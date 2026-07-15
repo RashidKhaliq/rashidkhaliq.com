@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Mega Thrift Store — Discount App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+  :root{
+    --cream:#f5f0e8; --paper:#fdfbf6; --forest:#2f4a30; --forest-deep:#22381f;
+    --gold:#c9a84c; --terra:#b3562e; --ink:#26301f; --line:#d9d0bd;
+    --ok:#2e7d4f; --warn:#a4551f; --shadow:0 10px 30px rgba(38,48,31,.10);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:'Manrope',sans-serif; background:var(--cream); color:var(--ink);
+    min-height:100vh; -webkit-user-select:none; user-select:none;
+    background-image:radial-gradient(rgba(47,74,48,.05) 1px, transparent 1px);
+    background-size:26px 26px;
+  }
+  input, textarea{-webkit-user-select:text; user-select:text;}
+  .serif{font-family:'Fraunces',serif;}
+  a{color:var(--forest);}
+
+  /* ---------- LOCK SCREEN ---------- */
+  #lockScreen{
+    position:fixed; inset:0; z-index:1000; background:var(--forest-deep);
+    display:flex; align-items:center; justify-content:center; padding:20px;
+    background-image:radial-gradient(rgba(201,168,76,.08) 1px, transparent 1px);
+    background-size:22px 22px;
+  }
+  .lock-card{
+    width:100%; max-width:420px; background:var(--paper); border-radius:18px;
+    padding:42px 34px 34px; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.45);
+    border:1px solid rgba(201,168,76,.5); position:relative;
+  }
+  .lock-card::before{
+    content:""; position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    width:26px; height:26px; border-radius:50%; background:var(--cream);
+    border:2px solid var(--gold); box-shadow:inset 0 2px 5px rgba(0,0,0,.15);
+  }
+  .lock-eyebrow{font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--terra); font-weight:800; margin-top:22px;}
+  .lock-title{font-size:30px; font-weight:700; color:var(--forest); margin:8px 0 4px;}
+  .lock-sub{font-size:13px; color:#6b6a5c; margin-bottom:26px;}
+  .lock-input{
+    width:100%; padding:14px 16px; border:1.5px solid var(--line); border-radius:10px;
+    font-size:16px; font-family:'Manrope',sans-serif; background:#fff; outline:none;
+    text-align:center; letter-spacing:.08em;
+  }
+  .lock-input:focus{border-color:var(--forest); box-shadow:0 0 0 3px rgba(47,74,48,.12);}
+  .lock-btn{
+    width:100%; margin-top:14px; padding:14px; border:none; border-radius:10px;
+    background:var(--forest); color:var(--cream); font-size:15px; font-weight:700;
+    font-family:'Manrope',sans-serif; cursor:pointer; letter-spacing:.04em;
+    transition:background .2s, transform .1s;
+  }
+  .lock-btn:hover{background:var(--forest-deep);}
+  .lock-btn:active{transform:scale(.98);}
+  .lock-error{color:var(--terra); font-size:13px; font-weight:600; margin-top:12px; min-height:18px;}
+  .lock-foot{margin-top:22px; font-size:12px; color:#8a887a;}
+  .lock-foot a{font-weight:700; text-decoration:none;}
+  .shake{animation:shake .4s;}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+  /* ---------- APP SHELL ---------- */
+  #app{display:none; max-width:1080px; margin:0 auto; padding:28px 20px 60px;}
+  header.masthead{
+    display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+    gap:14px; padding-bottom:18px; border-bottom:2px solid var(--forest); margin-bottom:30px;
+  }
+  .brand-eyebrow{font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--terra); font-weight:800;}
+  h1.brand{font-size:clamp(30px,5vw,44px); font-weight:700; color:var(--forest); line-height:1.05;}
+  h1.brand em{font-style:italic; color:var(--gold);}
+  .head-actions{display:flex; gap:10px;}
+  .ghost-btn{
+    padding:9px 16px; border:1.5px solid var(--forest); background:transparent; color:var(--forest);
+    border-radius:999px; font-family:'Manrope',sans-serif; font-weight:700; font-size:13px; cursor:pointer;
+    transition:all .2s;
+  }
+  .ghost-btn:hover{background:var(--forest); color:var(--cream);}
+
+  /* ---------- STEP SECTIONS ---------- */
+  .step{background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:26px 26px 28px; margin-bottom:22px; box-shadow:var(--shadow);}
+  .step-head{display:flex; align-items:baseline; gap:14px; margin-bottom:6px;}
+  .step-tag{
+    font-family:'Fraunces',serif; font-weight:700; font-size:15px; color:var(--cream);
+    background:var(--forest); border-radius:6px 6px 6px 0; padding:4px 11px; position:relative; flex-shrink:0;
+  }
+  .step-tag::after{content:""; position:absolute; left:0; bottom:-6px; border:3px solid transparent; border-top-color:var(--forest-deep); border-right-color:var(--forest-deep);}
+  .step h2{font-family:'Fraunces',serif; font-size:22px; color:var(--forest); font-weight:600;}
+  .step .hint{font-size:13.5px; color:#6b6a5c; margin:4px 0 18px;}
+
+  /* Upload */
+  .dropzone{
+    border:2px dashed var(--gold); border-radius:14px; background:rgba(201,168,76,.06);
+    padding:44px 20px; text-align:center; cursor:pointer; transition:all .2s;
+  }
+  .dropzone:hover, .dropzone.drag{background:rgba(201,168,76,.16); border-color:var(--terra);}
+  .dz-icon{font-size:34px;}
+  .dz-title{font-family:'Fraunces',serif; font-size:19px; color:var(--forest); font-weight:600; margin-top:10px;}
+  .dz-sub{font-size:13px; color:#6b6a5c; margin-top:4px;}
+  .file-chip{
+    display:none; margin-top:16px; padding:12px 16px; background:var(--cream); border:1px solid var(--line);
+    border-radius:10px; font-size:14px; font-weight:600; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap;
+  }
+  .file-chip .meta{color:#6b6a5c; font-weight:500; font-size:12.5px;}
+
+  /* Types grid — swing tags */
+  .types-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px;}
+  .tag-card{
+    background:#fff; border:1px solid var(--line); border-radius:12px 12px 12px 3px;
+    padding:16px 16px 14px 22px; position:relative; box-shadow:0 3px 10px rgba(38,48,31,.06);
+  }
+  .tag-card::before{
+    content:""; position:absolute; left:8px; top:16px; width:9px; height:9px; border-radius:50%;
+    background:var(--cream); border:2px solid var(--gold);
+  }
+  .tag-type{font-family:'Fraunces',serif; font-weight:600; font-size:16.5px; color:var(--forest); line-height:1.2; word-break:break-word;}
+  .tag-count{font-size:11.5px; color:#8a887a; font-weight:600; margin:3px 0 12px; text-transform:uppercase; letter-spacing:.06em;}
+  .pct-wrap{display:flex; align-items:center; gap:8px;}
+  .pct-input{
+    width:90px; padding:9px 10px; border:1.5px solid var(--line); border-radius:8px; font-size:16px;
+    font-weight:700; font-family:'Manrope',sans-serif; color:var(--terra); outline:none; background:var(--paper);
+  }
+  .pct-input:focus{border-color:var(--terra); box-shadow:0 0 0 3px rgba(179,86,46,.12);}
+  .pct-sign{font-family:'Fraunces',serif; font-size:18px; font-weight:700; color:var(--terra);}
+  .pct-off{font-size:11px; color:#8a887a;}
+  .apply-all{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:18px; padding:12px 14px; background:rgba(47,74,48,.05); border-radius:10px;}
+  .apply-all label{font-size:13px; font-weight:700; color:var(--forest);}
+  .apply-all .pct-input{width:80px;}
+  .mini-btn{padding:8px 14px; border:none; border-radius:8px; background:var(--gold); color:var(--forest-deep); font-weight:800; font-size:12.5px; font-family:'Manrope',sans-serif; cursor:pointer;}
+  .mini-btn:hover{filter:brightness(1.06);}
+
+  /* Options */
+  .opt-list{display:grid; gap:10px;}
+  .opt{
+    display:flex; gap:12px; align-items:flex-start; padding:13px 15px; background:#fff;
+    border:1px solid var(--line); border-radius:10px; cursor:pointer; transition:border-color .15s;
+  }
+  .opt:hover{border-color:var(--gold);}
+  .opt input{margin-top:3px; width:17px; height:17px; accent-color:var(--forest); cursor:pointer; flex-shrink:0;}
+  .opt .ot{font-weight:700; font-size:14px; color:var(--forest);}
+  .opt .od{font-size:12.5px; color:#6b6a5c; margin-top:2px; line-height:1.45;}
+  .opt .badge{display:inline-block; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; background:var(--terra); color:#fff; border-radius:4px; padding:2px 7px; margin-left:6px; vertical-align:1px;}
+
+  /* Generate */
+  .gen-row{display:flex; flex-wrap:wrap; gap:12px; align-items:center;}
+  .primary-btn{
+    padding:15px 30px; border:none; border-radius:999px; background:var(--terra); color:#fff;
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; letter-spacing:.03em; cursor:pointer;
+    box-shadow:0 6px 18px rgba(179,86,46,.35); transition:transform .1s, box-shadow .2s;
+  }
+  .primary-btn:hover{box-shadow:0 8px 24px rgba(179,86,46,.45);}
+  .primary-btn:active{transform:scale(.98);}
+  .primary-btn:disabled{background:#b9b4a3; box-shadow:none; cursor:not-allowed;}
+  .dl-btn{background:var(--forest); box-shadow:0 6px 18px rgba(47,74,48,.35); display:none;}
+  .dl-btn:hover{box-shadow:0 8px 24px rgba(47,74,48,.45);}
+
+  /* Summary + preview */
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:20px 0;}
+  .stat{background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:10px; padding:14px 16px;}
+  .stat .n{font-family:'Fraunces',serif; font-size:26px; font-weight:700; color:var(--forest);}
+  .stat .l{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#8a887a; margin-top:2px;}
+  .stat.green{border-left-color:var(--ok);} .stat.orange{border-left-color:var(--terra);}
+  .tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:#fff;}
+  table{width:100%; border-collapse:collapse; font-size:13px; min-width:680px;}
+  th{background:var(--forest); color:var(--cream); text-align:left; padding:10px 12px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap;}
+  td{padding:10px 12px; border-top:1px solid #efeadd; vertical-align:top;}
+  tr:nth-child(even) td{background:#fbf8f1;}
+  .old-price{text-decoration:line-through; color:#9a9788;}
+  .new-price{font-weight:800; color:var(--terra);}
+  .disc-pill{display:inline-block; background:rgba(46,125,79,.12); color:var(--ok); font-weight:800; font-size:11.5px; border-radius:999px; padding:2px 9px;}
+  .note{font-size:12px; color:#8a887a; margin-top:10px;}
+
+  /* Modal */
+  .modal-bg{position:fixed; inset:0; background:rgba(34,56,31,.65); z-index:900; display:none; align-items:center; justify-content:center; padding:20px;}
+  .modal{background:var(--paper); border-radius:16px; padding:30px 28px; width:100%; max-width:400px; box-shadow:0 30px 80px rgba(0,0,0,.4);}
+  .modal h3{font-family:'Fraunces',serif; color:var(--forest); font-size:21px; margin-bottom:4px;}
+  .modal p{font-size:12.5px; color:#6b6a5c; margin-bottom:16px;}
+  .modal label{display:block; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--forest); margin:12px 0 5px;}
+  .modal input{width:100%; padding:11px 13px; border:1.5px solid var(--line); border-radius:9px; font-size:14px; font-family:'Manrope',sans-serif; outline:none;}
+  .modal input:focus{border-color:var(--forest);}
+  .modal .row{display:flex; gap:10px; margin-top:20px;}
+  .modal .row button{flex:1;}
+  .msg{font-size:13px; font-weight:700; margin-top:12px; min-height:18px;}
+  .msg.err{color:var(--terra);} .msg.ok{color:var(--ok);}
+
+  /* Toast */
+  #toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(90px);
+    background:var(--forest-deep); color:var(--cream); padding:13px 22px; border-radius:999px;
+    font-size:14px; font-weight:700; box-shadow:0 10px 30px rgba(0,0,0,.3); transition:transform .35s; z-index:950;
+    max-width:92vw; text-align:center;
+  }
+  #toast.show{transform:translateX(-50%) translateY(0);}
+
+  footer{
+    margin-top:44px; padding-top:22px; border-top:2px solid var(--forest);
+    text-align:center; font-size:14px; color:var(--ink);
+  }
+  footer .credit{font-family:'Fraunces',serif; font-size:15px;}
+  footer a{font-weight:700; text-decoration:none; border-bottom:2px solid var(--gold);}
+  footer .flags{font-size:18px; margin-top:6px; letter-spacing:2px;}
+  footer .lock-note{font-size:11px; color:#8a887a; margin-top:10px;}
+
+  @media (max-width:640px){
+    #app{padding:20px 14px 50px;}
+    .step{padding:20px 16px 22px;}
+    .types-grid{grid-template-columns:1fr 1fr;}
+    table{min-width:620px;}
+  }
+  @media (max-width:430px){ .types-grid{grid-template-columns:1fr;} }
+  @media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important;} }
+</style>
+</head>
+<body>
+
+<!-- ==================== LOCK SCREEN ==================== -->
+<div id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-eyebrow">Private Tool · Authorized Access Only</div>
+    <div class="lock-title serif">Mega Thrift Store</div>
+    <div class="lock-sub">Discount App — enter password to continue</div>
+    <input type="password" id="pwInput" class="lock-input" placeholder="••••••••••" autocomplete="off">
+    <button class="lock-btn" id="unlockBtn">Unlock App</button>
+    <div class="lock-error" id="lockError"></div>
+    <div class="lock-foot">Created by <a href="https://www.rashidkhaliq.com/" target="_blank" rel="noopener">Rashid Khaliq</a> 💚🇵🇰🤍🍉🇵🇸</div>
+  </div>
+</div>
+
+<!-- ==================== APP ==================== -->
+<div id="app">
+  <header class="masthead">
+    <div>
+      <div class="brand-eyebrow">Shopify Bulk Discount Tool</div>
+      <h1 class="brand serif">Mega Thrift Store <em>Discount App</em></h1>
+    </div>
+    <div class="head-actions">
+      <button class="ghost-btn" id="changePwBtn">Change Password</button>
+      <button class="ghost-btn" id="resetBtn">Start Over</button>
+    </div>
+  </header>
+
+  <!-- STEP 1 : UPLOAD -->
+  <section class="step" id="step1">
+    <div class="step-head"><span class="step-tag">Step 1</span><h2>Upload your Shopify product file</h2></div>
+    <p class="hint">Export your products from Shopify Admin (Products → Export → CSV). Drop the file below.</p>
+    <div class="dropzone" id="dropzone">
+      <div class="dz-icon">🏷️</div>
+      <div class="dz-title serif">Drop your CSV here</div>
+      <div class="dz-sub">or click to browse — Shopify product export (.csv)</div>
+    </div>
+    <input type="file" id="fileInput" accept=".csv,text/csv" hidden>
+    <div class="file-chip" id="fileChip">
+      <span id="fileName">—</span>
+      <span class="meta" id="fileMeta"></span>
+    </div>
+  </section>
+
+  <!-- STEP 2 : TYPES -->
+  <section class="step" id="step2" style="display:none">
+    <div class="step-head"><span class="step-tag">Step 2</span><h2>Set discount by product type</h2></div>
+    <p class="hint">Every product type found in your file is listed below. Enter a new discount % for the types you want to update. Leave a type blank to keep it unchanged.</p>
+    <div class="apply-all">
+      <label for="allPct">Quick fill — apply one % to all types:</label>
+      <input type="number" id="allPct" class="pct-input" min="0" max="99" step="0.5" placeholder="e.g. 30">
+      <button class="mini-btn" id="fillAllBtn">Fill All</button>
+      <button class="mini-btn" id="clearAllBtn" style="background:var(--line); color:var(--ink)">Clear All</button>
+    </div>
+    <div class="types-grid" id="typesGrid"></div>
+  </section>
+
+  <!-- STEP 3 : OPTIONS -->
+  <section class="step" id="step3" style="display:none">
+    <div class="step-head"><span class="step-tag">Step 3</span><h2>Optional rules</h2></div>
+    <p class="hint">Tick only what you need — every rule below is optional.</p>
+    <div class="opt-list">
+      <label class="opt"><input type="checkbox" id="optSkipHigher" checked>
+        <span><span class="ot">Protect bigger existing discounts <span class="badge">Recommended</span></span>
+        <span class="od">If a product's current discount is already <b>higher</b> than the new one, skip it. The new discount only applies where the existing discount is lower.</span></span>
+      </label>
+      <label class="opt"><input type="checkbox" id="optRound">
+        <span><span class="ot">Round prices down</span>
+        <span class="od">Round the new price <b>down</b> to the nearest 10 — e.g. Rs. 1,847 becomes Rs. 1,840. Prices are never rounded up.</span></span>
+      </label>
+      <label class="opt"><input type="checkbox" id="optSkipOOS">
+        <span><span class="ot">Skip out-of-stock products</span>
+        <span class="od">Variants with inventory quantity 0 (or less) keep their current price.</span></span>
+      </label>
+      <label class="opt"><input type="checkbox" id="optOnlyActive">
+        <span><span class="ot">Only update active products</span>
+        <span class="od">Products with status <b>draft</b> or <b>archived</b> are left untouched.</span></span>
+      </label>
+      <label class="opt"><input type="checkbox" id="optSetCompare">
+        <span><span class="ot">Fill missing "Compare At Price"</span>
+        <span class="od">If a product has no Compare At Price, use its current price as the Compare At — so Shopify shows the discount as a sale.</span></span>
+      </label>
+      <label class="opt"><input type="checkbox" id="optOnlyChanged" checked>
+        <span><span class="ot">Export only updated rows <span class="badge">Faster import</span></span>
+        <span class="od">Products where the discount did <b>not</b> change are removed from the file completely (skipped, unchanged and image-only rows). Smaller file = faster, safer Shopify import.</span></span>
+      </label>
+      <label class="opt"><input type="checkbox" id="optLeanCols" checked>
+        <span><span class="ot">Export only required columns <span class="badge">Lean file</span></span>
+        <span class="od">Keeps only the columns Shopify needs to match variants and update prices — Handle, Title, Option 1–3 Name/Value, Variant SKU, Variant Price, Variant Compare At Price. All other columns are dropped, so nothing else on your products gets touched during import.</span></span>
+      </label>
+    </div>
+  </section>
+
+  <!-- STEP 4 : GENERATE -->
+  <section class="step" id="step4" style="display:none">
+    <div class="step-head"><span class="step-tag">Step 4</span><h2>Generate &amp; download</h2></div>
+    <p class="hint">Review the summary and preview, then download your Shopify-ready CSV.</p>
+    <div class="gen-row">
+      <button class="primary-btn" id="genBtn">Generate Discounted File</button>
+      <button class="primary-btn dl-btn" id="dlBtn">⬇ Download CSV</button>
+    </div>
+    <div id="results" style="display:none">
+      <div class="stats" id="statsGrid"></div>
+      <h2 class="serif" style="font-size:18px; color:var(--forest); margin:6px 0 10px;">Preview — first updated products</h2>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th>Product</th><th>Type</th><th>Compare At</th><th>Old Price</th><th>Old&nbsp;%</th><th>New Price</th><th>New&nbsp;%</th>
+          </tr></thead>
+          <tbody id="previewBody"></tbody>
+        </table>
+      </div>
+      <p class="note" id="skipNote"></p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="credit">Created by <a href="https://www.rashidkhaliq.com/" target="_blank" rel="noopener">Rashid Khaliq</a></div>
+    <div class="flags">💚🇵🇰&nbsp;🤍🍉🇵🇸</div>
+    <div class="lock-note">Private tool · Password protected · All processing happens in your browser — no data is uploaded anywhere.</div>
+  </footer>
+</div>
+
+<!-- ==================== CHANGE PASSWORD MODAL ==================== -->
+<div class="modal-bg" id="pwModal">
+  <div class="modal">
+    <h3 class="serif">Change Password</h3>
+    <p>The new password is saved in this browser. On another device or browser, the original password will still work.</p>
+    <label for="curPw">Current password</label>
+    <input type="password" id="curPw" autocomplete="off">
+    <label for="newPw">New password</label>
+    <input type="password" id="newPw" autocomplete="off">
+    <label for="newPw2">Confirm new password</label>
+    <input type="password" id="newPw2" autocomplete="off">
+    <div class="msg" id="pwMsg"></div>
+    <div class="row">
+      <button class="ghost-btn" id="pwCancel">Cancel</button>
+      <button class="lock-btn" id="pwSave" style="margin-top:0">Save Password</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= PASSWORD / SECURITY ================= */
+/* Default password is stored only as a SHA-256 hash — plain text is never in this file. */
+var DEFAULT_HASH = "32ba084ea61e03aeee925265d7116b86805fcfa8f3c58185e7439cd2ec5c8f01";
+var PW_KEY = "mts_dapp_k";
+var sessionUnlocked = false;
+var sessionHash = null; /* fallback if browser storage unavailable */
+
+/* Pure-JS SHA-256 fallback (verified against FIPS test vectors) — used when crypto.subtle is unavailable, e.g. some file:// contexts */
+function sha256js(msg){
+  // UTF-8 encode
+  var bytes = [];
+  for (var i = 0; i < msg.length; i++) {
+    var c = msg.charCodeAt(i);
+    if (c < 128) bytes.push(c);
+    else if (c < 2048) { bytes.push(192 | (c >> 6), 128 | (c & 63)); }
+    else if (c < 55296 || c >= 57344) { bytes.push(224 | (c >> 12), 128 | ((c >> 6) & 63), 128 | (c & 63)); }
+    else { // surrogate pair
+      var c2 = msg.charCodeAt(++i);
+      var cp = 65536 + (((c & 1023) << 10) | (c2 & 1023));
+      bytes.push(240 | (cp >> 18), 128 | ((cp >> 12) & 63), 128 | ((cp >> 6) & 63), 128 | (cp & 63));
+    }
+  }
+  var K = [
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  var H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  var l = bytes.length;
+  bytes.push(0x80);
+  while (bytes.length % 64 !== 56) bytes.push(0);
+  var bitLenHi = Math.floor(l / 536870912); // l*8 / 2^32
+  var bitLenLo = (l << 3) >>> 0;
+  bytes.push((bitLenHi >>> 24) & 255, (bitLenHi >>> 16) & 255, (bitLenHi >>> 8) & 255, bitLenHi & 255);
+  bytes.push((bitLenLo >>> 24) & 255, (bitLenLo >>> 16) & 255, (bitLenLo >>> 8) & 255, bitLenLo & 255);
+  function rotr(x, n){ return (x >>> n) | (x << (32 - n)); }
+  var w = new Array(64);
+  for (var off = 0; off < bytes.length; off += 64) {
+    for (var t = 0; t < 16; t++) {
+      w[t] = (bytes[off + 4*t] << 24) | (bytes[off + 4*t + 1] << 16) | (bytes[off + 4*t + 2] << 8) | (bytes[off + 4*t + 3]);
+    }
+    for (t = 16; t < 64; t++) {
+      var s0 = rotr(w[t-15], 7) ^ rotr(w[t-15], 18) ^ (w[t-15] >>> 3);
+      var s1 = rotr(w[t-2], 17) ^ rotr(w[t-2], 19) ^ (w[t-2] >>> 10);
+      w[t] = (w[t-16] + s0 + w[t-7] + s1) | 0;
+    }
+    var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+    for (t = 0; t < 64; t++) {
+      var S1 = rotr(e,6) ^ rotr(e,11) ^ rotr(e,25);
+      var ch = (e & f) ^ (~e & g);
+      var t1 = (h + S1 + ch + K[t] + w[t]) | 0;
+      var S0 = rotr(a,2) ^ rotr(a,13) ^ rotr(a,22);
+      var maj = (a & b) ^ (a & c) ^ (b & c);
+      var t2 = (S0 + maj) | 0;
+      h=g; g=f; f=e; e=(d+t1)|0; d=c; c=b; b=a; a=(t1+t2)|0;
+    }
+    H[0]=(H[0]+a)|0; H[1]=(H[1]+b)|0; H[2]=(H[2]+c)|0; H[3]=(H[3]+d)|0;
+    H[4]=(H[4]+e)|0; H[5]=(H[5]+f)|0; H[6]=(H[6]+g)|0; H[7]=(H[7]+h)|0;
+  }
+  var hex = "";
+  for (var i2 = 0; i2 < 8; i2++) { hex += ((H[i2] >>> 0).toString(16)).padStart(8, "0"); }
+  return hex;
+}
+
+function hashText(txt){
+  return new Promise(function(resolve){
+    try{
+      if(window.crypto && crypto.subtle && crypto.subtle.digest){
+        var enc = new TextEncoder().encode(txt);
+        crypto.subtle.digest("SHA-256", enc).then(function(buf){
+          var arr = Array.from(new Uint8Array(buf));
+          resolve(arr.map(function(b){return b.toString(16).padStart(2,"0");}).join(""));
+        }).catch(function(){ resolve(sha256js(txt)); });
+      } else {
+        resolve(sha256js(txt));
+      }
+    }catch(e){ resolve(sha256js(txt)); }
+  });
+}
+
+function storedHash(){
+  if(sessionHash) return sessionHash;
+  try{ var v = window.localStorage.getItem(PW_KEY); if(v) return v; }catch(e){}
+  return DEFAULT_HASH;
+}
+function saveHash(h){
+  sessionHash = h;
+  try{ window.localStorage.setItem(PW_KEY, h); return true; }catch(e){ return false; }
+}
+
+var lockScreen = document.getElementById("lockScreen");
+var pwInput = document.getElementById("pwInput");
+var lockError = document.getElementById("lockError");
+
+function tryUnlock(){
+  var val = pwInput.value;
+  if(!val){ lockError.textContent = "Please enter the password."; return; }
+  hashText(val).then(function(h){
+    if(h === storedHash()){
+      sessionUnlocked = true;
+      lockScreen.style.display = "none";
+      document.getElementById("app").style.display = "block";
+      pwInput.value = "";
+      lockError.textContent = "";
+    } else {
+      lockError.textContent = "Wrong password. Access denied.";
+      var card = lockScreen.querySelector(".lock-card");
+      card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+      pwInput.value = ""; pwInput.focus();
+    }
+  });
+}
+document.getElementById("unlockBtn").addEventListener("click", tryUnlock);
+pwInput.addEventListener("keydown", function(e){ if(e.key === "Enter") tryUnlock(); });
+
+/* ---- Change password modal ---- */
+var pwModal = document.getElementById("pwModal");
+var pwMsg = document.getElementById("pwMsg");
+document.getElementById("changePwBtn").addEventListener("click", function(){
+  pwModal.style.display = "flex";
+  pwMsg.textContent = ""; pwMsg.className = "msg";
+  document.getElementById("curPw").value = "";
+  document.getElementById("newPw").value = "";
+  document.getElementById("newPw2").value = "";
+});
+document.getElementById("pwCancel").addEventListener("click", function(){ pwModal.style.display = "none"; });
+document.getElementById("pwSave").addEventListener("click", function(){
+  var cur = document.getElementById("curPw").value;
+  var np = document.getElementById("newPw").value;
+  var np2 = document.getElementById("newPw2").value;
+  pwMsg.className = "msg err";
+  if(!cur || !np || !np2){ pwMsg.textContent = "All fields are required."; return; }
+  if(np.length < 6){ pwMsg.textContent = "New password must be at least 6 characters."; return; }
+  if(np !== np2){ pwMsg.textContent = "New passwords do not match."; return; }
+  hashText(cur).then(function(ch){
+    if(ch !== storedHash()){ pwMsg.textContent = "Current password is incorrect."; return; }
+    hashText(np).then(function(nh){
+      var persisted = saveHash(nh);
+      pwMsg.className = "msg ok";
+      pwMsg.textContent = persisted ? "Password updated ✓" : "Password updated for this session (browser storage unavailable).";
+      setTimeout(function(){ pwModal.style.display = "none"; toast("Password changed successfully"); }, 900);
+    });
+  });
+});
+
+/* ---- Anti-copy deterrents ---- */
+document.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+document.addEventListener("copy", function(e){
+  var t = e.target;
+  if(!(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA"))){ e.preventDefault(); }
+});
+document.addEventListener("keydown", function(e){
+  var k = (e.key || "").toUpperCase();
+  if(k === "F12"){ e.preventDefault(); return; }
+  if((e.ctrlKey || e.metaKey) && e.shiftKey && (k === "I" || k === "J" || k === "C")){ e.preventDefault(); return; }
+  if((e.ctrlKey || e.metaKey) && (k === "U" || k === "S" || k === "P")){ e.preventDefault(); return; }
+});
+document.addEventListener("dragstart", function(e){
+  if(e.target && e.target.tagName === "IMG") e.preventDefault();
+});
+
+/* ================= APP LOGIC ================= */
+var headers = [], rows = [], handleInfo = {}, typeStats = {};
+var COL = {}; // resolved column names
+var outputCSV = null, outputName = "discounted.csv";
+var NO_TYPE = "(No type)";
+
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove("show"); }, 3200);
+}
+function num(v){
+  if(v === null || v === undefined) return NaN;
+  var s = String(v).replace(/[",\s]/g, "").replace(/Rs\.?/i, "");
+  if(s === "") return NaN;
+  return parseFloat(s);
+}
+function money(n){
+  if(!isFinite(n)) return "";
+  return (Math.abs(n - Math.round(n)) < 0.005) ? String(Math.round(n)) : n.toFixed(2);
+}
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function cleanHeader(h){
+  /* strip BOM + zero-width/invisible chars, collapse spaces */
+  return String(h).replace(/[\ufeff\u200b\u200c\u200d\u00a0]/g, " ").replace(/\s+/g, " ").trim().toLowerCase();
+}
+function findCol(names){
+  /* Priority order: the FIRST name in the list wins, even if another
+     candidate column appears earlier in the file (e.g. Shopify puts
+     "Product Category" before "Type" — exact "Type" must win). */
+  for(var j = 0; j < names.length; j++){
+    for(var i = 0; i < headers.length; i++){
+      if(cleanHeader(headers[i]) === names[j]) return headers[i];
+    }
+  }
+  return null;
+}
+
+/* ---- Upload ---- */
+var dropzone = document.getElementById("dropzone");
+var fileInput = document.getElementById("fileInput");
+dropzone.addEventListener("click", function(){ fileInput.click(); });
+dropzone.addEventListener("dragover", function(e){ e.preventDefault(); dropzone.classList.add("drag"); });
+dropzone.addEventListener("dragleave", function(){ dropzone.classList.remove("drag"); });
+dropzone.addEventListener("drop", function(e){
+  e.preventDefault(); dropzone.classList.remove("drag");
+  if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener("change", function(){ if(fileInput.files.length) handleFile(fileInput.files[0]); });
+
+function handleFile(file){
+  if(!/\.csv$/i.test(file.name)){ toast("Please upload a .csv file (Shopify product export)"); return; }
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: "greedy",
+    complete: function(res){
+      if(!res.meta || !res.meta.fields || !res.meta.fields.length){ toast("Could not read this file — is it a valid CSV?"); return; }
+      headers = res.meta.fields;
+      rows = res.data;
+
+      COL.handle  = findCol(["handle"]);
+      COL.title   = findCol(["title"]);
+      COL.type    = findCol(["type", "product type", "product category"]);
+      COL.status  = findCol(["status"]);
+      COL.price   = findCol(["variant price", "price"]);
+      COL.compare = findCol(["variant compare at price", "compare at price", "compare-at price"]);
+      COL.qty     = findCol(["variant inventory qty", "inventory qty", "variant inventory quantity"]);
+
+      if(!COL.handle || !COL.price){
+        toast("This doesn't look like a Shopify product export — 'Handle' or 'Variant Price' column missing.");
+        return;
+      }
+      if(!COL.type){
+        toast("No 'Type' column found — all products will be grouped as (No type).");
+      }
+
+      // Build product map: handle -> {type, status, title}
+      handleInfo = {}; typeStats = {};
+      var i, r, h;
+      for(i = 0; i < rows.length; i++){
+        r = rows[i]; h = (r[COL.handle] || "").trim();
+        if(!h) continue;
+        if(!handleInfo[h]) handleInfo[h] = { type: "", status: "", title: "" };
+        if(!handleInfo[h].type && COL.type && (r[COL.type] || "").trim()) handleInfo[h].type = r[COL.type].trim();
+        if(!handleInfo[h].status && COL.status && (r[COL.status] || "").trim()) handleInfo[h].status = r[COL.status].trim().toLowerCase();
+        if(!handleInfo[h].title && COL.title && (r[COL.title] || "").trim()) handleInfo[h].title = r[COL.title].trim();
+      }
+      // Type stats (variant rows = rows with a price)
+      var seenHandleForType = {};
+      for(i = 0; i < rows.length; i++){
+        r = rows[i]; h = (r[COL.handle] || "").trim();
+        if(!h || isNaN(num(r[COL.price]))) continue;
+        var t = (handleInfo[h] && handleInfo[h].type) ? handleInfo[h].type : NO_TYPE;
+        if(!typeStats[t]) typeStats[t] = { products: 0, variants: 0 };
+        typeStats[t].variants++;
+        if(!seenHandleForType[h]){ seenHandleForType[h] = true; typeStats[t].products++; }
+      }
+
+      document.getElementById("fileName").textContent = "📄 " + file.name;
+      document.getElementById("fileMeta").textContent =
+        rows.length + " rows · " + Object.keys(handleInfo).length + " products · " + Object.keys(typeStats).length + " types";
+      document.getElementById("fileChip").style.display = "flex";
+
+      renderTypes();
+      document.getElementById("step2").style.display = "block";
+      document.getElementById("step3").style.display = "block";
+      document.getElementById("step4").style.display = "block";
+      document.getElementById("results").style.display = "none";
+      document.getElementById("dlBtn").style.display = "none";
+      outputCSV = null;
+      toast("File loaded — " + Object.keys(typeStats).length + " product types found");
+      document.getElementById("step2").scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+    error: function(){ toast("Failed to read the file. Please try again."); }
+  });
+}
+
+function renderTypes(){
+  var grid = document.getElementById("typesGrid");
+  grid.innerHTML = "";
+  var types = Object.keys(typeStats).sort(function(a, b){
+    if(a === NO_TYPE) return 1; if(b === NO_TYPE) return -1;
+    return a.localeCompare(b);
+  });
+  types.forEach(function(t, idx){
+    var s = typeStats[t];
+    var card = document.createElement("div");
+    card.className = "tag-card";
+    card.innerHTML =
+      '<div class="tag-type">' + esc(t) + '</div>' +
+      '<div class="tag-count">' + s.products + ' products · ' + s.variants + ' variants</div>' +
+      '<div class="pct-wrap"><input type="number" class="pct-input type-pct" min="0" max="99" step="0.5" placeholder="—" data-type="' + esc(t) + '" id="pct_' + idx + '"><span class="pct-sign">%</span><span class="pct-off">off</span></div>';
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById("fillAllBtn").addEventListener("click", function(){
+  var v = document.getElementById("allPct").value;
+  if(v === "" || isNaN(parseFloat(v))){ toast("Enter a % first, e.g. 30"); return; }
+  document.querySelectorAll(".type-pct").forEach(function(inp){ inp.value = v; });
+});
+document.getElementById("clearAllBtn").addEventListener("click", function(){
+  document.querySelectorAll(".type-pct").forEach(function(inp){ inp.value = ""; });
+  document.getElementById("allPct").value = "";
+});
+
+/* ---- Generate ---- */
+document.getElementById("genBtn").addEventListener("click", function(){
+  if(!rows.length){ toast("Upload a file first (Step 1)"); return; }
+
+  var discounts = {};
+  var anySet = false;
+  document.querySelectorAll(".type-pct").forEach(function(inp){
+    var v = parseFloat(inp.value);
+    if(!isNaN(v) && v > 0 && v < 100){ discounts[inp.getAttribute("data-type")] = v; anySet = true; }
+  });
+  if(!anySet){ toast("Enter a discount % for at least one type (Step 2)"); return; }
+
+  var oSkipHigher = document.getElementById("optSkipHigher").checked;
+  var oRound      = document.getElementById("optRound").checked;
+  var oSkipOOS    = document.getElementById("optSkipOOS").checked;
+  var oOnlyActive = document.getElementById("optOnlyActive").checked;
+  var oSetCompare = document.getElementById("optSetCompare").checked;
+  var oOnlyChanged = document.getElementById("optOnlyChanged").checked;
+  var oLeanCols    = document.getElementById("optLeanCols").checked;
+
+  var out = [];
+  var stats = { variants: 0, updated: 0, skipHigher: 0, skipOOS: 0, skipStatus: 0, noDiscount: 0, discSum: 0 };
+  var preview = [];
+
+  for(var i = 0; i < rows.length; i++){
+    var src = rows[i];
+    var row = {};
+    for(var c = 0; c < headers.length; c++){ row[headers[c]] = src[headers[c]]; }
+
+    var h = (row[COL.handle] || "").trim();
+    var price = num(row[COL.price]);
+    if(!h || isNaN(price)){ if(!oOnlyChanged){ out.push(row); } continue; } // image/extra rows
+
+    stats.variants++;
+    var info = handleInfo[h] || { type: "", status: "", title: h };
+    var t = info.type || NO_TYPE;
+    var d = discounts[t];
+
+    if(d === undefined){ stats.noDiscount++; if(!oOnlyChanged){ out.push(row); } continue; }
+
+    if(oOnlyActive && info.status && info.status !== "active"){ stats.skipStatus++; if(!oOnlyChanged){ out.push(row); } continue; }
+
+    if(oSkipOOS && COL.qty){
+      var q = num(row[COL.qty]);
+      if(!isNaN(q) && q <= 0){ stats.skipOOS++; if(!oOnlyChanged){ out.push(row); } continue; }
+    }
+
+    var compareRaw = COL.compare ? num(row[COL.compare]) : NaN;
+    var hasCompare = !isNaN(compareRaw) && compareRaw > 0;
+    var base = (hasCompare && compareRaw > price) ? compareRaw : price;
+    var currentDisc = (base > 0) ? ((base - price) / base) * 100 : 0;
+
+    if(oSkipHigher && currentDisc >= d - 0.001){ stats.skipHigher++; if(!oOnlyChanged){ out.push(row); } continue; }
+
+    var newPrice = base * (1 - d / 100);
+    if(oRound){
+      var fl = Math.floor(newPrice / 10) * 10;      // 1847 -> 1840, never up
+      if(fl <= 0) fl = Math.floor(newPrice);         // guard for very low prices
+      newPrice = fl;
+    } else {
+      newPrice = Math.round(newPrice * 100) / 100;
+    }
+    if(newPrice < 0) newPrice = 0;
+
+    row[COL.price] = money(newPrice);
+    if(COL.compare){
+      if(hasCompare){
+        /* keep existing compare-at as is */
+      } else if(oSetCompare){
+        row[COL.compare] = money(base);
+      }
+    }
+
+    stats.updated++;
+    var effDisc = (base > 0) ? ((base - newPrice) / base) * 100 : d;
+    stats.discSum += effDisc;
+
+    if(preview.length < 12){
+      preview.push({
+        title: info.title || h, type: t,
+        compareAt: (hasCompare || oSetCompare) ? money(base) : "—",
+        oldPrice: money(price), oldDisc: currentDisc,
+        newPrice: money(newPrice), newDisc: effDisc
+      });
+    }
+    out.push(row);
+  }
+
+  if(!stats.updated){
+    toast("No products qualified — check your % values and optional rules.");
+  }
+
+  // Decide export columns (lean = only what Shopify needs to match variants + update prices)
+  var exportHeaders = headers;
+  if(oLeanCols){
+    var KEEP = ["handle","title","option1 name","option1 value","option2 name","option2 value",
+                "option3 name","option3 value","variant sku","variant price","variant compare at price"];
+    exportHeaders = headers.filter(function(hd){ return KEEP.indexOf(cleanHeader(hd)) !== -1; });
+    // safety: never drop the essentials even if names differ slightly
+    [COL.handle, COL.price, COL.compare].forEach(function(cn){
+      if(cn && exportHeaders.indexOf(cn) === -1) exportHeaders.push(cn);
+    });
+  }
+
+  // Build CSV
+  var data = out.map(function(r){ return exportHeaders.map(function(hd){ return r[hd] === undefined ? "" : r[hd]; }); });
+  outputCSV = Papa.unparse({ fields: exportHeaders, data: data });
+  var dt = new Date(), pad = function(n){ return (n < 10 ? "0" : "") + n; };
+  outputName = "mega-thrift-discounted_" + dt.getFullYear() + "-" + pad(dt.getMonth() + 1) + "-" + pad(dt.getDate()) + ".csv";
+
+  // Render summary
+  var avg = stats.updated ? (stats.discSum / stats.updated) : 0;
+  var sg = document.getElementById("statsGrid");
+  sg.innerHTML =
+    stat(stats.variants, "Variants in file", "") +
+    stat(stats.updated, "Prices updated", "green") +
+    stat(stats.skipHigher, "Kept (higher discount)", "orange") +
+    stat(stats.skipOOS + stats.skipStatus, "Skipped (stock/status)", "orange") +
+    stat(out.length, "Rows in export", "green") +
+    stat(exportHeaders.length + "/" + headers.length, "Columns in export", "") +
+    stat(avg.toFixed(1) + "%", "Avg. new discount", "green");
+
+  var pb = document.getElementById("previewBody");
+  pb.innerHTML = preview.map(function(p){
+    return "<tr><td>" + esc(p.title) + "</td><td>" + esc(p.type) + "</td><td>" + esc(p.compareAt) +
+      "</td><td class='old-price'>" + esc(p.oldPrice) + "</td><td>" + p.oldDisc.toFixed(1) + "%</td>" +
+      "<td class='new-price'>" + esc(p.newPrice) + "</td><td><span class='disc-pill'>" + p.newDisc.toFixed(1) + "% off</span></td></tr>";
+  }).join("") || "<tr><td colspan='7' style='text-align:center;color:#8a887a'>No rows were updated.</td></tr>";
+
+  var noteBits = [];
+  noteBits.push(oOnlyChanged
+    ? "Export contains only the " + stats.updated + " updated variant rows — skipped and unchanged products are removed for a faster import."
+    : "Skipped rows keep their original prices in the downloaded file, so the CSV stays complete.");
+  if(oLeanCols){
+    noteBits.push("Only " + exportHeaders.length + " required columns are included (Handle, Title, Options, SKU, Price, Compare At) — Shopify leaves all other product fields untouched.");
+  }
+  noteBits.push("Import in Shopify Admin: Products → Import → tick \u201cOverwrite products with matching handles\u201d.");
+  document.getElementById("skipNote").textContent = noteBits.join(" ");
+  document.getElementById("results").style.display = "block";
+  document.getElementById("dlBtn").style.display = stats.updated ? "inline-block" : "none";
+  toast(stats.updated + " variant prices updated ✓");
+  document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
+
+  function stat(n, l, cls){
+    return "<div class='stat " + cls + "'><div class='n'>" + n + "</div><div class='l'>" + l + "</div></div>";
+  }
+});
+
+/* ---- Download ---- */
+document.getElementById("dlBtn").addEventListener("click", function(){
+  if(!outputCSV){ toast("Generate the file first"); return; }
+  var blob = new Blob(["\ufeff" + outputCSV], { type: "text/csv;charset=utf-8;" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = outputName;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+  toast("Downloading " + outputName);
+});
+
+/* ---- Reset ---- */
+document.getElementById("resetBtn").addEventListener("click", function(){
+  headers = []; rows = []; handleInfo = {}; typeStats = {}; outputCSV = null;
+  fileInput.value = "";
+  document.getElementById("fileChip").style.display = "none";
+  document.getElementById("step2").style.display = "none";
+  document.getElementById("step3").style.display = "none";
+  document.getElementById("step4").style.display = "none";
+  document.getElementById("results").style.display = "none";
+  document.getElementById("dlBtn").style.display = "none";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  toast("Ready for a new file");
+});
+
+})();
+</script>
+</body>
+</html>
