@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Grid Swap — HTML5 Puzzle</title>
+<style>
+:root{
+  --bg:#0b0f12;--panel:#141b20;--ink:#e8f0f5;--dim:#8a9ba8;--accent:#3dffa2;--accent2:#5ad7ff;--warn:#ffc145;--danger:#ff5f56;
+  --cell:56px;--gap:6px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:manipulation;user-select:none}
+#app{width:min(100vw,520px);padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px}
+h1{font-size:clamp(22px,6vw,32px);letter-spacing:.04em}
+.panel{width:100%;background:var(--panel);border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.stat b{font-size:20px;color:var(--accent)}
+.stat span{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.btn{font:inherit;color:#04150c;background:var(--accent);border:none;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;transition:filter .15s,transform .05s}
+.btn:hover{filter:brightness(1.1)}
+.btn:active{transform:translateY(1px)}
+.btn.secondary{background:transparent;color:var(--ink);border:1px solid #2a3833}
+#boardWrap{position:relative;background:var(--panel);padding:var(--gap);border-radius:18px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+#board{display:grid;grid-template-columns:repeat(6,var(--cell));grid-template-rows:repeat(6,var(--cell));gap:var(--gap);touch-action:none}
+.cell{width:var(--cell);height:var(--cell);border-radius:12px;display:grid;place-items:center;font-size:28px;cursor:pointer;transition:transform .12s,background .15s;position:relative;background:#1f2930}
+.cell.selected{box-shadow:0 0 0 3px var(--accent2);z-index:2}
+.cell.hint{animation:hint 1.2s ease-in-out infinite}
+.cell.pop{animation:pop .22s ease forwards}
+.cell.fall{animation:fall .28s ease-out forwards}
+@keyframes hint{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(0);opacity:0}}
+@keyframes fall{from{transform:translateY(-40px);opacity:.6}to{transform:translateY(0);opacity:1}}
+#targetBar{width:100%;height:10px;background:#1f2930;border-radius:5px;overflow:hidden;margin-top:4px}
+#targetFill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .3s}
+#overlay{position:fixed;inset:0;background:rgba(4,7,9,.88);display:none;align-items:center;justify-content:center;z-index:100}
+#overlay.on{display:flex}
+.card{background:var(--panel);padding:28px 34px;border-radius:20px;text-align:center;max-width:min(90vw,360px);box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.card h2{font-size:26px;margin-bottom:8px}
+.card p{color:var(--dim);font-size:14px;line-height:1.5;margin-bottom:18px}
+.card .big{font-size:42px;margin-bottom:6px}
+.row{display:flex;gap:10px;justify-content:center}
+#startScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:90}
+.hidden{display:none !important}
+@media (max-width:420px){:root{--cell:46px;--gap:5px}#app{padding:10px}}
+@media (max-width:340px){:root{--cell:40px}}
+</style>
+</head>
+<body>
+<div id="startScreen">
+  <div class="card">
+    <div class="big">🧩</div>
+    <h2>Grid Swap</h2>
+    <p>Swap adjacent gems to make lines of 3+. Clear the target score before moves run out.</p>
+    <button class="btn" id="startBtn">Play</button>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <h1>Grid Swap</h1>
+  <div class="panel">
+    <div class="stat"><b id="scoreEl">0</b><span>Score</span></div>
+    <div class="stat"><b id="movesEl">20</b><span>Moves</span></div>
+    <div class="stat"><b id="levelEl">1</b><span>Level</span></div>
+    <div class="stat"><b id="hiEl">0</b><span>Best</span></div>
+    <button class="btn secondary" id="resetBtn">↺</button>
+  </div>
+  <div id="targetBar"><div id="targetFill"></div></div>
+  <div id="boardWrap"><div id="board"></div></div>
+</div>
+
+<div id="overlay">
+  <div class="card">
+    <div class="big" id="winIcon">🏆</div>
+    <h2 id="winTitle">Level Complete</h2>
+    <p id="winMsg">Great job!</p>
+    <div class="row">
+      <button class="btn secondary" id="homeBtn">Home</button>
+      <button class="btn" id="nextBtn">Next Level</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const ROWS=6, COLS=6;
+const GEMS=[{s:"●",c:"#ff5f56"},{s:"◆",c:"#ffc145"},{s:"■",c:"#3dffa2"},{s:"▲",c:"#5ad7ff"},{s:"★",c:"#a78bfa"},{s:"♥",c:"#ff7eb3"}];
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+
+let grid=[], score=0, moves=0, level=1, target=0, hi=0, selected=null, busy=false, audioCtx=null;
+
+function ensureAudio(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }
+function tone(f,d=.08,g=.03,t="sine"){
+  if(!audioCtx)return; const o=audioCtx.createOscillator(),v=audioCtx.createGain();
+  o.type=t;o.frequency.value=f;v.gain.value=g;o.connect(v).connect(audioCtx.destination);
+  o.start();v.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+d);o.stop(audioCtx.currentTime+d);
+}
+function sfxMatch(n){ tone(440+ n*80,.12,.04,"triangle"); }
+function sfxSwap(){ tone(320,.06,.03,"sine"); }
+function sfxBad(){ tone(180,.1,.04,"sawtooth"); }
+function sfxWin(){ [523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.18,.05,"sine"),i*90)); }
+
+function randGem(){ return Math.floor(Math.random()*GEMS.length); }
+function inBounds(r,c){ return r>=0&&r<ROWS&&c>=0&&c<COLS; }
+
+function initLevel(){
+  score=0; moves=15+level*2; target=300+level*250;
+  $("#scoreEl").textContent=score; $("#movesEl").textContent=moves; $("#levelEl").textContent=level;
+  updateTargetBar(); buildGrid(); render(); showHint();
+}
+function buildGrid(){
+  do{ grid=Array.from({length:ROWS},()=>Array.from({length:COLS},randGem)); }while(findMatches().length);
+}
+function render(){
+  const b=$("#board"); b.innerHTML="";
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    const d=document.createElement("div"); d.className="cell"; d.dataset.r=r; d.dataset.c=c;
+    const g=GEMS[grid[r][c]]; d.textContent=g.s; d.style.color=g.c; d.style.boxShadow=`inset 0 2px 6px ${g.c}33`;
+    if(selected&&selected.r===r&&selected.c===c)d.classList.add("selected");
+    b.appendChild(d);
+  }
+}
+function updateTargetBar(){ const pct=Math.min(100,Math.round(score/target*100)); $("#targetFill").style.width=pct+"%"; }
+
+function findMatches(){
+  const set=new Set();
+  for(let r=0;r<ROWS;r++){
+    let run=1;
+    for(let c=1;c<=COLS;c++){
+      if(c<COLS&&grid[r][c]===grid[r][c-1]) run++; else {
+        if(run>=3) for(let k=0;k<run;k++) set.add(`${r},${c-1-k}`);
+        run=1;
+      }
+    }
+  }
+  for(let c=0;c<COLS;c++){
+    let run=1;
+    for(let r=1;r<=ROWS;r++){
+      if(r<ROWS&&grid[r][c]===grid[r-1][c]) run++; else {
+        if(run>=3) for(let k=0;k<run;k++) set.add(`${r-1-k},${c}`);
+        run=1;
+      }
+    }
+  }
+  return [...set].map(s=>{const [r,c]=s.split(",").map(Number);return {r,c};});
+}
+function hasMatch(){ return findMatches().length>0; }
+function canMove(){
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    if(c+1<COLS){[grid[r][c],grid[r][c+1]]=[grid[r][c+1],grid[r][c]]; if(hasMatch()){[grid[r][c],grid[r][c+1]]=[grid[r][c+1],grid[r][c]];return true;}[grid[r][c],grid[r][c+1]]=[grid[r][c+1],grid[r][c]];}
+    if(r+1<ROWS){[grid[r][c],grid[r+1][c]]=[grid[r+1][c],grid[r][c]]; if(hasMatch()){[grid[r][c],grid[r+1][c]]=[grid[r+1][c],grid[r][c]];return true;}[grid[r][c],grid[r+1][c]]=[grid[r+1][c],grid[r][c]];}
+  }
+  return false;
+}
+function showHint(){
+  document.querySelectorAll(".cell.hint").forEach(x=>x.classList.remove("hint"));
+  if(busy)return;
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    if(c+1<COLS){[grid[r][c],grid[r][c+1]]=[grid[r][c+1],grid[r][c]]; if(hasMatch()){const a=$(`.cell[data-r="${r}"][data-c="${c}"]`),b=$(`.cell[data-r="${r}"][data-c="${c+1}"]`); if(a&&b){a.classList.add("hint");b.classList.add("hint");}[grid[r][c],grid[r][c+1]]=[grid[r][c+1],grid[r][c]];return;}[grid[r][c],grid[r][c+1]]=[grid[r][c+1],grid[r][c]];}
+    if(r+1<ROWS){[grid[r][c],grid[r+1][c]]=[grid[r+1][c],grid[r][c]]; if(hasMatch()){const a=$(`.cell[data-r="${r}"][data-c="${c}"]`),b=$(`.cell[data-r="${r+1}"][data-c="${c}"]`); if(a&&b){a.classList.add("hint");b.classList.add("hint");}[grid[r][c],grid[r+1][c]]=[grid[r+1][c],grid[r][c]];return;}[grid[r][c],grid[r+1][c]]=[grid[r+1][c],grid[r][c]];}
+  }
+}
+
+async function handleCell(r,c){
+  if(busy)return;
+  ensureAudio();
+  if(!selected){ selected={r,c}; render(); return; }
+  const dr=Math.abs(selected.r-r), dc=Math.abs(selected.c-c);
+  if(dr+dc===1){
+    busy=true;
+    [grid[selected.r][selected.c],grid[r][c]]=[grid[r][c],grid[selected.r][selected.c]];
+    if(hasMatch()){
+      moves--; $("#movesEl").textContent=moves; sfxSwap();
+      selected=null; render(); await resolveMatches();
+      if(score>=target) endLevel(true); else if(moves<=0) endLevel(false);
+      else if(!canMove()) shuffleBoard();
+    }else{
+      sfxBad();
+      [grid[selected.r][selected.c],grid[r][c]]=[grid[r][c],grid[selected.r][selected.c]];
+      selected=null; render(); busy=false; showHint();
+    }
+  }else{ selected={r,c}; render(); busy=false; }
+}
+async function resolveMatches(){
+  let combo=0;
+  while(true){
+    const matches=findMatches(); if(!matches.length)break;
+    combo++;
+    const pts=matches.length*10*(1+combo);
+    score+=pts; $("#scoreEl").textContent=score; updateTargetBar(); sfxMatch(combo);
+    matches.forEach(m=>{const el=$(`.cell[data-r="${m.r}"][data-c="${m.c}"]`); if(el)el.classList.add("pop");});
+    await wait(240);
+    const cols=Array.from({length:COLS},()=>[]);
+    matches.forEach(m=>grid[m.r][m.c]=-1);
+    for(let c=0;c<COLS;c++){
+      let write=ROWS-1;
+      for(let r=ROWS-1;r>=0;r--) if(grid[r][c]!==-1) cols[c][write--]=grid[r][c];
+      for(let r=write;r>=0;r--) cols[c][r]=randGem();
+    }
+    for(let c=0;c<COLS;c++)for(let r=0;r<ROWS;r++) grid[r][c]=cols[c][r];
+    render();
+    document.querySelectorAll(".cell").forEach((el,i)=>{ if(i<COLS*2) el.classList.add("fall"); });
+    await wait(280);
+  }
+  busy=false; showHint();
+}
+function shuffleBoard(){
+  do{ buildGrid(); }while(!canMove());
+  render(); toast("No moves — board shuffled");
+}
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function toast(msg){ const t=document.createElement("div"); t.textContent=msg; t.style.cssText="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#0b1512;border:1px solid #2a3833;color:#fff;padding:8px 14px;border-radius:8px;font-size:12px;opacity:0;transition:opacity .3s;z-index:200"; document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1); setTimeout(()=>{t.style.opacity=0;setTimeout(()=>t.remove(),300)},1600); }
+
+function endLevel(win){
+  busy=true;
+  const ov=$("#overlay"), title=$("#winTitle"), msg=$("#winMsg"), icon=$("#winIcon"), next=$("#nextBtn");
+  ov.classList.add("on");
+  if(win){
+    sfxWin(); icon.textContent="🏆"; title.textContent="Level Complete"; msg.textContent=`Score ${score} · ${moves} moves left`;
+    next.textContent="Next Level"; next.classList.remove("secondary"); next.onclick=()=>{level++; startGame();};
+    if(score>hi){hi=score; LS.set("gridswap_hi",hi); $("#hiEl").textContent=hi;}
+  }else{
+    icon.textContent="💀"; title.textContent="Out of Moves"; msg.textContent=`Target was ${target}. You scored ${score}.`;
+    next.textContent="Try Again"; next.classList.add("secondary"); next.onclick=()=>{startGame();};
+  }
+}
+function startGame(){
+  $("#startScreen").classList.add("hidden"); $("#app").classList.remove("hidden"); $("#overlay").classList.remove("on"); busy=false; selected=null;
+  hi=parseInt(LS.get("gridswap_hi")||"0",10); $("#hiEl").textContent=hi;
+  initLevel();
+}
+function goHome(){ level=1; $("#startScreen").classList.remove("hidden"); $("#app").classList.add("hidden"); $("#overlay").classList.remove("on"); }
+
+$("#startBtn").addEventListener("click",()=>{ensureAudio();startGame();});
+$("#resetBtn").addEventListener("click",()=>{if(confirm("Restart this level?")){busy=false;selected=null;initLevel();}});
+$("#homeBtn").addEventListener("click",goHome);
+
+$("#board").addEventListener("pointerdown",e=>{
+  const cell=e.target.closest(".cell"); if(!cell)return;
+  const r=+cell.dataset.r, c=+cell.dataset.c; handleCell(r,c);
+});
+document.addEventListener("keydown",e=>{
+  if($("#app").classList.contains("hidden"))return;
+  if(!selected)return;
+  const {r,c}=selected;
+  const map={ArrowUp:[-1,0],ArrowDown:[1,0],ArrowLeft:[0,-1],ArrowRight:[0,1],w:[-1,0],s:[1,0],a:[0,-1],d:[0,1]};
+  const d=map[e.key]; if(!d)return;
+  e.preventDefault(); const nr=r+d[0], nc=c+d[1]; if(inBounds(nr,nc)) handleCell(nr,nc);
+});
+</script>
+</body>
+</html>

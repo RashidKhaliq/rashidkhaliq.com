@@ -1,0 +1,2 @@
+Build HTML5 puzzle game. Single `index.html`, no build step. Use Canvas 2D or plain DOM. Mechanics: [swap/match/slide/connect]. Board: [N×M grid]. Win condition: [clear board / reach target / solve pattern]. Include: start screen, level reset, move counter, win overlay, touch + mouse controls. Style with clean CSS, responsive layout. No external assets; generate shapes/colors in code. Add sound via Web Audio API optional. Persist high score in localStorage.
+

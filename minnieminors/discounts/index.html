@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minnie Minors Discount File 💚🤍🍉</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rind:#1B6B45;
+    --leaf:#2E9E5F;
+    --leaf-soft:#E7F5EC;
+    --mint:#F4FAF6;
+    --melon:#FF5D73;
+    --melon-deep:#E63E56;
+    --melon-soft:#FFECEF;
+    --cream:#FDFEFC;
+    --seed:#25302A;
+    --muted:#61705F;
+    --line:#D9E7DD;
+    --amber:#B7791F;
+    --amber-soft:#FDF3E3;
+    --radius:18px;
+    --shadow:0 6px 24px rgba(27,107,69,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  body{
+    font-family:'Nunito Sans',system-ui,sans-serif;
+    background:var(--mint);
+    color:var(--seed);
+    line-height:1.55;
+    min-height:100vh;
+    display:flex;flex-direction:column;
+  }
+  .rind-bar{
+    height:12px;
+    background:repeating-linear-gradient(90deg,
+      #1B6B45 0 42px, #2E9E5F 42px 70px, #BFE6CD 70px 84px, #2E9E5F 84px 112px);
+    border-bottom:3px solid #fff;
+    box-shadow:inset 0 -2px 0 rgba(0,0,0,.05);
+  }
+  header{text-align:center;padding:40px 20px 18px}
+  h1{
+    font-family:'Fredoka',sans-serif;font-weight:600;
+    font-size:clamp(1.7rem,4.5vw,2.6rem);
+    color:var(--rind);letter-spacing:.2px;
+  }
+  h1 .hearts{font-size:.8em;vertical-align:middle}
+  .tagline{color:var(--muted);max-width:680px;margin:10px auto 0;font-size:1rem}
+  .privacy-note{
+    display:inline-flex;align-items:center;gap:7px;margin-top:12px;
+    background:var(--leaf-soft);color:var(--rind);
+    font-size:.8rem;font-weight:700;padding:6px 14px;border-radius:999px;
+  }
+  main{width:min(1120px,94%);margin:20px auto 40px;flex:1}
+  /* Seed progress */
+  .seed-progress{display:flex;justify-content:center;align-items:center;gap:22px;margin-bottom:24px;flex-wrap:wrap}
+  .seed-step{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:700;font-size:.85rem}
+  .seed{
+    width:14px;height:19px;border-radius:50%/60% 60% 40% 40%;
+    background:#fff;border:2.5px solid var(--line);transform:rotate(18deg);
+    transition:background .3s,border-color .3s;
+  }
+  .seed-step.done .seed{background:var(--seed);border-color:var(--seed)}
+  .seed-step.done{color:var(--rind)}
+  /* Cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:880px){.cards{grid-template-columns:1fr}}
+  .card{
+    background:var(--cream);border-radius:var(--radius);box-shadow:var(--shadow);
+    overflow:hidden;display:flex;flex-direction:column;border:1.5px solid var(--line);
+  }
+  .card-rind{height:8px;background:linear-gradient(90deg,var(--rind),var(--leaf))}
+  .card.shopify .card-rind{background:linear-gradient(90deg,var(--melon-deep),var(--melon))}
+  .card-body{padding:16px 16px 18px;display:flex;flex-direction:column;gap:11px;flex:1}
+  .card h2{
+    font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.08rem;color:var(--rind);
+    display:flex;align-items:center;gap:8px;
+  }
+  .card.shopify h2{color:var(--melon-deep)}
+  .card .hint{font-size:.82rem;color:var(--muted)}
+  .card .hint code{
+    background:var(--leaf-soft);padding:1px 6px;border-radius:6px;
+    font-size:.78rem;color:var(--rind);font-weight:700;
+  }
+  .card.shopify .hint code{background:var(--melon-soft);color:var(--melon-deep)}
+  .dropzone{
+    border:2px dashed var(--line);border-radius:14px;padding:20px 12px;text-align:center;
+    cursor:pointer;background:#fff;transition:border-color .2s,background .2s;outline:none;
+  }
+  .dropzone:hover,.dropzone:focus-visible,.dropzone.dragover{border-color:var(--leaf);background:var(--leaf-soft)}
+  .dropzone.loaded{border-style:solid;border-color:var(--leaf);background:var(--leaf-soft)}
+  .card.shopify .dropzone:hover,.card.shopify .dropzone:focus-visible,
+  .card.shopify .dropzone.dragover{border-color:var(--melon);background:var(--melon-soft)}
+  .card.shopify .dropzone.loaded{border-color:var(--melon);background:var(--melon-soft)}
+  .dz-icon{font-size:1.6rem}
+  .dz-text{font-weight:700;font-size:.9rem;margin-top:5px}
+  .dz-sub{font-size:.76rem;color:var(--muted)}
+  .file-badge{display:none;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font-size:.82rem}
+  .file-badge.show{display:block}
+  .file-badge .fname{font-weight:800;word-break:break-all}
+  .file-badge .frows{color:var(--muted)}
+  .mapping{display:none;flex-direction:column;gap:9px}
+  .mapping.show{display:flex}
+  .mapping label{font-size:.78rem;font-weight:800;color:var(--muted);display:block;margin-bottom:3px}
+  .mapping select{
+    width:100%;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);
+    font-family:inherit;font-size:.86rem;background:#fff;color:var(--seed);
+  }
+  .mapping select:focus-visible{outline:3px solid var(--leaf-soft);border-color:var(--leaf)}
+  .mapping select.missing{border-color:var(--amber);background:var(--amber-soft)}
+  .auto-tag{
+    display:inline-block;background:var(--leaf-soft);color:var(--rind);
+    font-size:.66rem;font-weight:800;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:1px;
+  }
+  .ok-list{font-size:.78rem;color:var(--rind);font-weight:700}
+  .warn{color:var(--amber);background:var(--amber-soft);border-radius:10px;padding:8px 10px;font-size:.78rem;display:none}
+  .warn.show{display:block}
+  /* Options + generate */
+  .options-row{
+    display:flex;justify-content:center;align-items:center;gap:9px;
+    margin:24px auto 0;max-width:640px;
+    font-size:.86rem;color:var(--muted);flex-wrap:wrap;text-align:center;
+  }
+  .options-row input{accent-color:var(--rind);width:16px;height:16px}
+  .options-row label{font-weight:700;cursor:pointer}
+  .generate-wrap{text-align:center;margin:16px 0 8px}
+  .btn{
+    font-family:'Fredoka',sans-serif;font-weight:600;border:none;border-radius:999px;cursor:pointer;
+    transition:transform .15s,box-shadow .15s,background .2s;
+  }
+  .btn:focus-visible{outline:3px solid var(--seed);outline-offset:3px}
+  .btn-generate{
+    background:linear-gradient(135deg,var(--melon),var(--melon-deep));color:#fff;
+    font-size:1.12rem;padding:15px 40px;box-shadow:0 8px 22px rgba(230,62,86,.35);
+  }
+  .btn-generate:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 26px rgba(230,62,86,.42)}
+  .btn-generate:disabled{background:#cfd8d0;box-shadow:none;cursor:not-allowed;color:#fff}
+  .gen-hint{margin-top:9px;font-size:.84rem;color:var(--muted)}
+  /* Progress + logs */
+  .progress-wrap{display:none;margin:22px auto 0;max-width:640px}
+  .progress-wrap.show{display:block}
+  .progress-track{
+    height:16px;background:#fff;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;width:0%;
+    background:repeating-linear-gradient(90deg,#1B6B45 0 26px,#2E9E5F 26px 44px,#BFE6CD 44px 52px,#2E9E5F 52px 70px);
+    border-radius:999px;transition:width .15s linear;
+  }
+  .progress-label{
+    display:flex;justify-content:space-between;font-size:.78rem;font-weight:800;color:var(--muted);margin-top:5px;
+  }
+  .log-panel{
+    display:none;margin:18px auto 0;max-width:640px;
+    background:#132A1E;border-radius:14px;padding:12px 16px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.76rem;line-height:1.7;
+    color:#BFE6CD;max-height:180px;overflow:auto;
+  }
+  .log-panel.show{display:block}
+  .log-panel .t{color:#6FAE8C;margin-right:8px}
+  .log-panel .ok{color:#7CE3A8}
+  .log-panel .err{color:#FF9AA9}
+  /* Results */
+  .results{
+    display:none;background:var(--cream);border:1.5px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow);margin-top:26px;overflow:hidden;
+  }
+  .results.show{display:block}
+  .results-rind{height:8px;background:repeating-linear-gradient(90deg,#1B6B45 0 26px,#2E9E5F 26px 44px,#BFE6CD 44px 52px,#2E9E5F 52px 70px)}
+  .results-body{padding:22px 22px 26px}
+  .results h3{font-family:'Fredoka',sans-serif;font-weight:600;color:var(--rind);font-size:1.25rem;margin-bottom:4px}
+  .exec-time{font-size:.82rem;color:var(--muted);font-weight:700;margin-bottom:16px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  @media(max-width:840px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center}
+  .stat .num{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.45rem;color:var(--seed)}
+  .stat.green .num{color:var(--rind)}
+  .stat.pink .num{color:var(--melon-deep)}
+  .stat.amber .num{color:var(--amber)}
+  .stat .lbl{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .dl-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .btn-download{
+    background:linear-gradient(135deg,var(--leaf),var(--rind));color:#fff;
+    font-size:1rem;padding:12px 28px;box-shadow:0 6px 18px rgba(27,107,69,.3);
+  }
+  .btn-download:hover{transform:translateY(-2px)}
+  .btn-secondary{background:#fff;color:var(--amber);border:2px solid var(--amber);font-size:.9rem;padding:10px 20px}
+  .btn-secondary:hover{background:var(--amber-soft)}
+  .error-box{margin-top:20px;display:none}
+  .error-box.show{display:block}
+  .error-box h4{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1rem;color:var(--amber);margin-bottom:8px}
+  .error-list{max-height:240px;overflow:auto;background:#fff;border:1.5px solid var(--line);border-radius:12px;font-size:.78rem}
+  .error-list table{width:100%;border-collapse:collapse}
+  .error-list th{
+    position:sticky;top:0;background:var(--amber-soft);color:var(--amber);
+    text-align:left;padding:8px 12px;font-size:.7rem;text-transform:uppercase;letter-spacing:.4px;
+  }
+  .error-list td{padding:5px 12px;border-top:1px solid var(--line);vertical-align:top}
+  .error-list td.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .note{font-size:.79rem;color:var(--muted);margin-top:14px}
+  /* Toast */
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);
+    background:var(--seed);color:#fff;padding:12px 22px;border-radius:999px;
+    font-weight:700;font-size:.88rem;opacity:0;pointer-events:none;
+    transition:transform .3s,opacity .3s;z-index:50;max-width:92%;text-align:center;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  footer{
+    text-align:center;padding:24px 16px 28px;background:var(--cream);
+    border-top:1.5px solid var(--line);font-size:.9rem;color:var(--muted);
+  }
+  footer a{color:var(--rind);font-weight:800;text-decoration:none;border-bottom:2px solid var(--leaf)}
+  footer a:hover{color:var(--melon-deep);border-color:var(--melon)}
+  footer .melon{font-size:1.05rem}
+</style>
+</head>
+<body>
+<div class="rind-bar" aria-hidden="true"></div>
+
+<header>
+  <h1>Minnie Minors Discount File <span class="hearts">💚🤍🍉</span></h1>
+  <p class="tagline">Upload the Retail File (Design Code + Discount %), Retail Pro (Design + UPC) and your Shopify export — the tool chains Design&nbsp;→&nbsp;UPC&nbsp;→&nbsp;Barcode and generates a minimal, ready-to-import discount file.</p>
+  <span class="privacy-note">🔒 Everything runs in your browser — no data is uploaded anywhere</span>
+</header>
+
+<main>
+  <div class="seed-progress" aria-label="Progress">
+    <div class="seed-step" id="step1"><span class="seed" aria-hidden="true"></span> 1 · Upload &amp; validate</div>
+    <div class="seed-step" id="step2"><span class="seed" aria-hidden="true"></span> 2 · Generate</div>
+    <div class="seed-step" id="step3"><span class="seed" aria-hidden="true"></span> 3 · Download</div>
+  </div>
+
+  <div class="cards">
+    <!-- Retail File -->
+    <section class="card" id="card-retail">
+      <div class="card-rind"></div>
+      <div class="card-body">
+        <h2>🍉 Retail File</h2>
+        <p class="hint">Needs <code>Design Code</code> and <code>Discount %</code> columns.</p>
+        <div class="dropzone" id="dz-retail" tabindex="0" role="button" aria-label="Upload Retail File">
+          <div class="dz-icon">📄</div>
+          <div class="dz-text">Drop file here or click to browse</div>
+          <div class="dz-sub">.xlsx, .xls or .csv · max 50 MB</div>
+        </div>
+        <input type="file" id="file-retail" accept=".xlsx,.xls,.csv" hidden>
+        <div class="file-badge" id="badge-retail"></div>
+        <div class="mapping" id="map-retail"></div>
+        <div class="warn" id="warn-retail"></div>
+      </div>
+    </section>
+
+    <!-- Retail Pro -->
+    <section class="card" id="card-pro">
+      <div class="card-rind"></div>
+      <div class="card-body">
+        <h2>🍉 Retail Pro</h2>
+        <p class="hint">Needs <code>Design</code> and <code>UPC</code> columns — the bridge between designs and barcodes.</p>
+        <div class="dropzone" id="dz-pro" tabindex="0" role="button" aria-label="Upload Retail Pro file">
+          <div class="dz-icon">📄</div>
+          <div class="dz-text">Drop file here or click to browse</div>
+          <div class="dz-sub">.xlsx, .xls or .csv · max 50 MB</div>
+        </div>
+        <input type="file" id="file-pro" accept=".xlsx,.xls,.csv" hidden>
+        <div class="file-badge" id="badge-pro"></div>
+        <div class="mapping" id="map-pro"></div>
+        <div class="warn" id="warn-pro"></div>
+      </div>
+    </section>
+
+    <!-- Shopify -->
+    <section class="card shopify" id="card-shopify">
+      <div class="card-rind"></div>
+      <div class="card-body">
+        <h2>🛍️ Shopify Export</h2>
+        <p class="hint">Needs <code>Variant Barcode</code>, <code>Variant Price</code>, <code>Variant Compare At Price</code>. All other columns are ignored.</p>
+        <div class="dropzone" id="dz-shopify" tabindex="0" role="button" aria-label="Upload Shopify export">
+          <div class="dz-icon">📄</div>
+          <div class="dz-text">Drop file here or click to browse</div>
+          <div class="dz-sub">.xlsx, .xls or .csv · max 50 MB</div>
+        </div>
+        <input type="file" id="file-shopify" accept=".xlsx,.xls,.csv" hidden>
+        <div class="file-badge" id="badge-shopify"></div>
+        <div class="mapping" id="map-shopify"></div>
+        <div class="warn" id="warn-shopify"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="options-row">
+    <input type="checkbox" id="opt-options" checked>
+    <label for="opt-options">Include Option columns (Option1/2/3 Name &amp; Value) — needed by Shopify's built-in importer to match variants</label>
+  </div>
+
+  <div class="generate-wrap">
+    <button class="btn btn-generate" id="btn-generate" disabled>🍉 Validate &amp; Generate Discount File</button>
+    <p class="gen-hint" id="gen-hint">Upload all three files to enable.</p>
+  </div>
+
+  <div class="progress-wrap" id="progress-wrap" aria-live="polite">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label"><span id="progress-stage">Waiting…</span><span id="progress-pct">0%</span></div>
+  </div>
+
+  <div class="log-panel" id="log-panel" aria-live="polite"></div>
+
+  <section class="results" id="results">
+    <div class="results-rind"></div>
+    <div class="results-body">
+      <h3>Processing complete 💚</h3>
+      <div class="exec-time" id="exec-time"></div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="st-retail">0</div><div class="lbl">Retail records</div></div>
+        <div class="stat"><div class="num" id="st-pro">0</div><div class="lbl">Retail Pro records</div></div>
+        <div class="stat"><div class="num" id="st-shopify">0</div><div class="lbl">Shopify rows</div></div>
+        <div class="stat green"><div class="num" id="st-designs">0</div><div class="lbl">Matched designs</div></div>
+        <div class="stat green"><div class="num" id="st-upcs">0</div><div class="lbl">Matched UPCs</div></div>
+        <div class="stat pink"><div class="num" id="st-updated">0</div><div class="lbl">Variants updated</div></div>
+        <div class="stat amber"><div class="num" id="st-skipped">0</div><div class="lbl">Variants skipped</div></div>
+        <div class="stat amber"><div class="num" id="st-missing-designs">0</div><div class="lbl">Missing designs</div></div>
+        <div class="stat amber"><div class="num" id="st-missing-upcs">0</div><div class="lbl">Missing UPCs</div></div>
+        <div class="stat amber"><div class="num" id="st-dups">0</div><div class="lbl">Duplicate records</div></div>
+        <div class="stat"><div class="num" id="st-handles">0</div><div class="lbl">Products (handles)</div></div>
+        <div class="stat amber"><div class="num" id="st-errors">0</div><div class="lbl">Issues reported</div></div>
+      </div>
+      <div class="dl-row">
+        <button class="btn btn-download" id="btn-download" disabled>⬇️ Download Shopify Discount File (CSV)</button>
+        <button class="btn btn-secondary" id="btn-download-errors" style="display:none">⚠️ Download Error Report (CSV)</button>
+      </div>
+      <div class="error-box" id="error-box">
+        <h4>⚠️ Validation issues &amp; unmatched records (first 500 shown — full list in the Error Report)</h4>
+        <div class="error-list">
+          <table>
+            <thead><tr><th>Type</th><th>File</th><th>Row</th><th>Value</th><th>Detail</th></tr></thead>
+            <tbody id="error-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="note">The discount file contains only matched variants with these columns: Handle<span id="note-options">, Option1/2/3 Name &amp; Value</span>, Variant SKU, Variant Barcode, Variant Price (discounted), Variant Compare At Price (original price). Import via <strong>Shopify Admin → Products → Import</strong> with <em>"Overwrite products with matching handles"</em> ticked.</p>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+
+<footer>
+  Made with 💚🤍 and a slice of <span class="melon">🍉</span> &nbsp;·&nbsp; Credit goes to
+  <a href="https://www.rashidkhaliq.com" target="_blank" rel="noopener">Rashid Khaliq</a>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  /* ==========================================================================
+     Minnie Minors Discount File Generator — v2 (corrected mapping logic)
+     Pipeline (O(n), hash maps, no nested loops):
+       Step 1: Retail.Design Code  ->  Retail Pro.Design   (design -> discount %)
+       Step 2: Retail Pro.UPC      ->  Shopify.Variant Barcode
+       Step 3: New Price = Variant Price − (Variant Price × Discount% / 100)
+       Step 4: Compare At Price = original Variant Price; Variant Price = new
+     Note: this build runs fully client-side (files never leave the browser).
+     For source-code protection, the same pipeline can be moved behind an
+     authenticated server API — the UI already isolates it as a pure module.
+     ========================================================================== */
+
+  const MAX_FILE_BYTES = 50 * 1024 * 1024;      // oversized-upload guard
+  const ALLOWED_EXT = /\.(xlsx|xls|csv)$/i;     // malicious-upload guard
+  const CHUNK = 8000;                           // rows per async chunk
+
+  /* ---------------- State ---------------- */
+  const state = {
+    retail:  null,  // {name, headers, rows, designIdx, discIdx, autoD, autoP}
+    pro:     null,  // {name, headers, rows, designIdx, upcIdx, autoD, autoU}
+    shopify: null,  // {name, headers, rows, cols:{...}, autos:{...}}
+    output:  null,
+    errors:  [],
+    busy:    false
+  };
+
+  /* ---------------- Tiny helpers ---------------- */
+  const $ = id => document.getElementById(id);
+  const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function toast(msg){
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._h);
+    t._h = setTimeout(() => t.classList.remove('show'), 3800);
+  }
+  function log(msg, cls){
+    const p = $('log-panel');
+    p.classList.add('show');
+    const time = new Date().toLocaleTimeString();
+    const div = document.createElement('div');
+    div.innerHTML = '<span class="t">' + time + '</span><span class="' + (cls||'') + '">' + escapeHtml(msg) + '</span>';
+    p.appendChild(div);
+    p.scrollTop = p.scrollHeight;
+  }
+  function setProgress(stage, pct){
+    $('progress-wrap').classList.add('show');
+    $('progress-stage').textContent = stage;
+    $('progress-pct').textContent = Math.round(pct) + '%';
+    $('progress-fill').style.width = pct + '%';
+  }
+  const yieldUI = () => new Promise(r => setTimeout(r, 0));
+
+  /* ---------------- Normalizers (pure, unit-tested) ---------------- */
+  function normKey(v){
+    if (v === null || v === undefined) return '';
+    return String(v).trim().toUpperCase().replace(/\s+/g, ' ');
+  }
+  function normBarcode(v){
+    if (v === null || v === undefined) return '';
+    let s = String(v).trim();
+    if (!s) return '';
+    if (/e\+?\d+$/i.test(s) && !isNaN(Number(s))) s = Number(s).toFixed(0); // Excel sci-notation
+    s = s.replace(/\.0+$/, '').replace(/\s+/g, '').toUpperCase();
+    return s;
+  }
+  function barcodeDigits(v){
+    const d = normBarcode(v).replace(/\D/g, '');
+    return d.replace(/^0+/, '') || d;
+  }
+  function parseNumber(v){
+    if (v === null || v === undefined) return NaN;
+    let s = String(v).trim();
+    if (!s || /^#?N\/?A$/i.test(s) || s === '-') return NaN;
+    s = s.replace(/rs\.?/gi,'').replace(/pkr/gi,'').replace(/%/g,'')
+         .replace(/,/g,'').replace(/\s+/g,'');
+    const n = parseFloat(s);
+    return isFinite(n) ? n : NaN;
+  }
+  function round2(n){ return Math.round((n + Number.EPSILON) * 100) / 100; }
+  function money(n){ return round2(n).toFixed(2); }
+
+  /* ---------------- CSV output (with injection guard for reports) ---------------- */
+  function csvEscape(v, guardFormulas){
+    if (v === null || v === undefined) return '';
+    let s = String(v);
+    if (guardFormulas && /^[=+\-@\t\r]/.test(s)) s = "'" + s;   // CSV-injection guard
+    if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+    return s;
+  }
+  function downloadCSV(rows, filename, guardFormulas){
+    const csv = '\uFEFF' + rows.map(r => r.map(c => csvEscape(c, guardFormulas)).join(',')).join('\r\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+  function todayStr(){
+    const d = new Date(), p = n => String(n).padStart(2,'0');
+    return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+  }
+
+  /* ---------------- File reading (single load per file) ---------------- */
+  async function readSpreadsheet(file){
+    if (!ALLOWED_EXT.test(file.name)) throw new Error('Only .xlsx, .xls or .csv files are accepted.');
+    if (file.size > MAX_FILE_BYTES) throw new Error('File is larger than 50 MB. Please split it and try again.');
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, {type:'array'});
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    if (!sheet) throw new Error('No sheets found in this file.');
+    const data = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', raw:true});
+    let h = 0;
+    while (h < data.length && data[h].every(c => String(c).trim() === '')) h++;
+    if (h >= data.length) throw new Error('The file appears to be empty.');
+    const headers = data[h].map(c => String(c).trim());
+    const rows = data.slice(h+1).filter(r => r.some(c => String(c).trim() !== ''));
+    return {headers, rows};
+  }
+
+  /* ---------------- Column auto-detection ---------------- */
+  function detectColumn(headers, rows, patterns, valueTest){
+    let best = -1, bestScore = 0;
+    headers.forEach((hd, i) => {
+      let score = 0;
+      patterns.forEach((p, rank) => { if (p.test(hd)) score = Math.max(score, 100 - rank*10); });
+      if (score === 0 && valueTest){
+        const sample = rows.slice(0, 30).map(r => r[i]).filter(v => String(v).trim() !== '');
+        if (sample.length) score = Math.round((sample.filter(valueTest).length / sample.length) * 60);
+      }
+      if (score > bestScore){ bestScore = score; best = i; }
+    });
+    return bestScore >= 40 ? best : -1;
+  }
+  const looksLikeBarcode = v => /^\d{8,}$/.test(barcodeDigits(v));
+  const looksLikePct = v => { const n = parseNumber(v); return !isNaN(n) && n >= 0 && n <= 100; };
+
+  const P = {
+    designCode: [/design\s*code/i, /^design$/i, /article\s*code/i, /style\s*code/i, /design/i, /article/i, /^code$/i],
+    discount:   [/disc(ount)?\s*%/i, /disc(ount)?\s*percent/i, /^%$/, /discount/i, /^disc\.?$/i],
+    design:     [/^design$/i, /design\s*code/i, /article/i, /style/i, /design/i],
+    upc:        [/^upc$/i, /variant\s*barcode/i, /bar\s*code/i, /^ean$/i, /barcode/i, /upc/i],
+    shBarcode:  [/variant\s*barcode/i, /^barcode$/i, /barcode/i, /^upc$/i],
+    shPrice:    [/^variant\s*price$/i, /variant\s*price/i],
+    shCompare:  [/variant\s*compare\s*at\s*price/i, /compare\s*at\s*price/i, /compare/i],
+    shSku:      [/variant\s*sku/i, /^sku$/i],
+    shHandle:   [/^handle$/i, /handle/i],
+    opt1n:[/^option1\s*name$/i], opt1v:[/^option1\s*value$/i],
+    opt2n:[/^option2\s*name$/i], opt2v:[/^option2\s*value$/i],
+    opt3n:[/^option3\s*name$/i], opt3v:[/^option3\s*value$/i]
+  };
+
+  /* ---------------- Upload cards ---------------- */
+  function bindDropzone(dz, input, onFile){
+    dz.addEventListener('click', () => { if(!state.busy) input.click(); });
+    dz.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); if(!state.busy) input.click(); }
+    });
+    input.addEventListener('change', () => {
+      if (input.files.length) onFile(input.files[0]);
+      input.value = '';
+    });
+    ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+    dz.addEventListener('drop', e => { if (e.dataTransfer.files.length && !state.busy) onFile(e.dataTransfer.files[0]); });
+  }
+
+  function renderBadge(key, name, rowCount){
+    const b = $('badge-' + key);
+    b.innerHTML = '<div class="fname">📎 ' + escapeHtml(name) + '</div>' +
+      '<div class="frows">' + rowCount.toLocaleString() + ' data rows</div>';
+    b.classList.add('show');
+    hideWarn(key);
+  }
+  function showWarn(key, msg){
+    const w = $('warn-' + key);
+    w.textContent = '⚠️ ' + msg;
+    w.classList.add('show');
+  }
+  function hideWarn(key){ $('warn-' + key).classList.remove('show'); }
+
+  function selectHtml(headers, idx, allowNone){
+    let html = allowNone ? '<option value="-1"' + (idx<0?' selected':'') + '>— not in file —</option>' : '';
+    headers.forEach((h,i) => {
+      html += '<option value="' + i + '"' + (i===idx?' selected':'') + '>' +
+        escapeHtml(h || '(column ' + (i+1) + ')') + '</option>';
+    });
+    return html;
+  }
+
+  /* Retail File card */
+  bindDropzone($('dz-retail'), $('file-retail'), async file => {
+    try{
+      const {headers, rows} = await readSpreadsheet(file);
+      if (!rows.length) throw new Error('No data rows found.');
+      const designIdx = detectColumn(headers, rows, P.designCode, null);
+      const discIdx = detectColumn(headers.map((h,i)=> i===designIdx?'\u0000':h), rows, P.discount, looksLikePct);
+      state.retail = {name:file.name, headers, rows,
+        designIdx: designIdx >= 0 ? designIdx : 0,
+        discIdx: discIdx >= 0 ? discIdx : Math.min(1, headers.length-1),
+        autoD: designIdx >= 0, autoP: discIdx >= 0};
+      renderBadge('retail', file.name, rows.length);
+      if (!state.retail.autoD || !state.retail.autoP)
+        showWarn('retail', 'Could not auto-detect ' + (!state.retail.autoD ? '"Design Code"' : '"Discount %"') + ' — please check the mapping below.');
+      renderRetailMapping();
+      $('dz-retail').classList.add('loaded');
+      $('dz-retail').querySelector('.dz-text').textContent = 'Replace file';
+      log('Retail File loaded — ' + rows.length.toLocaleString() + ' rows (' + file.name + ')', 'ok');
+      refresh();
+    }catch(err){ showWarn('retail', err.message); log('Retail File error: ' + err.message, 'err'); }
+  });
+  function renderRetailMapping(){
+    const s = state.retail, wrap = $('map-retail');
+    wrap.innerHTML =
+      '<div><label>Design Code column' + (s.autoD?'<span class="auto-tag">auto-detected</span>':'') + '</label>' +
+      '<select data-field="designIdx" class="' + (s.autoD?'':'missing') + '">' + selectHtml(s.headers, s.designIdx) + '</select></div>' +
+      '<div><label>Discount % column' + (s.autoP?'<span class="auto-tag">auto-detected</span>':'') + '</label>' +
+      '<select data-field="discIdx" class="' + (s.autoP?'':'missing') + '">' + selectHtml(s.headers, s.discIdx) + '</select></div>';
+    wrap.classList.add('show');
+    wrap.querySelectorAll('select').forEach(sel => sel.addEventListener('change', e => {
+      state.retail[e.target.dataset.field] = parseInt(e.target.value, 10);
+      e.target.classList.remove('missing');
+    }));
+  }
+
+  /* Retail Pro card */
+  bindDropzone($('dz-pro'), $('file-pro'), async file => {
+    try{
+      const {headers, rows} = await readSpreadsheet(file);
+      if (!rows.length) throw new Error('No data rows found.');
+      const designIdx = detectColumn(headers, rows, P.design, null);
+      const upcIdx = detectColumn(headers.map((h,i)=> i===designIdx?'\u0000':h), rows, P.upc, looksLikeBarcode);
+      state.pro = {name:file.name, headers, rows,
+        designIdx: designIdx >= 0 ? designIdx : 0,
+        upcIdx: upcIdx >= 0 ? upcIdx : Math.min(1, headers.length-1),
+        autoD: designIdx >= 0, autoU: upcIdx >= 0};
+      renderBadge('pro', file.name, rows.length);
+      if (!state.pro.autoD || !state.pro.autoU)
+        showWarn('pro', 'Could not auto-detect ' + (!state.pro.autoD ? '"Design"' : '"UPC"') + ' — please check the mapping below.');
+      renderProMapping();
+      $('dz-pro').classList.add('loaded');
+      $('dz-pro').querySelector('.dz-text').textContent = 'Replace file';
+      log('Retail Pro loaded — ' + rows.length.toLocaleString() + ' rows (' + file.name + ')', 'ok');
+      refresh();
+    }catch(err){ showWarn('pro', err.message); log('Retail Pro error: ' + err.message, 'err'); }
+  });
+  function renderProMapping(){
+    const s = state.pro, wrap = $('map-pro');
+    wrap.innerHTML =
+      '<div><label>Design column' + (s.autoD?'<span class="auto-tag">auto-detected</span>':'') + '</label>' +
+      '<select data-field="designIdx" class="' + (s.autoD?'':'missing') + '">' + selectHtml(s.headers, s.designIdx) + '</select></div>' +
+      '<div><label>UPC column' + (s.autoU?'<span class="auto-tag">auto-detected</span>':'') + '</label>' +
+      '<select data-field="upcIdx" class="' + (s.autoU?'':'missing') + '">' + selectHtml(s.headers, s.upcIdx) + '</select></div>';
+    wrap.classList.add('show');
+    wrap.querySelectorAll('select').forEach(sel => sel.addEventListener('change', e => {
+      state.pro[e.target.dataset.field] = parseInt(e.target.value, 10);
+      e.target.classList.remove('missing');
+    }));
+  }
+
+  /* Shopify card */
+  const SH_FIELDS = [
+    {f:'barcode', label:'Variant Barcode', patterns:P.shBarcode, required:true,  vt:looksLikeBarcode},
+    {f:'price',   label:'Variant Price',   patterns:P.shPrice,   required:true,  vt:null},
+    {f:'compare', label:'Variant Compare At Price', patterns:P.shCompare, required:false, vt:null},
+    {f:'sku',     label:'Variant SKU',     patterns:P.shSku,     required:false, vt:null},
+    {f:'handle',  label:'Handle',          patterns:P.shHandle,  required:false, vt:null}
+  ];
+  const OPT_FIELDS = ['opt1n','opt1v','opt2n','opt2v','opt3n','opt3v'];
+
+  bindDropzone($('dz-shopify'), $('file-shopify'), async file => {
+    try{
+      const {headers, rows} = await readSpreadsheet(file);
+      if (!rows.length) throw new Error('No data rows found.');
+      const cols = {}, autos = {};
+      SH_FIELDS.forEach(c => {
+        const idx = detectColumn(headers, rows, c.patterns, c.vt);
+        cols[c.f] = idx; autos[c.f] = idx >= 0;
+      });
+      OPT_FIELDS.forEach(f => { cols[f] = detectColumn(headers, rows, P[f], null); });
+      if (cols.barcode < 0) cols.barcode = 0;
+      if (cols.price < 0) cols.price = Math.min(1, headers.length - 1);
+      state.shopify = {name:file.name, headers, rows, cols, autos};
+      renderBadge('shopify', file.name, rows.length);
+      const missingReq = SH_FIELDS.filter(c => c.required && !autos[c.f]).map(c => '"' + c.label + '"');
+      if (missingReq.length)
+        showWarn('shopify', 'Could not auto-detect ' + missingReq.join(', ') + ' — please check the mapping below.');
+      renderShopifyMapping();
+      $('dz-shopify').classList.add('loaded');
+      $('dz-shopify').querySelector('.dz-text').textContent = 'Replace file';
+      log('Shopify export loaded — ' + rows.length.toLocaleString() + ' rows (' + file.name + ')', 'ok');
+      refresh();
+    }catch(err){ showWarn('shopify', err.message); log('Shopify file error: ' + err.message, 'err'); }
+  });
+  function renderShopifyMapping(){
+    const s = state.shopify, wrap = $('map-shopify');
+    const allAuto = SH_FIELDS.every(c => s.autos[c.f] || !c.required);
+    let html = allAuto ? '<div class="ok-list">✅ Shopify columns detected automatically</div>' : '';
+    SH_FIELDS.forEach(c => {
+      html += '<div><label>' + c.label + (s.autos[c.f]?'<span class="auto-tag">auto-detected</span>':'') + '</label>' +
+        '<select data-field="' + c.f + '" class="' + (c.required && !s.autos[c.f] ? 'missing' : '') + '">' +
+        selectHtml(s.headers, s.cols[c.f], !c.required) + '</select></div>';
+    });
+    wrap.innerHTML = html;
+    wrap.classList.add('show');
+    wrap.querySelectorAll('select').forEach(sel => sel.addEventListener('change', e => {
+      state.shopify.cols[e.target.dataset.field] = parseInt(e.target.value, 10);
+      e.target.classList.remove('missing');
+    }));
+  }
+
+  function refresh(){
+    const ready = !!(state.retail && state.pro && state.shopify);
+    $('step1').classList.toggle('done', !!(state.retail || state.pro || state.shopify));
+    const btn = $('btn-generate');
+    btn.disabled = !ready || state.busy;
+    $('gen-hint').textContent = ready
+      ? 'Check the column mapping above, then generate. 🍉'
+      : 'Upload all three files to enable.';
+  }
+
+  /* ==========================================================
+     PIPELINE — O(n), hash maps, chunked so the UI stays alive
+     ========================================================== */
+
+  function buildRetailMap(rows, designIdx, discIdx, errors){
+    const map = new Map();
+    let valid = 0;
+    for (let i = 0; i < rows.length; i++){
+      const r = rows[i], rowNo = i + 2;
+      const design = normKey(r[designIdx]);
+      const discRaw = r[discIdx];
+      if (!design){ errors.push({type:'Blank Design Code', file:'Retail File', row:rowNo, value:'', detail:'Design Code is empty'}); continue; }
+      const disc = parseNumber(discRaw);
+      if (isNaN(disc)){ errors.push({type:'Invalid Discount', file:'Retail File', row:rowNo, value:design, detail:'Discount "' + String(discRaw) + '" is not a number'}); continue; }
+      if (disc < 0){ errors.push({type:'Negative Discount', file:'Retail File', row:rowNo, value:design, detail:'Discount ' + disc + '% is negative'}); continue; }
+      if (disc > 100){ errors.push({type:'Discount Over 100', file:'Retail File', row:rowNo, value:design, detail:'Discount ' + disc + '% exceeds 100%'}); continue; }
+      if (map.has(design)){ errors.push({type:'Duplicate Design Code', file:'Retail File', row:rowNo, value:design, detail:'Design appears more than once — first occurrence kept (' + map.get(design) + '%)'}); continue; }
+      map.set(design, disc);
+      valid++;
+    }
+    return {map, valid};
+  }
+
+  function buildUpcMap(rows, designIdx, upcIdx, retailMap, errors){
+    const upcMap = new Map(), upcDigitsMap = new Map();
+    const matchedDesigns = new Set(), missingDesigns = new Set();
+    let valid = 0;
+    for (let i = 0; i < rows.length; i++){
+      const r = rows[i], rowNo = i + 2;
+      const design = normKey(r[designIdx]);
+      const upc = normBarcode(r[upcIdx]);
+      if (!design){ errors.push({type:'Blank Design', file:'Retail Pro', row:rowNo, value:String(r[upcIdx] ?? ''), detail:'Design is empty'}); continue; }
+      if (!upc){ errors.push({type:'Blank UPC', file:'Retail Pro', row:rowNo, value:design, detail:'UPC is empty'}); continue; }
+      if (!/^[A-Z0-9-]{6,}$/.test(upc)){ errors.push({type:'Invalid UPC', file:'Retail Pro', row:rowNo, value:design, detail:'UPC "' + upc + '" is not a valid barcode'}); continue; }
+      if (upcMap.has(upc)){ errors.push({type:'Duplicate UPC', file:'Retail Pro', row:rowNo, value:upc, detail:'UPC appears more than once — first occurrence kept'}); continue; }
+      valid++;
+      if (!retailMap.has(design)){ missingDesigns.add(design); continue; }
+      const entry = {design, discount: retailMap.get(design)};
+      upcMap.set(upc, entry);
+      const d = barcodeDigits(upc);
+      if (d && !upcDigitsMap.has(d)) upcDigitsMap.set(d, entry);
+      matchedDesigns.add(design);
+    }
+    return {upcMap, upcDigitsMap, matchedDesigns, missingDesigns, valid};
+  }
+
+  async function generate(){
+    if (state.busy) return;
+    const sh = state.shopify;
+    if (sh.cols.barcode < 0 || sh.cols.price < 0){
+      toast('⚠️ Please select the Variant Barcode and Variant Price columns.');
+      return;
+    }
+    state.busy = true;
+    $('btn-generate').disabled = true;
+    $('results').classList.remove('show');
+    $('log-panel').innerHTML = '';
+    const t0 = performance.now();
+    const errors = [];
+
+    try{
+      log('Validating Retail File…');
+      setProgress('Validating Retail File', 5);
+      await yieldUI();
+      const A = buildRetailMap(state.retail.rows, state.retail.designIdx, state.retail.discIdx, errors);
+      log(A.valid.toLocaleString() + ' valid discount rows (' + A.map.size.toLocaleString() + ' unique designs)', 'ok');
+
+      log('Matching Designs (Retail ↔ Retail Pro)…');
+      setProgress('Matching Designs & UPCs', 15);
+      await yieldUI();
+      const B = buildUpcMap(state.pro.rows, state.pro.designIdx, state.pro.upcIdx, A.map, errors);
+      log(B.matchedDesigns.size.toLocaleString() + ' designs matched → ' + B.upcMap.size.toLocaleString() + ' UPCs with discounts', 'ok');
+      if (B.missingDesigns.size) log(B.missingDesigns.size.toLocaleString() + ' designs in Retail Pro have no discount in Retail File', 'err');
+      if (B.upcMap.size === 0) throw new Error('No designs matched between Retail File and Retail Pro. Check the Design columns.');
+
+      /* Output header plan (minimal Shopify import file) */
+      const includeOptions = $('opt-options').checked;
+      const cols = sh.cols;
+      const plan = [];
+      if (cols.handle >= 0) plan.push({kind:'handle', name:'Handle'});
+      if (includeOptions){
+        [['opt1n','Option1 Name'],['opt1v','Option1 Value'],['opt2n','Option2 Name'],
+         ['opt2v','Option2 Value'],['opt3n','Option3 Name'],['opt3v','Option3 Value']]
+          .forEach(([f, name]) => { if (cols[f] >= 0) plan.push({kind:'col', idx:cols[f], name}); });
+      }
+      if (cols.sku >= 0) plan.push({kind:'sku', name:'Variant SKU'});
+      plan.push({kind:'barcode', name:'Variant Barcode'});
+      plan.push({kind:'price', name:'Variant Price'});
+      plan.push({kind:'compare', name:'Variant Compare At Price'});
+
+      log('Matching UPCs with Shopify barcodes & applying discounts…');
+      const rows = sh.rows;
+      const outRows = [plan.map(p => p.name)];
+      const matchedUpcs = new Set(), updatedHandles = new Set();
+      let updated = 0, skipped = 0;
+
+      for (let start = 0; start < rows.length; start += CHUNK){
+        const end = Math.min(start + CHUNK, rows.length);
+        for (let i = start; i < end; i++){
+          const r = rows[i], rowNo = i + 2;
+          const bcRaw = r[cols.barcode];
+          const bc = normBarcode(bcRaw);
+          if (!bc){ skipped++; continue; }
+          let entry = B.upcMap.get(bc);
+          if (!entry) entry = B.upcDigitsMap.get(barcodeDigits(bc));
+          if (!entry){ skipped++; continue; }        // no discount -> skip (per spec)
+
+          let base = parseNumber(r[cols.price]);
+          let usedFallback = false;
+          if (isNaN(base) || base <= 0){
+            base = cols.compare >= 0 ? parseNumber(r[cols.compare]) : NaN;
+            usedFallback = true;
+          }
+          if (isNaN(base) || base <= 0){
+            errors.push({type:'Invalid Price', file:'Shopify', row:rowNo, value:bc, detail:'No valid Variant Price or Compare At Price — variant skipped'});
+            skipped++;
+            continue;
+          }
+          const newPrice = round2(base * (1 - entry.discount / 100));
+          const out = [];
+          for (const c of plan){
+            switch (c.kind){
+              case 'handle':  out.push(String(r[cols.handle] ?? '')); break;
+              case 'sku':     out.push(String(r[cols.sku] ?? '')); break;
+              case 'barcode': out.push(String(bcRaw ?? '')); break;
+              case 'price':   out.push(money(newPrice)); break;
+              case 'compare': out.push(money(base)); break;   // original price -> Compare At
+              case 'col':     out.push(String(r[c.idx] ?? '')); break;
+            }
+          }
+          outRows.push(out);
+          matchedUpcs.add(bc);
+          if (usedFallback)
+            errors.push({type:'Price Fallback', file:'Shopify', row:rowNo, value:bc, detail:'Variant Price was blank/#N/A — used Compare At Price ' + money(base) + ' as the original price'});
+          if (cols.handle >= 0 && String(r[cols.handle] ?? '').trim()) updatedHandles.add(normKey(r[cols.handle]));
+          updated++;
+        }
+        setProgress('Applying discounts (' + end.toLocaleString() + ' / ' + rows.length.toLocaleString() + ' rows)', 20 + (end / rows.length) * 70);
+        await yieldUI();
+      }
+
+      log('Generating output…');
+      setProgress('Generating output', 95);
+      await yieldUI();
+
+      /* UPCs with a discount that never appeared in Shopify */
+      const missingUpcs = [];
+      for (const upc of B.upcMap.keys()){
+        if (!matchedUpcs.has(upc)) missingUpcs.push(upc);
+      }
+      missingUpcs.forEach(u => errors.push({type:'UPC Not In Shopify', file:'Retail Pro', row:'', value:u,
+        detail:'Design ' + B.upcMap.get(u).design + ' — barcode not found in Shopify export'}));
+      B.missingDesigns.forEach(d => errors.push({type:'Missing Design Code', file:'Retail Pro', row:'', value:d,
+        detail:'Design exists in Retail Pro but has no discount in Retail File'}));
+
+      const dupCount = errors.filter(e => e.type === 'Duplicate Design Code' || e.type === 'Duplicate UPC').length;
+      const ms = performance.now() - t0;
+
+      state.output = outRows;
+      state.errors = errors;
+
+      /* Summary */
+      $('st-retail').textContent = state.retail.rows.length.toLocaleString();
+      $('st-pro').textContent = state.pro.rows.length.toLocaleString();
+      $('st-shopify').textContent = rows.length.toLocaleString();
+      $('st-designs').textContent = B.matchedDesigns.size.toLocaleString();
+      $('st-upcs').textContent = matchedUpcs.size.toLocaleString();
+      $('st-updated').textContent = updated.toLocaleString();
+      $('st-skipped').textContent = skipped.toLocaleString();
+      $('st-missing-designs').textContent = B.missingDesigns.size.toLocaleString();
+      $('st-missing-upcs').textContent = missingUpcs.length.toLocaleString();
+      $('st-dups').textContent = dupCount.toLocaleString();
+      $('st-handles').textContent = updatedHandles.size.toLocaleString();
+      $('st-errors').textContent = errors.length.toLocaleString();
+      $('exec-time').textContent = '⏱️ Execution time: ' + (ms < 1000 ? Math.round(ms) + ' ms' : (ms/1000).toFixed(2) + ' s');
+      $('note-options').style.display = includeOptions ? '' : 'none';
+
+      const tbody = $('error-tbody');
+      tbody.innerHTML = errors.slice(0, 500).map(e =>
+        '<tr><td><strong>' + escapeHtml(e.type) + '</strong></td><td>' + escapeHtml(e.file) + '</td><td>' +
+        escapeHtml(e.row) + '</td><td class="mono">' + escapeHtml(e.value) + '</td><td>' + escapeHtml(e.detail) + '</td></tr>'
+      ).join('');
+      $('error-box').classList.toggle('show', errors.length > 0);
+      $('btn-download-errors').style.display = errors.length ? 'inline-block' : 'none';
+      $('btn-download').disabled = updated === 0;
+
+      setProgress('Completed', 100);
+      log('Completed successfully — ' + updated.toLocaleString() + ' variants updated, ' +
+          skipped.toLocaleString() + ' skipped, ' + errors.length.toLocaleString() + ' issues, ' +
+          Math.round(ms) + ' ms', 'ok');
+
+      $('step2').classList.add('done');
+      $('results').classList.add('show');
+      $('results').scrollIntoView({behavior:'smooth', block:'start'});
+      toast(updated
+        ? '💚 ' + updated.toLocaleString() + ' variant prices discounted!'
+        : '⚠️ No variants matched — download the Error Report to see why.');
+    }catch(err){
+      log('Error: ' + err.message, 'err');
+      setProgress('Stopped', 0);
+      toast('⚠️ ' + err.message);
+    }finally{
+      state.busy = false;
+      refresh();
+    }
+  }
+
+  /* ---------------- Downloads ---------------- */
+  $('btn-generate').addEventListener('click', generate);
+
+  $('btn-download').addEventListener('click', () => {
+    if (!state.output || state.output.length < 2) return;
+    downloadCSV(state.output, 'minnie-minors-discount-file-' + todayStr() + '.csv', false);
+    $('step3').classList.add('done');
+    log('Discount file downloaded (' + (state.output.length - 1).toLocaleString() + ' variants)', 'ok');
+    toast('🍉 Discount file downloaded — ready to import into Shopify!');
+  });
+
+  $('btn-download-errors').addEventListener('click', () => {
+    if (!state.errors.length) return;
+    const rows = [['Type','File','Row','Value','Detail']]
+      .concat(state.errors.map(e => [e.type, e.file, e.row, e.value, e.detail]));
+    downloadCSV(rows, 'minnie-minors-error-report-' + todayStr() + '.csv', true);
+    log('Error report downloaded (' + state.errors.length.toLocaleString() + ' issues)', 'ok');
+  });
+
+  refresh();
+})();
+</script>
+</body>
+</html>
