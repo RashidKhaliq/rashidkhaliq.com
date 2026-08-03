@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Hub | Transform Your Body, Transform Your Life</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Tailwind Configuration for strict Red, Black & White palette -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#D6001C',
+                            redhover: '#B50017',
+                            black: '#0A0A0A',
+                            dark: '#141414',
+                            card: '#1C1C1C',
+                            border: '#2E2E2E'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #FFFFFF;
+        }
+        .font-display {
+            font-family: 'Oswald', sans-serif;
+        }
+        /* Glassmorphism & custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D6001C;
+            border-radius: 4px;
+        }
+        .bg-pattern {
+            background-image: radial-gradient(#D6001C 0.75px, transparent 0.75px);
+            background-size: 24px 24px;
+            opacity: 0.12;
+        }
+    </style>
+</head>
+<body class="bg-brand-black text-white antialiased selection:bg-brand-red selection:text-white relative">
+
+    <header class="sticky top-0 z-50 bg-brand-black/95 backdrop-blur-md border-b border-brand-border/60 transition-all duration-300" id="main-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#home" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 bg-brand-red rounded-xl flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-brand-red/30 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-dumbbell text-white"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display text-2xl font-bold tracking-wider text-white uppercase leading-none">FITNESS <span class="text-brand-red">HUB</span></span>
+                    <span class="text-[10px] tracking-widest text-neutral-400 font-semibold uppercase">fitnesshubpk.com</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold tracking-wide uppercase">
+                <a href="#home" class="nav-link text-white hover:text-brand-red transition-colors">Home</a>
+                <a href="#about" class="nav-link text-neutral-300 hover:text-brand-red transition-colors">About</a>
+                <a href="#plans" class="nav-link text-neutral-300 hover:text-brand-red transition-colors">Memberships</a>
+                <a href="#personal-training" class="nav-link text-neutral-300 hover:text-brand-red transition-colors">Personal Training</a>
+                <a href="#ladies-zone" class="nav-link text-neutral-300 hover:text-brand-red transition-colors">Ladies Zone</a>
+                <a href="#facilities" class="nav-link text-neutral-300 hover:text-brand-red transition-colors">Facilities</a>
+                <a href="#supplements" class="nav-link text-neutral-300 hover:text-brand-red transition-colors">Supplements</a>
+                <a href="#gallery" class="nav-link text-neutral-300 hover:text-brand-red transition-colors">Gallery</a>
+                <a href="#contact" class="nav-link text-neutral-300 hover:text-brand-red transition-colors">Contact</a>
+            </nav>
+
+            <!-- Action CTA & Mobile Menu Toggle -->
+            <div class="flex items-center gap-4">
+                <button onclick="openModal('membership-modal')" class="hidden sm:inline-flex items-center gap-2 bg-brand-red hover:bg-brand-redhover text-white font-bold px-5 py-2.5 rounded-full text-sm uppercase tracking-wider transition-all duration-300 shadow-lg shadow-brand-red/25 hover:shadow-brand-red/50 hover:scale-105 active:scale-95">
+                    <i class="fa-solid fa-bolt"></i> Join Now
+                </button>
+                <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg bg-brand-dark border border-brand-border text-white hover:text-brand-red focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-dark border-b border-brand-border px-6 py-6 space-y-4">
+            <a href="#home" class="mobile-nav-link block text-lg font-bold uppercase text-brand-red">Home</a>
+            <a href="#about" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">About Us</a>
+            <a href="#plans" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">Memberships</a>
+            <a href="#personal-training" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">Personal Training</a>
+            <a href="#ladies-zone" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">Ladies Zone</a>
+            <a href="#facilities" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">Facilities</a>
+            <a href="#supplements" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">Supplement Store</a>
+            <a href="#gallery" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">Gallery</a>
+            <a href="#blog" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">Blog</a>
+            <a href="#contact" class="mobile-nav-link block text-lg font-bold uppercase text-neutral-200 hover:text-brand-red">Contact Us</a>
+            <button onclick="openModal('membership-modal')" class="w-full bg-brand-red hover:bg-brand-redhover text-white font-bold py-3 rounded-xl uppercase tracking-wider text-center mt-4 shadow-lg">
+                <i class="fa-solid fa-bolt"></i> Claim Free Trial & Join
+            </button>
+        </div>
+    </header>
+
+    <section id="home" class="relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-brand-black">
+        <!-- Parallax Background Image with Dark Vignette Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2000&auto=format&fit=crop" 
+                 alt="Fitness Hub Gym Interior" 
+                 class="w-full h-full object-cover object-center brightness-40 scale-105 transition-transform duration-1000">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/60 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-black/90 via-transparent to-brand-black/90"></div>
+            <div class="absolute inset-0 bg-pattern"></div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 pb-20">
+            <div class="inline-flex items-center gap-2 bg-brand-red/10 border border-brand-red/40 px-4 py-1.5 rounded-full mb-6">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand-red animate-ping"></span>
+                <span class="text-xs sm:text-sm font-bold text-white uppercase tracking-widest">Premier Gym Facility in Pakistan</span>
+            </div>
+
+            <h1 class="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight leading-none mb-6">
+                Transform Your <span class="text-brand-red underline decoration-brand-red/50">Body</span>.<br/>
+                Transform Your <span class="text-white">Life</span>.
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-base sm:text-xl text-neutral-300 font-normal mb-10 leading-relaxed">
+                Experience world-class strength training, dedicated ladies sessions, certified personal trainers, and state-of-the-art equipment at <span class="text-white font-semibold">Fitness Hub</span>.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                <button onclick="openModal('membership-modal')" class="w-full sm:w-auto bg-brand-red hover:bg-brand-redhover text-white font-black text-lg px-9 py-4 rounded-full uppercase tracking-wider transition-all duration-300 shadow-xl shadow-brand-red/40 hover:scale-105">
+                    Start Your Fitness Journey <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+                <a href="#contact" class="w-full sm:w-auto bg-brand-card/90 hover:bg-brand-dark text-white border border-brand-border font-bold text-lg px-8 py-4 rounded-full uppercase tracking-wider transition-all duration-300 hover:border-brand-red">
+                    <i class="fa-solid fa-location-dot text-brand-red mr-2"></i> Visit Our Gym
+                </a>
+            </div>
+
+            <!-- Key Metric Highlights Badge Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto bg-brand-card/80 border border-brand-border/80 backdrop-blur-md rounded-2xl p-6 text-center">
+                <div class="p-2 border-r border-brand-border/40 last:border-none">
+                    <p class="font-display text-3xl sm:text-4xl font-black text-brand-red">15,000+</p>
+                    <p class="text-xs text-neutral-400 font-semibold uppercase tracking-wider mt-1">Sq. Ft. Facility</p>
+                </div>
+                <div class="p-2 md:border-r border-brand-border/40">
+                    <p class="font-display text-3xl sm:text-4xl font-black text-white">25+</p>
+                    <p class="text-xs text-neutral-400 font-semibold uppercase tracking-wider mt-1">Certified Coaches</p>
+                </div>
+                <div class="p-2 border-r border-brand-border/40">
+                    <p class="font-display text-3xl sm:text-4xl font-black text-brand-red">100%</p>
+                    <p class="text-xs text-neutral-400 font-semibold uppercase tracking-wider mt-1">Privacy Ladies Zone</p>
+                </div>
+                <div class="p-2">
+                    <p class="font-display text-3xl sm:text-4xl font-black text-white">4.9 ★</p>
+                    <p class="text-xs text-neutral-400 font-semibold uppercase tracking-wider mt-1">350+ Google Reviews</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 bg-brand-dark relative border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Visual Card Grid -->
+                <div class="relative">
+                    <div class="relative rounded-2xl overflow-hidden border border-brand-border shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1200&auto=format&fit=crop" 
+                             alt="Fitness Hub Main Gym Floor" 
+                             class="w-full h-[450px] object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent"></div>
+                    </div>
+                    <!-- Overlay Badge Card -->
+                    <div class="absolute -bottom-6 -right-4 sm:bottom-6 sm:right-6 bg-brand-red p-6 rounded-2xl shadow-xl max-w-xs text-white border border-brand-red/40 hidden sm:block">
+                        <i class="fa-solid fa-trophy text-3xl mb-2"></i>
+                        <h4 class="font-display text-xl font-bold uppercase">Best Fitness Center</h4>
+                        <p class="text-xs text-neutral-100 mt-1">Awarded premier gym standard for fitness excellence & professional coaching.</p>
+                    </div>
+                </div>
+
+                <!-- Story & Mission Content -->
+                <div class="space-y-6">
+                    <div class="inline-block border-l-4 border-brand-red pl-3">
+                        <span class="text-brand-red text-sm font-bold uppercase tracking-widest">About Fitness Hub</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-5xl font-black uppercase tracking-tight">
+                        Empowering Your Strength & Performance
+                    </h2>
+                    <p class="text-neutral-300 leading-relaxed text-base">
+                        Founded with a single mission—to revolutionize the gym experience in Pakistan—Fitness Hub brings together world-class biomechanical training equipment, dedicated specialized arenas, and highly elite certified personal trainers.
+                    </p>
+                    
+                    <div class="grid sm:grid-cols-2 gap-4 pt-2">
+                        <div class="bg-brand-card p-4 rounded-xl border border-brand-border">
+                            <div class="w-10 h-10 bg-brand-red/20 rounded-lg flex items-center justify-center text-brand-red mb-3">
+                                <i class="fa-solid fa-bullseye text-xl"></i>
+                            </div>
+                            <h3 class="font-display text-lg font-bold uppercase text-white">Our Mission</h3>
+                            <p class="text-xs text-neutral-400 mt-1">To inspire every individual to surpass their personal limits through science-backed fitness training.</p>
+                        </div>
+                        <div class="bg-brand-card p-4 rounded-xl border border-brand-border">
+                            <div class="w-10 h-10 bg-brand-red/20 rounded-lg flex items-center justify-center text-brand-red mb-3">
+                                <i class="fa-solid fa-eye text-xl"></i>
+                            </div>
+                            <h3 class="font-display text-lg font-bold uppercase text-white">Our Vision</h3>
+                            <p class="text-xs text-neutral-400 mt-1">Creating a vibrant, clean, high-energy community that fosters long-term health and wellness.</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex items-center gap-6">
+                        <a href="#facilities" class="inline-flex items-center gap-2 text-brand-red font-bold uppercase text-sm hover:underline">
+                            Explore Facilities <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <span class="text-neutral-600">|</span>
+                        <a href="#plans" class="inline-flex items-center gap-2 text-white font-bold uppercase text-sm hover:text-brand-red transition-colors">
+                            View Pricing <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-brand-black border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Why Choose Fitness Hub</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                    Engineered For Maximum Results
+                </h2>
+                <p class="text-neutral-400 mt-4 text-base">
+                    Every detail of our gym is meticulously structured to help you stay motivated, burn fat, build lean muscle, and maintain total health.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-brand-card p-8 rounded-2xl border border-brand-border hover:border-brand-red transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-brand-red/10 rounded-2xl border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-6 group-hover:bg-brand-red group-hover:text-white transition-all">
+                        <i class="fa-solid fa-dumbbell"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold uppercase text-white mb-3">Elite Equipment</h3>
+                    <p class="text-neutral-400 text-sm leading-relaxed">
+                        Imported biomechanical strength units, heavy-duty power racks, dumbbells up to 60kg, and ergonomic cardio gear with digital metrics.
+                    </p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-brand-card p-8 rounded-2xl border border-brand-border hover:border-brand-red transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-brand-red/10 rounded-2xl border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-6 group-hover:bg-brand-red group-hover:text-white transition-all">
+                        <i class="fa-solid fa-user-ninja"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold uppercase text-white mb-3">Certified Coaches</h3>
+                    <p class="text-neutral-400 text-sm leading-relaxed">
+                        International certification standard fitness trainers offering tailored workout routines, posture correction, and body recomposition guidance.
+                    </p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-brand-card p-8 rounded-2xl border border-brand-border hover:border-brand-red transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-brand-red/10 rounded-2xl border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-6 group-hover:bg-brand-red group-hover:text-white transition-all">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold uppercase text-white mb-3">100% Privacy Ladies Zone</h3>
+                    <p class="text-neutral-400 text-sm leading-relaxed">
+                        Exclusive, fully curtained and secure training room with certified female coaches, specialized weights, cardio, and separate lockers.
+                    </p>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-brand-card p-8 rounded-2xl border border-brand-border hover:border-brand-red transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-brand-red/10 rounded-2xl border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-6 group-hover:bg-brand-red group-hover:text-white transition-all">
+                        <i class="fa-solid fa-apple-whole"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold uppercase text-white mb-3">Custom Nutrition Plans</h3>
+                    <p class="text-neutral-400 text-sm leading-relaxed">
+                        Caloric intake breakdown, macro split targets, Pakistani diet friendly meal charts, and supplement recommendations for fast results.
+                    </p>
+                </div>
+                <!-- Card 5 -->
+                <div class="bg-brand-card p-8 rounded-2xl border border-brand-border hover:border-brand-red transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-brand-red/10 rounded-2xl border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-6 group-hover:bg-brand-red group-hover:text-white transition-all">
+                        <i class="fa-solid fa-shower"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold uppercase text-white mb-3">Luxury Amenities</h3>
+                    <p class="text-neutral-400 text-sm leading-relaxed">
+                        Central inverter air conditioning, steaming warm shower cubicles, biometric access locks, ambient music system, and secure valet parking.
+                    </p>
+                </div>
+                <!-- Card 6 -->
+                <div class="bg-brand-card p-8 rounded-2xl border border-brand-border hover:border-brand-red transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-brand-red/10 rounded-2xl border border-brand-red/30 flex items-center justify-center text-brand-red text-2xl mb-6 group-hover:bg-brand-red group-hover:text-white transition-all">
+                        <i class="fa-solid fa-flask-vial"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold uppercase text-white mb-3">Authentic Supplements</h3>
+                    <p class="text-neutral-400 text-sm leading-relaxed">
+                        Direct import guaranteed original whey proteins, BCAAs, pre-workouts, and multivitamins available in-house at wholesale prices.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="plans" class="py-20 bg-brand-dark relative border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Transparent Membership Pricing</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                    Choose Your Transformation Plan
+                </h2>
+                <p class="text-neutral-400 mt-4 text-base">
+                    No hidden charges. Full access to gym facilities, lockers, cardio zone, and complimentary fitness assessment upon signup.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Plan 1: Monthly -->
+                <div class="bg-brand-card rounded-3xl p-8 border border-brand-border hover:border-brand-red/50 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs uppercase font-bold tracking-widest text-neutral-400 mb-2">Flexible Option</div>
+                        <h3 class="font-display text-2xl font-bold uppercase text-white">Monthly Plan</h3>
+                        <div class="mt-6 mb-6">
+                            <span class="font-display text-4xl font-black text-white">PKR 8,500</span>
+                            <span class="text-neutral-400 text-xs font-semibold">/ Month</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-neutral-300 border-t border-brand-border pt-6 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Full Gym Floor Access</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Unlimited Cardio Zone</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Locker & Shower Facilities</li>
+                            <li class="flex items-center gap-2 text-neutral-500"><i class="fa-solid fa-circle-xmark"></i> Free Personal Trainer Demo</li>
+                            <li class="flex items-center gap-2 text-neutral-500"><i class="fa-solid fa-circle-xmark"></i> Nutrition Plan Consultation</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('membership-modal', 'Monthly Plan')" class="w-full bg-transparent hover:bg-brand-red border border-brand-red text-white font-bold py-3 rounded-xl uppercase tracking-wider text-xs transition-colors">
+                        Select Plan
+                    </button>
+                </div>
+
+                <!-- Plan 2: Quarterly (Most Popular) -->
+                <div class="bg-brand-card rounded-3xl p-8 border-2 border-brand-red relative shadow-2xl shadow-brand-red/20 flex flex-col justify-between">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-red text-white text-[10px] uppercase font-black tracking-widest px-4 py-1.5 rounded-full shadow-lg">
+                        Most Popular Choice
+                    </div>
+                    <div>
+                        <div class="text-xs uppercase font-bold tracking-widest text-brand-red mb-2">3 Months Commitment</div>
+                        <h3 class="font-display text-2xl font-bold uppercase text-white">Quarterly Plan</h3>
+                        <div class="mt-6 mb-6">
+                            <span class="font-display text-4xl font-black text-brand-red">PKR 22,500</span>
+                            <span class="text-neutral-400 text-xs font-semibold">/ 3 Months</span>
+                            <p class="text-[11px] text-emerald-400 font-medium mt-1">Save PKR 3,000</p>
+                        </div>
+                        <ul class="space-y-3 text-sm text-neutral-300 border-t border-brand-border pt-6 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Full Gym Floor & Cardio</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> 1 Free Trainer Guidance Session</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> InBody Composition Analysis</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Locker & Warm Showers</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> 10% Discount at Supplement Store</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('membership-modal', 'Quarterly Plan')" class="w-full bg-brand-red hover:bg-brand-redhover text-white font-bold py-3.5 rounded-xl uppercase tracking-wider text-xs shadow-lg shadow-brand-red/30 transition-all">
+                        Join Quarterly Now
+                    </button>
+                </div>
+
+                <!-- Plan 3: Half-Yearly -->
+                <div class="bg-brand-card rounded-3xl p-8 border border-brand-border hover:border-brand-red/50 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs uppercase font-bold tracking-widest text-neutral-400 mb-2">6 Months Value</div>
+                        <h3 class="font-display text-2xl font-bold uppercase text-white">Half-Yearly Plan</h3>
+                        <div class="mt-6 mb-6">
+                            <span class="font-display text-4xl font-black text-white">PKR 40,000</span>
+                            <span class="text-neutral-400 text-xs font-semibold">/ 6 Months</span>
+                            <p class="text-[11px] text-emerald-400 font-medium mt-1">Save PKR 11,000</p>
+                        </div>
+                        <ul class="space-y-3 text-sm text-neutral-300 border-t border-brand-border pt-6 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> All Gym Access Included</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Customized Diet Chart</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Monthly Progress Tracker</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Free Guest Pass (2 per month)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> 15% Store Discount</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('membership-modal', 'Half-Yearly Plan')" class="w-full bg-transparent hover:bg-brand-red border border-brand-red text-white font-bold py-3 rounded-xl uppercase tracking-wider text-xs transition-colors">
+                        Select Plan
+                    </button>
+                </div>
+
+                <!-- Plan 4: Annual -->
+                <div class="bg-brand-card rounded-3xl p-8 border border-brand-border hover:border-brand-red/50 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs uppercase font-bold tracking-widest text-neutral-400 mb-2">Maximum Savings</div>
+                        <h3 class="font-display text-2xl font-bold uppercase text-white">Annual VIP Plan</h3>
+                        <div class="mt-6 mb-6">
+                            <span class="font-display text-4xl font-black text-white">PKR 70,000</span>
+                            <span class="text-neutral-400 text-xs font-semibold">/ Year</span>
+                            <p class="text-[11px] text-emerald-400 font-medium mt-1">Save PKR 32,000</p>
+                        </div>
+                        <ul class="space-y-3 text-sm text-neutral-300 border-t border-brand-border pt-6 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> VIP All-Access Pass</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Full Nutrition & Supplement Guide</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Dedicated Locker Storage</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> 4 Free PT Session Vouchers</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-red"></i> Free Fitness Hub Branded Shaker</li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal('membership-modal', 'Annual VIP Plan')" class="w-full bg-transparent hover:bg-brand-red border border-brand-red text-white font-bold py-3 rounded-xl uppercase tracking-wider text-xs transition-colors">
+                        Select VIP Plan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="personal-training" class="py-20 bg-brand-black border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Content Left -->
+                <div>
+                    <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Accelerated Results</span>
+                    <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                        1-on-1 Personal Training
+                    </h2>
+                    <p class="text-neutral-300 mt-4 leading-relaxed">
+                        Need guaranteed transformations? Our certified master trainers design targeted routines, correct form in real-time, push your resistance limits, and track body fat percentages weekly.
+                    </p>
+                    <div class="space-y-4 mt-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 bg-brand-red/20 rounded-full flex items-center justify-center text-brand-red flex-shrink-0 mt-1">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display text-lg font-bold uppercase text-white">Biweekly InBody Progress Audits</h4>
+                                <p class="text-xs text-neutral-400">Track exact muscle mass gain, subcutaneous fat reduction, and basal metabolic changes.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 bg-brand-red/20 rounded-full flex items-center justify-center text-brand-red flex-shrink-0 mt-1">
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display text-lg font-bold uppercase text-white">Custom Pakistani Macro Plans</h4>
+                                <p class="text-xs text-neutral-400">Meal guidance tailored for real local foods—high protein, balanced carbs, and simple prep.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="openModal('membership-modal', 'Personal Training Inquiry')" class="mt-8 bg-brand-red hover:bg-brand-redhover text-white font-bold px-8 py-3.5 rounded-full uppercase tracking-wider text-sm shadow-lg shadow-brand-red/30">
+                        Book Free PT Consultation
+                    </button>
+                </div>
+                <!-- Image Right -->
+                <div class="rounded-3xl overflow-hidden border border-brand-border shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1200&auto=format&fit=crop" 
+                         alt="Personal Trainer Guidance" 
+                         class="w-full h-[450px] object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ladies-zone" class="py-20 bg-brand-dark border-t border-brand-border/40 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Image Left -->
+                <div class="order-2 lg:order-1 rounded-3xl overflow-hidden border border-brand-border shadow-2xl relative">
+                    <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop" 
+                         alt="Dedicated Ladies Gym Zone" 
+                         class="w-full h-[450px] object-cover">
+                    <div class="absolute top-4 left-4 bg-brand-red text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-md shadow-md">
+                        Female Only Facility
+                    </div>
+                </div>
+                <!-- Content Right -->
+                <div class="order-1 lg:order-2">
+                    <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Comfort & Security</span>
+                    <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                        Dedicated Ladies Gym Arena
+                    </h2>
+                    <p class="text-neutral-300 mt-4 leading-relaxed">
+                        Fitness Hub provides a completely private, air-conditioned environment designed exclusively for women, ensuring total peace of mind and maximum focus during workouts.
+                    </p>
+                    
+                    <div class="grid sm:grid-cols-2 gap-4 mt-8">
+                        <div class="bg-brand-card p-4 rounded-xl border border-brand-border">
+                            <i class="fa-solid fa-clock text-brand-red text-xl mb-2"></i>
+                            <h4 class="font-display font-bold uppercase text-white">Exclusive Timings</h4>
+                            <p class="text-xs text-neutral-400">Morning & Afternoon slots with full privacy partitions active.</p>
+                        </div>
+                        <div class="bg-brand-card p-4 rounded-xl border border-brand-border">
+                            <i class="fa-solid fa-person-dress text-brand-red text-xl mb-2"></i>
+                            <h4 class="font-display font-bold uppercase text-white">Female Trainers</h4>
+                            <p class="text-xs text-neutral-400">Certified female fitness coaches & squat/weight supervisors.</p>
+                        </div>
+                        <div class="bg-brand-card p-4 rounded-xl border border-brand-border">
+                            <i class="fa-solid fa-lock text-brand-red text-xl mb-2"></i>
+                            <h4 class="font-display font-bold uppercase text-white">Private Lockers</h4>
+                            <p class="text-xs text-neutral-400">Keycard access female changing room and warm showers.</p>
+                        </div>
+                        <div class="bg-brand-card p-4 rounded-xl border border-brand-border">
+                            <i class="fa-solid fa-child-reaching text-brand-red text-xl mb-2"></i>
+                            <h4 class="font-display font-bold uppercase text-white">Group Aerobics & HIIT</h4>
+                            <p class="text-xs text-neutral-400">Fun cardio dance, mat Pilates, and weight loss group sessions.</p>
+                        </div>
+                    </div>
+
+                    <button onclick="openModal('membership-modal', 'Ladies Gym Trial')" class="mt-8 bg-brand-red hover:bg-brand-redhover text-white font-bold px-8 py-3.5 rounded-full uppercase tracking-wider text-sm shadow-lg shadow-brand-red/30">
+                        Inquire Ladies Zone Timings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-brand-black border-t border-brand-border/40">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-brand-card rounded-3xl border border-brand-border p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-12 -right-12 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl"></div>
+                
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <span class="text-brand-red text-xs font-bold uppercase tracking-widest">Instant Body Health Check</span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-black uppercase tracking-tight mt-1">
+                        Calculate Your Body Mass Index (BMI)
+                    </h2>
+                    <p class="text-neutral-400 text-sm mt-2">
+                        Get quick insight into your weight category and calorie burn targets.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <!-- Input Form -->
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">Height (CM)</label>
+                            <input type="number" id="bmi-height" placeholder="e.g. 175" class="w-full bg-brand-dark border border-brand-border focus:border-brand-red rounded-xl px-4 py-3 text-white placeholder-neutral-600 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">Weight (KG)</label>
+                            <input type="number" id="bmi-weight" placeholder="e.g. 75" class="w-full bg-brand-dark border border-brand-border focus:border-brand-red rounded-xl px-4 py-3 text-white placeholder-neutral-600 focus:outline-none">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">Age</label>
+                                <input type="number" id="bmi-age" placeholder="25" class="w-full bg-brand-dark border border-brand-border focus:border-brand-red rounded-xl px-4 py-3 text-white placeholder-neutral-600 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-neutral-300 mb-2">Gender</label>
+                                <select id="bmi-gender" class="w-full bg-brand-dark border border-brand-border focus:border-brand-red rounded-xl px-4 py-3 text-white focus:outline-none">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button onclick="calculateBMI()" class="w-full bg-brand-red hover:bg-brand-redhover text-white font-bold py-3.5 rounded-xl uppercase tracking-wider text-sm transition-all shadow-lg shadow-brand-red/30">
+                            Calculate My BMI <i class="fa-solid fa-calculator ml-2"></i>
+                        </button>
+                    </div>
+
+                    <!-- Display Result Box -->
+                    <div class="bg-brand-dark border border-brand-border rounded-2xl p-6 text-center flex flex-col items-center justify-center min-h-[280px]">
+                        <div id="bmi-placeholder" class="space-y-3">
+                            <i class="fa-solid fa-scale-balanced text-4xl text-neutral-600"></i>
+                            <p class="text-neutral-400 text-sm">Enter your metrics on the left to view your BMI score and personalized fitness recommendation.</p>
+                        </div>
+                        <div id="bmi-result-card" class="hidden w-full space-y-4">
+                            <div class="text-xs uppercase font-bold text-neutral-400 tracking-wider">Your BMI Result</div>
+                            <div class="font-display text-5xl font-black text-brand-red" id="bmi-score">24.2</div>
+                            <div class="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase bg-brand-red/20 text-white border border-brand-red/40" id="bmi-category">
+                                Normal Weight
+                            </div>
+                            <p class="text-xs text-neutral-300 leading-relaxed pt-2 border-t border-brand-border" id="bmi-advice">
+                                Great balance! Maintain your body mass through progressive strength training and a structured diet plan at Fitness Hub.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-brand-dark border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Real Results</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                    Member Transformations
+                </h2>
+                <p class="text-neutral-400 mt-4 text-base">
+                    See what consistent dedication, proper technique, and certified guidance achieve at Fitness Hub.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Transformation Card 1 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden group">
+                    <div class="relative h-72">
+                        <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=800&auto=format&fit=crop" 
+                             alt="Transformation Member 1" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 bg-brand-black/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold uppercase text-brand-red border border-brand-red/40">
+                            12 Weeks Goal
+                        </div>
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-brand-black via-brand-black/80 to-transparent p-4">
+                            <h4 class="font-display text-xl font-bold uppercase text-white">Ahmed K.</h4>
+                            <p class="text-xs text-neutral-400">Lost 14 kg Fat & Built Lean Muscle</p>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <div class="flex justify-between text-xs border-b border-brand-border pb-2 text-neutral-300">
+                            <span>Starting Weight: <b>92 kg</b></span>
+                            <span class="text-brand-red font-bold">Current: 78 kg</span>
+                        </div>
+                        <p class="text-xs text-neutral-400">"The 1-on-1 personal training at Fitness Hub completely changed my physique and energy levels!"</p>
+                    </div>
+                </div>
+
+                <!-- Transformation Card 2 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden group">
+                    <div class="relative h-72">
+                        <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=800&auto=format&fit=crop" 
+                             alt="Transformation Member 2" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 bg-brand-black/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold uppercase text-brand-red border border-brand-red/40">
+                            16 Weeks Hypertrophy
+                        </div>
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-brand-black via-brand-black/80 to-transparent p-4">
+                            <h4 class="font-display text-xl font-bold uppercase text-white">Usman R.</h4>
+                            <p class="text-xs text-neutral-400">Gained 8 kg Pure Muscle Mass</p>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <div class="flex justify-between text-xs border-b border-brand-border pb-2 text-neutral-300">
+                            <span>Starting Weight: <b>64 kg</b></span>
+                            <span class="text-brand-red font-bold">Current: 72 kg</span>
+                        </div>
+                        <p class="text-xs text-neutral-400">"Heavy powerlifting gear and supplement advice helped me break every strength plateau."</p>
+                    </div>
+                </div>
+
+                <!-- Transformation Card 3 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden group">
+                    <div class="relative h-72">
+                        <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=800&auto=format&fit=crop" 
+                             alt="Transformation Member 3" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 bg-brand-black/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold uppercase text-brand-red border border-brand-red/40">
+                            Ladies Zone Success
+                        </div>
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-brand-black via-brand-black/80 to-transparent p-4">
+                            <h4 class="font-display text-xl font-bold uppercase text-white">Ayesha M.</h4>
+                            <p class="text-xs text-neutral-400">Post-Pregnancy Fitness Journey</p>
+                        </div>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <div class="flex justify-between text-xs border-b border-brand-border pb-2 text-neutral-300">
+                            <span>Target: <b>Tone & Strength</b></span>
+                            <span class="text-brand-red font-bold">Achieved</span>
+                        </div>
+                        <p class="text-xs text-neutral-400">"The privacy of the female arena combined with expert female coaches gave me 100% confidence."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="facilities" class="py-20 bg-brand-black border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-red text-sm font-bold uppercase tracking-widest">World-Class Infrastructure</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                    Gym Facilities Overview
+                </h2>
+                <p class="text-neutral-400 mt-4 text-base">
+                    Equipped with high-performance zones designed for specialized training modalities.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Facility Item 1 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop" alt="Cardio Zone" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold uppercase text-white">Cardio Zone</h3>
+                        <p class="text-xs text-neutral-400 mt-2">Treadmills, stairmasters, rowing machines, and spin bikes with real-time heart rate monitors.</p>
+                    </div>
+                </div>
+
+                <!-- Facility Item 2 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop" alt="Heavy Strength Area" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold uppercase text-white">Strength & Powerlifting Area</h3>
+                        <p class="text-xs text-neutral-400 mt-2">Olympic barbell stations, deadlift platforms, squat racks, and heavy plate-loaded pin machines.</p>
+                    </div>
+                </div>
+
+                <!-- Facility Item 3 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1517963879433-6ad2b056d712?q=80&w=600&auto=format&fit=crop" alt="Functional Turf" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold uppercase text-white">Functional Turf & Crossfit</h3>
+                        <p class="text-xs text-neutral-400 mt-2">Sled tracks, kettlebells, plyo boxes, battle ropes, and pull-up rig matrices.</p>
+                    </div>
+                </div>
+
+                <!-- Facility Item 4 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?q=80&w=600&auto=format&fit=crop" alt="Free Weights Area" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold uppercase text-white">Free Weights Station</h3>
+                        <p class="text-xs text-neutral-400 mt-2">Full dumbbell racks ranging from 2.5kg to 60kg, incline/decline benches, and cable crossovers.</p>
+                    </div>
+                </div>
+
+                <!-- Facility Item 5 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1554284126-aa88f22d8b74?q=80&w=600&auto=format&fit=crop" alt="Lockers & Showers" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold uppercase text-white">Locker Rooms & Hot Showers</h3>
+                        <p class="text-xs text-neutral-400 mt-2">Secure digital keycard lockers, continuous hot water showers, and vanity mirrors.</p>
+                    </div>
+                </div>
+
+                <!-- Facility Item 6 -->
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?q=80&w=600&auto=format&fit=crop" alt="Supplement Corner" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold uppercase text-white">In-House Supplement Bar</h3>
+                        <p class="text-xs text-neutral-400 mt-2">Fresh protein shakes, BCAA energy drinks, pre-workout shots, and authentic tub sales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="supplements" class="py-20 bg-brand-dark border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-red text-sm font-bold uppercase tracking-widest">100% Authentic Products</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                    Fitness Hub Supplement Store
+                </h2>
+                <p class="text-neutral-400 mt-4 text-base">
+                    Fuel your muscle recovery with guaranteed genuine sports nutrition directly imported from official brands.
+                </p>
+
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-2 mt-8" id="supp-filters">
+                    <button onclick="filterSupplements('all')" class="supp-btn active bg-brand-red text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">All Products</button>
+                    <button onclick="filterSupplements('protein')" class="supp-btn bg-brand-card hover:bg-brand-red/20 text-neutral-300 border border-brand-border px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Proteins</button>
+                    <button onclick="filterSupplements('preworkout')" class="supp-btn bg-brand-card hover:bg-brand-red/20 text-neutral-300 border border-brand-border px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Pre-Workout</button>
+                    <button onclick="filterSupplements('creatine')" class="supp-btn bg-brand-card hover:bg-brand-red/20 text-neutral-300 border border-brand-border px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Creatine & BCAAs</button>
+                </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8" id="supplement-grid">
+                <!-- Supp 1 -->
+                <div class="supp-card bg-brand-card rounded-2xl border border-brand-border p-5 flex flex-col justify-between" data-category="protein">
+                    <div>
+                        <div class="w-full h-48 bg-brand-dark rounded-xl flex items-center justify-center overflow-hidden mb-4 relative">
+                            <img src="https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?q=80&w=400&auto=format&fit=crop" alt="Whey Protein" class="object-cover w-full h-full">
+                            <span class="absolute top-2 right-2 bg-brand-red text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">Best Seller</span>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red">Protein Powder</span>
+                        <h4 class="font-display text-lg font-bold uppercase text-white mt-1">100% Gold Whey Isolate 5 lbs</h4>
+                        <p class="text-xs text-neutral-400 mt-1">25g Protein, 5.5g BCAAs per scoop. Zero added sugar.</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between border-t border-brand-border pt-4">
+                        <span class="font-display text-xl font-bold text-white">PKR 18,500</span>
+                        <button onclick="quickOrderSupp('100% Gold Whey Isolate')" class="bg-brand-red hover:bg-brand-redhover text-white text-xs font-bold px-4 py-2 rounded-lg uppercase transition-colors">
+                            Order <i class="fa-brands fa-whatsapp ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Supp 2 -->
+                <div class="supp-card bg-brand-card rounded-2xl border border-brand-border p-5 flex flex-col justify-between" data-category="preworkout">
+                    <div>
+                        <div class="w-full h-48 bg-brand-dark rounded-xl flex items-center justify-center overflow-hidden mb-4 relative">
+                            <img src="https://images.unsplash.com/photo-1593095948071-474c5cc2989d?q=80&w=400&auto=format&fit=crop" alt="Pre workout" class="object-cover w-full h-full">
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red">Pre-Workout</span>
+                        <h4 class="font-display text-lg font-bold uppercase text-white mt-1">Extreme Energy Explosive Pre 30 Servings</h4>
+                        <p class="text-xs text-neutral-400 mt-1">High caffeine, Beta-alanine & Citrulline for insane pumps.</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between border-t border-brand-border pt-4">
+                        <span class="font-display text-xl font-bold text-white">PKR 7,800</span>
+                        <button onclick="quickOrderSupp('Extreme Energy Pre-Workout')" class="bg-brand-red hover:bg-brand-redhover text-white text-xs font-bold px-4 py-2 rounded-lg uppercase transition-colors">
+                            Order <i class="fa-brands fa-whatsapp ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Supp 3 -->
+                <div class="supp-card bg-brand-card rounded-2xl border border-brand-border p-5 flex flex-col justify-between" data-category="creatine">
+                    <div>
+                        <div class="w-full h-48 bg-brand-dark rounded-xl flex items-center justify-center overflow-hidden mb-4 relative">
+                            <img src="https://images.unsplash.com/photo-1584017911766-d451b3d0e843?q=80&w=400&auto=format&fit=crop" alt="Creatine" class="object-cover w-full h-full">
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red">Creatine</span>
+                        <h4 class="font-display text-lg font-bold uppercase text-white mt-1">Pure Micronized Creatine 300g</h4>
+                        <p class="text-xs text-neutral-400 mt-1">Unflavored 100% pure monohydrate for muscle power and size.</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between border-t border-brand-border pt-4">
+                        <span class="font-display text-xl font-bold text-white">PKR 5,400</span>
+                        <button onclick="quickOrderSupp('Pure Micronized Creatine')" class="bg-brand-red hover:bg-brand-redhover text-white text-xs font-bold px-4 py-2 rounded-lg uppercase transition-colors">
+                            Order <i class="fa-brands fa-whatsapp ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Supp 4 -->
+                <div class="supp-card bg-brand-card rounded-2xl border border-brand-border p-5 flex flex-col justify-between" data-category="creatine">
+                    <div>
+                        <div class="w-full h-48 bg-brand-dark rounded-xl flex items-center justify-center overflow-hidden mb-4 relative">
+                            <img src="https://images.unsplash.com/photo-1546483875-ad9014c88eba?q=80&w=400&auto=format&fit=crop" alt="BCAA" class="object-cover w-full h-full">
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red">Recovery</span>
+                        <h4 class="font-display text-lg font-bold uppercase text-white mt-1">Essential BCAA Intra-Workout 30Serv</h4>
+                        <p class="text-xs text-neutral-400 mt-1">2:1:1 optimal ratio for endurance and muscle soreness prevention.</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between border-t border-brand-border pt-4">
+                        <span class="font-display text-xl font-bold text-white">PKR 6,200</span>
+                        <button onclick="quickOrderSupp('Essential BCAA')" class="bg-brand-red hover:bg-brand-redhover text-white text-xs font-bold px-4 py-2 rounded-lg uppercase transition-colors">
+                            Order <i class="fa-brands fa-whatsapp ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="py-20 bg-brand-black border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Take A Look Inside</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                    Fitness Hub Photo Gallery
+                </h2>
+                <p class="text-neutral-400 mt-4 text-base">
+                    Explore our high-octane environment, state-of-the-art equipment setups, and group sessions.
+                </p>
+            </div>
+
+            <!-- Image Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="cursor-pointer group relative rounded-2xl overflow-hidden h-64 border border-brand-border" onclick="openLightbox('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200&auto=format&fit=crop', 'Gym Main Floor')">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Gallery item">
+                    <div class="absolute inset-0 bg-brand-red/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl text-white"></i>
+                    </div>
+                </div>
+
+                <div class="cursor-pointer group relative rounded-2xl overflow-hidden h-64 border border-brand-border" onclick="openLightbox('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=1200&auto=format&fit=crop', 'Power Racks Area')">
+                    <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Gallery item">
+                    <div class="absolute inset-0 bg-brand-red/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl text-white"></i>
+                    </div>
+                </div>
+
+                <div class="cursor-pointer group relative rounded-2xl overflow-hidden h-64 border border-brand-border" onclick="openLightbox('https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop', 'Ladies Workout Zone')">
+                    <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Gallery item">
+                    <div class="absolute inset-0 bg-brand-red/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl text-white"></i>
+                    </div>
+                </div>
+
+                <div class="cursor-pointer group relative rounded-2xl overflow-hidden h-64 border border-brand-border" onclick="openLightbox('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1200&auto=format&fit=crop', 'Cardio Deck View')">
+                    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Gallery item">
+                    <div class="absolute inset-0 bg-brand-red/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass-plus text-3xl text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-brand-dark border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-2 text-yellow-500 mb-2">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <span class="text-xs text-white font-bold ml-1">4.9 / 5.0 Rating on Google</span>
+                </div>
+                <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight">
+                    What Members Say
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-brand-red rounded-full flex items-center justify-center font-bold text-lg text-white">
+                            ZA
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Zain Ali</h4>
+                            <span class="text-xs text-neutral-400">Verified Member • 6 Months</span>
+                        </div>
+                    </div>
+                    <div class="text-yellow-500 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-neutral-300 leading-relaxed">
+                        "Hands down the cleanest and best equipped gym in the city. Air conditioning is always running strong and the staff keeps the weights organized."
+                    </p>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-neutral-800 border border-brand-red text-brand-red rounded-full flex items-center justify-center font-bold text-lg">
+                            SN
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Sana Noor</h4>
+                            <span class="text-xs text-neutral-400">Ladies Zone Member</span>
+                        </div>
+                    </div>
+                    <div class="text-yellow-500 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-neutral-300 leading-relaxed">
+                        "The ladies timing and private section is 100% comfortable. Female personal trainers are super helpful with proper squat and deadlift posture."
+                    </p>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-brand-red rounded-full flex items-center justify-center font-bold text-lg text-white">
+                            HF
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Hamza Farooq</h4>
+                            <span class="text-xs text-neutral-400">Personal Training Client</span>
+                        </div>
+                    </div>
+                    <div class="text-yellow-500 text-xs">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-neutral-300 leading-relaxed">
+                        "Joined PT program 3 months back and lost over 12kg of body fat. The custom macro diet charts actually suit Pakistani homemade food!"
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="py-20 bg-brand-black border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Expert Knowledge</span>
+                <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                    Latest Fitness Articles & Tips
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Blog 1 -->
+                <article class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=600&auto=format&fit=crop" alt="Nutrition Tip" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red">Nutrition Guide</span>
+                        <h3 class="font-display text-xl font-bold uppercase text-white mt-2">How To Hit 150g Daily Protein On A Pakistani Diet</h3>
+                        <p class="text-xs text-neutral-400 mt-2">Discover budget-friendly local chicken, egg, and cottage cheese meal splits.</p>
+                        <a href="#contact" class="inline-block mt-4 text-xs font-bold text-white hover:text-brand-red uppercase">Read Guide <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                    </div>
+                </article>
+
+                <!-- Blog 2 -->
+                <article class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop" alt="Workout Tip" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red">Muscle Building</span>
+                        <h3 class="font-display text-xl font-bold uppercase text-white mt-2">5 Progressive Overload Rules For Muscle Growth</h3>
+                        <p class="text-xs text-neutral-400 mt-2">Master form, track rep tempos, and increase resistance efficiently.</p>
+                        <a href="#contact" class="inline-block mt-4 text-xs font-bold text-white hover:text-brand-red uppercase">Read Guide <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                    </div>
+                </article>
+
+                <!-- Blog 3 -->
+                <article class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-red transition-all">
+                    <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=600&auto=format&fit=crop" alt="Fat Loss Tip" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-brand-red">Fat Loss</span>
+                        <h3 class="font-display text-xl font-bold uppercase text-white mt-2">HIIT vs LISS Cardio: Which Burns Fat Faster?</h3>
+                        <p class="text-xs text-neutral-400 mt-2">A breakdown of heart rate zones and recovery timing for fat reduction.</p>
+                        <a href="#contact" class="inline-block mt-4 text-xs font-bold text-white hover:text-brand-red uppercase">Read Guide <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-brand-dark border-t border-brand-border/40">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Got Questions?</span>
+                <h2 class="font-display text-4xl font-black uppercase tracking-tight mt-1">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="space-y-4" id="faq-accordion">
+                <!-- FAQ 1 -->
+                <div class="bg-brand-card rounded-xl border border-brand-border overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left font-display text-lg font-bold uppercase flex justify-between items-center text-white">
+                        <span>What are the gym timings for general & ladies sessions?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-red transition-transform duration-300"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-xs text-neutral-300 leading-relaxed border-t border-brand-border/50 pt-3">
+                        General Gym Hours: Monday to Saturday 06:00 AM – 11:30 PM. Dedicated Ladies Timings run daily from 10:00 AM to 03:00 PM with full privacy screen curtains and female trainers present.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="bg-brand-card rounded-xl border border-brand-border overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left font-display text-lg font-bold uppercase flex justify-between items-center text-white">
+                        <span>Is a free trial pass available for new members?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-red transition-transform duration-300"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-xs text-neutral-300 leading-relaxed border-t border-brand-border/50 pt-3">
+                        Yes! You can claim a complimentary 1-Day Trial Pass to experience our workout floor, cardio equipment, and shower facilities before registering.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="bg-brand-card rounded-xl border border-brand-border overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left font-display text-lg font-bold uppercase flex justify-between items-center text-white">
+                        <span>Do you provide personal trainers and custom diet plans?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-red transition-transform duration-300"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-xs text-neutral-300 leading-relaxed border-t border-brand-border/50 pt-3">
+                        Yes, our 1-on-1 Personal Training packages include dedicated 60-minute daily supervision, bi-weekly InBody body composition scans, and personalized local meal macros.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 bg-brand-black border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Contact Details -->
+                <div class="space-y-8">
+                    <div>
+                        <span class="text-brand-red text-sm font-bold uppercase tracking-widest">Get In Touch</span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-black uppercase tracking-tight mt-2">
+                            Visit Fitness Hub Today
+                        </h2>
+                        <p class="text-neutral-400 mt-4 text-sm leading-relaxed">
+                            Have questions regarding memberships, personal coaching, or female gym slots? Walk in or send us a quick inquiry.
+                        </p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-brand-red/20 border border-brand-red/40 rounded-xl flex items-center justify-center text-brand-red shrink-0">
+                                <i class="fa-solid fa-location-dot text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display font-bold uppercase text-white">Location Address</h4>
+                                <p class="text-xs text-neutral-400 mt-1">Fitness Hub Complex, Main Boulevard, Commercial Zone, Pakistan</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-brand-red/20 border border-brand-red/40 rounded-xl flex items-center justify-center text-brand-red shrink-0">
+                                <i class="fa-solid fa-phone text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display font-bold uppercase text-white">Phone & WhatsApp</h4>
+                                <p class="text-xs text-neutral-400 mt-1">+92 300 1234567 / +92 42 35700000</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-brand-red/20 border border-brand-red/40 rounded-xl flex items-center justify-center text-brand-red shrink-0">
+                                <i class="fa-solid fa-envelope text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display font-bold uppercase text-white">Official Email</h4>
+                                <p class="text-xs text-neutral-400 mt-1">info@fitnesshubpk.com | support@fitnesshubpk.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-brand-red/20 border border-brand-red/40 rounded-xl flex items-center justify-center text-brand-red shrink-0">
+                                <i class="fa-solid fa-clock text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display font-bold uppercase text-white">Operating Hours</h4>
+                                <p class="text-xs text-neutral-400 mt-1">Mon - Sat: 06:00 AM - 11:30 PM | Sunday: 04:00 PM - 10:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="bg-brand-card p-8 rounded-3xl border border-brand-border">
+                    <h3 class="font-display text-2xl font-bold uppercase text-white mb-6">Send A Message</h3>
+                    <form onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-neutral-400 mb-1">Full Name *</label>
+                                <input type="text" required placeholder="John Doe" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-white text-sm focus:border-brand-red focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-neutral-400 mb-1">Phone Number *</label>
+                                <input type="tel" required placeholder="+92 300 0000000" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-white text-sm focus:border-brand-red focus:outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-neutral-400 mb-1">Email Address</label>
+                            <input type="email" placeholder="name@example.com" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-white text-sm focus:border-brand-red focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-neutral-400 mb-1">Interest Area</label>
+                            <select class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-white text-sm focus:border-brand-red focus:outline-none">
+                                <option>General Gym Membership</option>
+                                <option>Personal Training Program</option>
+                                <option>Ladies Zone Timings</option>
+                                <option>Supplements Inquiry</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-neutral-400 mb-1">Your Message</label>
+                            <textarea rows="4" placeholder="How can we help your fitness goal?" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-white text-sm focus:border-brand-red focus:outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-brand-red hover:bg-brand-redhover text-white font-bold py-3.5 rounded-xl uppercase tracking-wider text-sm shadow-lg shadow-brand-red/30 transition-all">
+                            Submit Inquiry <i class="fa-solid fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-brand-dark border-t border-brand-border pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                <!-- Col 1: Brand Info -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-brand-red rounded-xl flex items-center justify-center font-black text-xl text-white">
+                            <i class="fa-solid fa-dumbbell"></i>
+                        </div>
+                        <span class="font-display text-xl font-bold tracking-wider text-white uppercase">FITNESS <span class="text-brand-red">HUB</span></span>
+                    </div>
+                    <p class="text-xs text-neutral-400 leading-relaxed">
+                        Pakistan's premier destination for body transformation, strength training, and lifestyle wellness.
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <a href="https://facebook.com" target="_blank" class="w-9 h-9 bg-brand-card hover:bg-brand-red border border-brand-border rounded-lg flex items-center justify-center text-neutral-300 hover:text-white transition-colors">
+                            <i class="fa-brands fa-facebook-f text-sm"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="w-9 h-9 bg-brand-card hover:bg-brand-red border border-brand-border rounded-lg flex items-center justify-center text-neutral-300 hover:text-white transition-colors">
+                            <i class="fa-brands fa-instagram text-sm"></i>
+                        </a>
+                        <a href="https://youtube.com" target="_blank" class="w-9 h-9 bg-brand-card hover:bg-brand-red border border-brand-border rounded-lg flex items-center justify-center text-neutral-300 hover:text-white transition-colors">
+                            <i class="fa-brands fa-youtube text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Quick Links -->
+                <div>
+                    <h4 class="font-display text-base font-bold uppercase text-white mb-4 border-b border-brand-border pb-2">Quick Navigation</h4>
+                    <ul class="space-y-2 text-xs font-semibold uppercase text-neutral-400">
+                        <li><a href="#home" class="hover:text-brand-red">Home</a></li>
+                        <li><a href="#about" class="hover:text-brand-red">About Us</a></li>
+                        <li><a href="#plans" class="hover:text-brand-red">Membership Plans</a></li>
+                        <li><a href="#personal-training" class="hover:text-brand-red">Personal Training</a></li>
+                        <li><a href="#ladies-zone" class="hover:text-brand-red">Ladies Zone</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Facilities -->
+                <div>
+                    <h4 class="font-display text-base font-bold uppercase text-white mb-4 border-b border-brand-border pb-2">Facilities</h4>
+                    <ul class="space-y-2 text-xs font-semibold uppercase text-neutral-400">
+                        <li><a href="#facilities" class="hover:text-brand-red">Cardio Deck</a></li>
+                        <li><a href="#facilities" class="hover:text-brand-red">Powerlifting Platform</a></li>
+                        <li><a href="#facilities" class="hover:text-brand-red">Functional Arena</a></li>
+                        <li><a href="#supplements" class="hover:text-brand-red">Supplement Store</a></li>
+                        <li><a href="#facilities" class="hover:text-brand-red">Warm Showers & Lockers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Newsletter -->
+                <div>
+                    <h4 class="font-display text-base font-bold uppercase text-white mb-4 border-b border-brand-border pb-2">Newsletter</h4>
+                    <p class="text-xs text-neutral-400 mb-3">Subscribe for weekly workout tips, diet charts & seasonal promo discounts.</p>
+                    <form onsubmit="handleNewsletter(event)" class="space-y-2">
+                        <input type="email" required placeholder="Enter your email..." class="w-full bg-brand-card border border-brand-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-red">
+                        <button type="submit" class="w-full bg-brand-red hover:bg-brand-redhover text-white text-xs font-bold py-2.5 rounded-xl uppercase tracking-wider">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-brand-border pt-8 text-center text-xs text-neutral-500">
+                <p>&copy; 2026 Fitness Hub (fitnesshubpk.com). All Rights Reserved. Designed with peak performance in mind.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/923001234567?text=Hi%20Fitness%20Hub,%20I%20would%20like%20to%20inquire%20about%20membership!" 
+       target="_blank" 
+       class="fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- Scroll To Top Button -->
+    <button id="scroll-top-btn" onclick="scrollToTop()" class="hidden fixed bottom-6 left-6 z-40 bg-brand-card border border-brand-border text-white hover:text-brand-red w-12 h-12 rounded-full flex items-center justify-center shadow-xl transition-all">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 hidden backdrop-blur-md items-center justify-center p-4">
+        <div class="relative max-w-4xl w-full">
+            <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-white text-2xl hover:text-brand-red">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="lightbox-img" src="" alt="Enlarged Gym View" class="w-full h-auto max-h-[80vh] object-contain rounded-2xl border border-brand-border">
+            <p id="lightbox-caption" class="text-center font-display text-lg uppercase font-bold text-white mt-4"></p>
+        </div>
+    </div>
+
+    <!-- Membership Join Modal -->
+    <div id="membership-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-brand-card border border-brand-border w-full max-w-md rounded-3xl p-6 sm:p-8 relative shadow-2xl">
+            <button onclick="closeModal('membership-modal')" class="absolute top-4 right-4 text-neutral-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-brand-red/20 text-brand-red rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-bolt text-xl"></i>
+                </div>
+                <h3 class="font-display text-2xl font-bold uppercase text-white" id="modal-plan-title">Join Fitness Hub</h3>
+                <p class="text-xs text-neutral-400 mt-1">Fill out your details to activate your membership or book a free trial.</p>
+            </div>
+
+            <form onsubmit="handleMembershipSignup(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-neutral-300 mb-1">Full Name</label>
+                    <input type="text" required placeholder="Your Name" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-2.5 text-white text-sm focus:border-brand-red focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-neutral-300 mb-1">Phone / WhatsApp Number</label>
+                    <input type="tel" required placeholder="+92 300 0000000" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-2.5 text-white text-sm focus:border-brand-red focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-neutral-300 mb-1">Selected Plan</label>
+                    <select id="modal-plan-select" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-2.5 text-white text-sm focus:border-brand-red focus:outline-none">
+                        <option>Monthly Plan (PKR 8,500)</option>
+                        <option selected>Quarterly Plan (PKR 22,500)</option>
+                        <option>Half-Yearly Plan (PKR 40,000)</option>
+                        <option>Annual VIP Plan (PKR 70,000)</option>
+                        <option>1-Day Free Trial Pass</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-brand-red hover:bg-brand-redhover text-white font-bold py-3.5 rounded-xl uppercase tracking-wider text-sm shadow-lg shadow-brand-red/30 transition-all">
+                    Confirm Registration <i class="fa-solid fa-check ml-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-24 right-6 z-50 bg-brand-card border border-brand-red text-white px-6 py-4 rounded-xl shadow-2xl hidden items-center gap-3">
+        <i class="fa-solid fa-circle-check text-brand-red text-xl"></i>
+        <span id="toast-message" class="text-xs font-bold uppercase tracking-wider">Request Submitted Successfully!</span>
+    </div>
+
+    <script>
+        // Mobile Navigation Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile drawer when clicking a link
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Scroll to Top button visibility
+        const scrollTopBtn = document.getElementById('scroll-top-btn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                scrollTopBtn.classList.remove('hidden');
+            } else {
+                scrollTopBtn.classList.add('hidden');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Modal Handlers
+        function openModal(modalId, planName = 'Join Fitness Hub') {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                if (planName) {
+                    const titleElem = document.getElementById('modal-plan-title');
+                    if (titleElem) titleElem.innerText = planName;
+                }
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        // Lightbox Handlers
+        function openLightbox(imageSrc, caption) {
+            document.getElementById('lightbox-img').src = imageSrc;
+            document.getElementById('lightbox-caption').innerText = caption;
+            const lightbox = document.getElementById('lightbox-modal');
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox-modal');
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+        }
+
+        // FAQ Toggle Accordion
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // BMI Calculator Logic
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('bmi-height').value);
+            const weight = parseFloat(document.getElementById('bmi-weight').value);
+
+            if (!height || !weight || height <= 0 || weight <= 0) {
+                showToast("Please enter valid height and weight values!");
+                return;
+            }
+
+            const heightInMeters = height / 100;
+            const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+
+            document.getElementById('bmi-placeholder').classList.add('hidden');
+            const resultCard = document.getElementById('bmi-result-card');
+            resultCard.classList.remove('hidden');
+
+            document.getElementById('bmi-score').innerText = bmi;
+
+            const categoryElem = document.getElementById('bmi-category');
+            const adviceElem = document.getElementById('bmi-advice');
+
+            if (bmi < 18.5) {
+                categoryElem.innerText = "Underweight";
+                adviceElem.innerText = "Target muscle gain through progressive resistance workouts & hyper-caloric macro meal plans at Fitness Hub.";
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                categoryElem.innerText = "Normal Weight";
+                adviceElem.innerText = "Great shape! Focus on strength gains, muscle toning, and metabolic conditioning.";
+            } else if (bmi >= 25 && bmi < 29.9) {
+                categoryElem.innerText = "Overweight";
+                adviceElem.innerText = "Combine high-intensity cardio with compound weight lifting to accelerate calorie burn and trim fat.";
+            } else {
+                categoryElem.innerText = "Obese Range";
+                adviceElem.innerText = "Our personal trainers will guide you through low-impact fat loss routines tailored to build stamina safely.";
+            }
+        }
+
+        // Supplement Filtering
+        function filterSupplements(category) {
+            const cards = document.querySelectorAll('.supp-card');
+            const buttons = document.querySelectorAll('.supp-btn');
+
+            buttons.forEach(btn => btn.classList.remove('bg-brand-red', 'text-white'));
+            buttons.forEach(btn => btn.classList.add('bg-brand-card', 'text-neutral-300'));
+
+            event.target.classList.remove('bg-brand-card', 'text-neutral-300');
+            event.target.classList.add('bg-brand-red', 'text-white');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Quick WhatsApp Supplement Order
+        function quickOrderSupp(productName) {
+            const msg = encodeURIComponent(`Hi Fitness Hub! I would like to order: ${productName}. Please confirm availability.`);
+            window.open(`https://wa.me/923001234567?text=${msg}`, '_blank');
+        }
+
+        // Toast Notification System
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.innerText = message;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 4000);
+        }
+
+        // Event Handlers
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            showToast("Message Sent! Our reception will contact you shortly.");
+            e.target.reset();
+        }
+
+        function handleNewsletter(e) {
+            e.preventDefault();
+            showToast("Subscribed! Thank you for joining our newsletter.");
+            e.target.reset();
+        }
+
+        function handleMembershipSignup(e) {
+            e.preventDefault();
+            closeModal('membership-modal');
+            showToast("Registration Received! Our team will call to confirm.");
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>

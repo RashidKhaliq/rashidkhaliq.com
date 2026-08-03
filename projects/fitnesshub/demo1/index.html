@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Hub | Lahore's Home of Strength</title>
+<meta name="description" content="Fitness Hub - premium gym in Lahore. Strength training, HIIT, group classes, personal training and nutrition coaching.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0a0a0a;
+    --black-soft:#141414;
+    --black-card:#1b1b1b;
+    --red:#d3121e;
+    --red-dark:#7a0000;
+    --red-glow:#ff2a3a;
+    --white:#f5f5f0;
+    --gray:#8f8f8a;
+    --line:#2a2a2a;
+    --ease:cubic-bezier(.16,.84,.44,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--white);
+    font-family:'Barlow',sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  img{max-width:100%;display:block;}
+  .eyebrow{
+    font-family:'Barlow Condensed',sans-serif;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    color:var(--red);
+    font-weight:600;
+    font-size:.8rem;
+  }
+  h1,h2,h3,.display{
+    font-family:'Anton',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    line-height:.95;
+  }
+  .container{
+    width:100%;
+    max-width:1240px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+  ::selection{background:var(--red);color:var(--white);}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline:2px solid var(--red);
+    outline-offset:3px;
+  }
+
+  /* ---------- reveal animations ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(40px);
+    transition:opacity .9s var(--ease), transform .9s var(--ease);
+  }
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .reveal-scale{opacity:0;transform:scale(.92);transition:opacity .8s var(--ease), transform .8s var(--ease);}
+  .reveal-scale.in{opacity:1;transform:scale(1);}
+  .stagger .reveal:nth-child(1){transition-delay:.05s;}
+  .stagger .reveal:nth-child(2){transition-delay:.15s;}
+  .stagger .reveal:nth-child(3){transition-delay:.25s;}
+  .stagger .reveal:nth-child(4){transition-delay:.35s;}
+  .stagger .reveal:nth-child(5){transition-delay:.45s;}
+  .stagger .reveal:nth-child(6){transition-delay:.55s;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    padding:22px 0;
+    transition:padding .4s var(--ease), background .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  header.scrolled{
+    padding:12px 0;
+    background:rgba(10,10,10,.92);
+    backdrop-filter:blur(10px);
+    box-shadow:0 2px 24px rgba(0,0,0,.5);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:52px;width:auto;transition:height .4s var(--ease);}
+  header.scrolled .brand img{height:40px;}
+  .brand-text{font-family:'Anton',sans-serif;font-size:1.15rem;letter-spacing:.03em;}
+  .brand-text span{color:var(--red);}
+  .nav-links{display:flex;gap:34px;align-items:center;}
+  .nav-links a{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;font-size:.95rem;letter-spacing:.05em;text-transform:uppercase;
+    position:relative;padding:6px 0;
+  }
+  .nav-links a::after{
+    content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--red);
+    transition:width .3s var(--ease);
+  }
+  .nav-links a:hover::after{width:100%;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.9rem;
+    padding:13px 28px;border:2px solid var(--red);border-radius:2px;
+    position:relative;overflow:hidden;isolation:isolate;
+    transition:color .35s var(--ease), border-color .35s var(--ease);
+    cursor:pointer;
+  }
+  .btn::before{
+    content:'';position:absolute;inset:0;background:var(--red);
+    transform:translateX(-101%);transition:transform .35s var(--ease);z-index:-1;
+  }
+  .btn:hover::before{transform:translateX(0);}
+  .btn-solid{background:var(--red);color:var(--white);}
+  .btn-solid::before{background:var(--white);}
+  .btn-solid:hover{color:var(--black);}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+  .hamburger span{width:26px;height:2px;background:var(--white);transition:transform .3s,opacity .3s;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;min-height:100vh;display:flex;align-items:center;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,.55) 0%, rgba(10,10,10,.75) 55%, var(--black) 100%),
+      url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1800&q=80') center 30%/cover no-repeat;
+    background-size:cover;
+  }
+  .hero-bg{
+    position:absolute;inset:0;z-index:0;
+    background:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1800&q=80') center 30%/cover no-repeat;
+    will-change:transform;
+  }
+  .hero-overlay{
+    position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg, rgba(8,8,8,.35) 0%, rgba(8,8,8,.55) 45%, var(--black) 100%);
+  }
+  .hero .container{position:relative;z-index:2;padding-top:90px;}
+  .hero-eyebrow{margin-bottom:22px;display:flex;align-items:center;gap:14px;}
+  .hero-eyebrow .rule{width:50px;height:2px;background:var(--red);}
+  .hero h1{
+    font-size:clamp(3.2rem,8vw,7rem);
+    color:var(--white);
+  }
+  .hero h1 .line2{color:var(--red);display:block;}
+  .hero p.lead{
+    max-width:520px;margin-top:26px;font-size:1.15rem;color:#d6d6d0;font-weight:400;
+  }
+  .hero-cta{display:flex;gap:18px;margin-top:42px;flex-wrap:wrap;}
+  .hero-scroll{
+    position:absolute;bottom:110px;left:32px;z-index:2;
+    display:flex;align-items:center;gap:12px;
+    font-family:'Barlow Condensed',sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:.75rem;color:var(--gray);
+  }
+  .hero-scroll .stick{width:1px;height:46px;background:linear-gradient(var(--red),transparent);position:relative;overflow:hidden;}
+  .hero-scroll .stick::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--white);animation:scrollpulse 1.8s infinite var(--ease);}
+  @keyframes scrollpulse{ to{top:100%;} }
+
+  /* diagonal ribbon signature */
+  .ribbon{
+    position:relative;
+    height:96px;
+    background:linear-gradient(100deg, var(--red-dark) 0%, var(--red) 45%, var(--red-glow) 52%, var(--red) 58%, var(--red-dark) 100%);
+    transform:skewY(-2deg);
+    margin:-48px 0;
+    z-index:3;
+    display:flex;align-items:center;
+    box-shadow:0 10px 40px rgba(211,18,30,.25);
+  }
+  .ribbon-track{
+    display:flex;white-space:nowrap;transform:skewY(2deg);
+    animation:marquee 22s linear infinite;
+  }
+  .ribbon-track span{
+    font-family:'Anton',sans-serif;font-size:1.4rem;letter-spacing:.05em;
+    padding:0 28px;color:var(--white);text-transform:uppercase;
+    display:flex;align-items:center;gap:28px;
+  }
+  .ribbon-track span::after{content:'★';color:var(--black);font-size:1rem;}
+  @keyframes marquee{ from{transform:skewY(2deg) translateX(0);} to{transform:skewY(2deg) translateX(-50%);} }
+
+  /* ---------- STATS ---------- */
+  .stats{
+    background:var(--black-soft);
+    padding:80px 0 60px;
+    border-bottom:1px solid var(--line);
+  }
+  .stats-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  }
+  .stat{text-align:center;padding:0 10px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{
+    font-family:'Anton',sans-serif;font-size:clamp(2.4rem,5vw,3.6rem);color:var(--red);
+  }
+  .stat .lbl{
+    font-family:'Barlow Condensed',sans-serif;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--gray);font-size:.85rem;margin-top:6px;
+  }
+
+  /* ---------- SECTION HEADS ---------- */
+  section{padding:120px 0;position:relative;}
+  .sec-head{max-width:640px;margin-bottom:64px;}
+  .sec-head h2{font-size:clamp(2.4rem,5vw,3.8rem);margin-top:14px;}
+  .sec-head p{color:var(--gray);margin-top:18px;font-size:1.05rem;max-width:520px;}
+
+  /* ---------- ABOUT ---------- */
+  .about{background:var(--black);}
+  .about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center;}
+  .about-media{position:relative;}
+  .about-media .frame{
+    position:relative;border:2px solid var(--red);padding:16px;
+  }
+  .about-media img{filter:grayscale(.25) contrast(1.05);}
+  .about-media .tag{
+    position:absolute;bottom:-24px;right:-24px;background:var(--red);color:var(--white);
+    font-family:'Anton',sans-serif;padding:18px 26px;font-size:1.1rem;text-align:center;line-height:1.1;
+    box-shadow:0 12px 30px rgba(211,18,30,.35);
+  }
+  .about-copy .eyebrow{margin-bottom:16px;}
+  .about-copy h2{margin-bottom:24px;}
+  .about-copy p{color:#c9c9c4;margin-bottom:18px;line-height:1.7;}
+  .about-list{margin-top:26px;display:grid;gap:14px;}
+  .about-list li{display:flex;align-items:center;gap:14px;font-weight:500;}
+  .about-list .dot{width:10px;height:10px;background:var(--red);transform:rotate(45deg);flex:none;}
+
+  /* ---------- PROGRAMS ---------- */
+  .programs{background:var(--black-soft);}
+  .prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);}
+  .prog-card{
+    background:var(--black-card);padding:44px 34px;position:relative;overflow:hidden;
+    min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;
+    transition:background .4s var(--ease);
+  }
+  .prog-card .bgimg{
+    position:absolute;inset:0;background-size:cover;background-position:center;
+    opacity:.18;transition:opacity .5s var(--ease), transform .6s var(--ease);
+    filter:grayscale(1);
+  }
+  .prog-card:hover .bgimg{opacity:.42;transform:scale(1.08);filter:grayscale(.2);}
+  .prog-card .num{
+    font-family:'Barlow Condensed',sans-serif;color:var(--red);font-weight:700;font-size:1rem;
+    position:relative;z-index:1;letter-spacing:.1em;
+  }
+  .prog-card h3{position:relative;z-index:1;font-size:1.7rem;margin:14px 0 10px;}
+  .prog-card p{position:relative;z-index:1;color:var(--gray);font-size:.95rem;line-height:1.6;}
+  .prog-card .arrow{
+    position:relative;z-index:1;margin-top:20px;width:38px;height:38px;border:1px solid var(--red);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--red);
+    transition:background .3s,color .3s,transform .3s;
+  }
+  .prog-card:hover .arrow{background:var(--red);color:var(--white);transform:translateX(6px);}
+
+  /* ---------- PRICING ---------- */
+  .pricing{background:var(--black);}
+  .toggle-wrap{display:flex;align-items:center;gap:16px;margin-bottom:50px;justify-content:flex-start;}
+  .toggle-lbl{font-family:'Barlow Condensed',sans-serif;letter-spacing:.15em;text-transform:uppercase;font-size:.9rem;color:var(--gray);}
+  .toggle-lbl.active{color:var(--white);}
+  .toggle{
+    width:58px;height:30px;background:var(--black-card);border:1px solid var(--line);border-radius:20px;
+    position:relative;cursor:pointer;
+  }
+  .toggle .knob{
+    position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--red);
+    transition:transform .35s var(--ease);
+  }
+  .toggle.on .knob{transform:translateX(28px);}
+  .save-badge{background:var(--red);color:var(--white);font-size:.75rem;padding:3px 9px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.05em;}
+
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .price-card{
+    background:var(--black-card);border:1px solid var(--line);padding:44px 36px;
+    display:flex;flex-direction:column;transition:transform .4s var(--ease), border-color .4s var(--ease);
+  }
+  .price-card:hover{transform:translateY(-10px);border-color:var(--red);}
+  .price-card.featured{border-color:var(--red);background:linear-gradient(180deg, rgba(211,18,30,.08), var(--black-card) 30%);position:relative;}
+  .price-card.featured::before{
+    content:'MOST POPULAR';position:absolute;top:0;right:0;background:var(--red);color:var(--white);
+    font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;font-size:.72rem;padding:7px 16px;
+  }
+  .price-card h3{font-size:1.5rem;margin-bottom:6px;}
+  .price-card .desc{color:var(--gray);font-size:.9rem;margin-bottom:26px;}
+  .price-amt{font-family:'Anton',sans-serif;font-size:3rem;color:var(--white);margin-bottom:4px;}
+  .price-amt span{font-size:1.1rem;color:var(--gray);font-family:'Barlow',sans-serif;}
+  .price-period{color:var(--gray);font-size:.85rem;margin-bottom:30px;}
+  .price-feat{display:grid;gap:12px;margin-bottom:34px;flex:1;}
+  .price-feat li{display:flex;gap:10px;font-size:.95rem;color:#d6d6d0;}
+  .price-feat li::before{content:'✓';color:var(--red);font-weight:700;}
+  .price-card .btn{width:100%;justify-content:center;}
+
+  /* ---------- TRAINERS ---------- */
+  .trainers{background:var(--black-soft);}
+  .trainer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+  .trainer-card{position:relative;overflow:hidden;background:var(--black-card);}
+  .trainer-card .photo{height:340px;overflow:hidden;position:relative;}
+  .trainer-card .photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);transition:transform .6s var(--ease), filter .6s var(--ease);}
+  .trainer-card:hover .photo img{transform:scale(1.07);filter:grayscale(0);}
+  .trainer-card .info{padding:22px;position:relative;}
+  .trainer-card .info::before{content:'';position:absolute;top:-2px;left:22px;width:36px;height:3px;background:var(--red);}
+  .trainer-card h3{font-size:1.15rem;margin-bottom:4px;letter-spacing:.02em;}
+  .trainer-card .role{color:var(--red);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;font-size:.8rem;font-weight:600;}
+  .trainer-card .years{color:var(--gray);font-size:.85rem;margin-top:8px;}
+
+  /* ---------- GALLERY ---------- */
+  .gallery{background:var(--black);}
+  .gal-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:150px;gap:8px;
+  }
+  .gal-item{position:relative;overflow:hidden;cursor:pointer;}
+  .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease),filter .5s;filter:grayscale(.5) brightness(.85);}
+  .gal-item:hover img{transform:scale(1.12);filter:grayscale(0) brightness(1);}
+  .gal-item::after{
+    content:'+';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Anton',sans-serif;font-size:2.2rem;color:var(--white);background:rgba(211,18,30,0);
+    opacity:0;transition:opacity .4s, background .4s;
+  }
+  .gal-item:hover::after{opacity:1;background:rgba(211,18,30,.35);}
+  .gal-item.tall{grid-row:span 2;}
+  .gal-item.wide{grid-column:span 2;}
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testi{background:var(--black-soft);text-align:center;}
+  .testi-wrap{max-width:760px;margin:0 auto;position:relative;min-height:220px;}
+  .testi-slide{
+    position:absolute;inset:0;opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease), transform .6s var(--ease);
+    pointer-events:none;
+  }
+  .testi-slide.active{opacity:1;transform:translateY(0);pointer-events:auto;}
+  .testi-quote{font-family:'Anton',sans-serif;font-size:clamp(1.3rem,3vw,1.9rem);line-height:1.35;text-transform:none;color:var(--white);}
+  .testi-quote::before{content:'“';color:var(--red);}
+  .testi-quote::after{content:'”';color:var(--red);}
+  .testi-name{margin-top:24px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--red);font-weight:700;}
+  .testi-role{color:var(--gray);font-size:.9rem;margin-top:2px;}
+  .testi-dots{display:flex;gap:10px;justify-content:center;margin-top:40px;}
+  .testi-dots button{width:10px;height:10px;border-radius:50%;background:var(--line);border:none;cursor:pointer;transition:background .3s,transform .3s;}
+  .testi-dots button.active{background:var(--red);transform:scale(1.3);}
+
+  /* ---------- CTA BANNER ---------- */
+  .cta-band{
+    background:linear-gradient(120deg, var(--red-dark), var(--red) 60%, var(--red-dark));
+    padding:90px 0;text-align:center;position:relative;overflow:hidden;
+  }
+  .cta-band h2{font-size:clamp(2.4rem,6vw,4.2rem);color:var(--white);}
+  .cta-band p{color:rgba(255,255,255,.85);margin:18px 0 34px;font-size:1.1rem;}
+  .cta-band .btn{border-color:var(--white);}
+  .cta-band .btn-solid{background:var(--black);border-color:var(--black);}
+  .cta-band .btn-solid::before{background:var(--white);}
+  .cta-band .btn-outline{color:var(--white);}
+  .cta-band .btn-outline::before{background:var(--white);}
+  .cta-band .btn-outline:hover{color:var(--red);}
+
+  /* ---------- CONTACT ---------- */
+  .contact{background:var(--black);}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;}
+  .contact-info .eyebrow{margin-bottom:16px;}
+  .contact-info h2{margin-bottom:24px;}
+  .contact-info p{color:var(--gray);margin-bottom:30px;}
+  .info-row{display:flex;gap:16px;margin-bottom:22px;align-items:flex-start;}
+  .info-row .ic{width:42px;height:42px;border:1px solid var(--red);color:var(--red);display:flex;align-items:center;justify-content:center;flex:none;font-size:1.1rem;}
+  .info-row .t{font-weight:600;margin-bottom:2px;}
+  .info-row .d{color:var(--gray);font-size:.92rem;}
+  form{display:grid;gap:16px;}
+  .field{display:grid;gap:8px;}
+  .field label{font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;font-size:.8rem;color:var(--gray);}
+  .field input, .field textarea{
+    background:var(--black-card);border:1px solid var(--line);color:var(--white);padding:14px 16px;
+    font-family:'Barlow',sans-serif;font-size:.95rem;transition:border-color .3s;
+  }
+  .field input:focus, .field textarea:focus{border-color:var(--red);outline:none;}
+  form .btn{width:fit-content;margin-top:8px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--black-soft);border-top:1px solid var(--line);padding:60px 0 30px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:50px;}
+  .foot-brand{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+  .foot-brand img{height:44px;}
+  .foot-brand span{font-family:'Anton',sans-serif;font-size:1.05rem;}
+  footer p.tag{color:var(--gray);font-size:.9rem;max-width:280px;}
+  .foot-col h4{font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;color:var(--red);margin-bottom:16px;}
+  .foot-col li{margin-bottom:10px;}
+  .foot-col a{color:#c9c9c4;font-size:.92rem;transition:color .3s,padding-left .3s;}
+  .foot-col a:hover{color:var(--red);padding-left:6px;}
+  .foot-bottom{
+    border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;
+    color:var(--gray);font-size:.85rem;flex-wrap:wrap;gap:10px;
+  }
+  .socials{display:flex;gap:14px;}
+  .socials a{width:36px;height:36px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;transition:border-color .3s,color .3s;}
+  .socials a:hover{border-color:var(--red);color:var(--red);}
+
+  /* ---------- WHATSAPP FLOAT ---------- */
+  .wa-float{
+    position:fixed;bottom:28px;right:28px;z-index:900;
+    width:60px;height:60px;border-radius:50%;background:var(--red);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(211,18,30,.5);
+    animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(211,18,30,.55);}
+    70%{box-shadow:0 0 0 18px rgba(211,18,30,0);}
+    100%{box-shadow:0 0 0 0 rgba(211,18,30,0);}
+  }
+  .wa-float svg{width:28px;height:28px;fill:var(--white);}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:1000px){
+    .about-grid, .contact-grid{grid-template-columns:1fr;gap:50px;}
+    .prog-grid{grid-template-columns:repeat(2,1fr);}
+    .price-grid{grid-template-columns:1fr;max-width:440px;margin:0 auto;}
+    .trainer-grid{grid-template-columns:repeat(2,1fr);}
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .stat{border-right:none;border-bottom:1px solid var(--line);padding-bottom:24px;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:760px){
+    .nav-links{
+      position:fixed;top:0;right:0;height:100vh;width:78%;max-width:320px;
+      background:var(--black-soft);flex-direction:column;justify-content:center;gap:30px;
+      transform:translateX(100%);transition:transform .45s var(--ease);
+      border-left:1px solid var(--line);
+    }
+    .nav-links.open{transform:translateX(0);}
+    .hamburger{display:flex;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .prog-grid, .gal-grid, .trainer-grid{grid-template-columns:1fr;}
+    .gal-item.wide{grid-column:span 1;}
+    .foot-grid{grid-template-columns:1fr;gap:30px;}
+    section{padding:80px 0;}
+    .ribbon-track span{font-size:1.05rem;padding:0 18px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header id="siteHeader">
+  <div class="container">
+    <nav>
+      <div class="brand">
+        <img src="logo.png" alt="Fitness Hub logo">
+        <div class="brand-text">FITNESS<span>HUB</span></div>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#trainers">Trainers</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#contact" class="btn btn-solid">Book Free Trial</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-eyebrow"><span class="rule"></span><span class="eyebrow">Fitness Hub · Lahore</span></div>
+    <h1>NO EXCUSES<span class="line2">JUST RESULTS.</span></h1>
+    <p class="lead">Strength training, HIIT, and coaching built around one goal — the strongest version of you. Real equipment, real trainers, real progress.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-solid">Book Free Trial</a>
+      <a href="#pricing" class="btn">View Membership Plans</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><span class="stick"></span>SCROLL</div>
+</section>
+
+<div class="ribbon">
+  <div class="ribbon-track" id="ribbonTrack">
+    <span>STRENGTH</span><span>DISCIPLINE</span><span>FITNESS HUB</span><span>NO LIMITS</span>
+    <span>STRENGTH</span><span>DISCIPLINE</span><span>FITNESS HUB</span><span>NO LIMITS</span>
+  </div>
+</div>
+
+<!-- ================= STATS ================= -->
+<section class="stats" style="padding-top:110px;">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat reveal"><div class="num" data-count="1200">0</div><div class="lbl">Active Members</div></div>
+      <div class="stat reveal"><div class="num" data-count="18">0</div><div class="lbl">Expert Trainers</div></div>
+      <div class="stat reveal"><div class="num" data-count="40">0</div><div class="lbl">Classes / Week</div></div>
+      <div class="stat reveal"><div class="num" data-count="9">0</div><div class="lbl">Years Running</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="about" id="about">
+  <div class="container about-grid">
+    <div class="about-media reveal-scale">
+      <div class="frame">
+        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80" alt="Trainer coaching a member on strength technique">
+      </div>
+      <div class="tag">SINCE<br>2016</div>
+    </div>
+    <div class="about-copy">
+      <span class="eyebrow">Who we are</span>
+      <h2>Built for people who<br>show up.</h2>
+      <p>Fitness Hub started as a single floor above a market in Lahore and grew into a full training facility because members kept coming back — not for the paint job, but for results.</p>
+      <p>We keep the programming honest: real strength progressions, coached technique, and a community that notices when you skip a week.</p>
+      <ul class="about-list">
+        <li><span class="dot"></span> Certified strength & conditioning coaches</li>
+        <li><span class="dot"></span> Free-weight floor + dedicated cardio & HIIT zone</li>
+        <li><span class="dot"></span> Nutrition guidance included with every plan</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROGRAMS ================= -->
+<section class="programs" id="programs">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Train your way</span>
+      <h2>Programs that fit<br>the goal, not the trend.</h2>
+      <p>Six ways in. One standard of coaching.</p>
+    </div>
+  </div>
+  <div class="prog-grid">
+    <div class="prog-card">
+      <div class="bgimg" style="background-image:url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80')"></div>
+      <div class="num">01</div><h3>Strength Training</h3>
+      <p>Barbell fundamentals to advanced programming, coached every session.</p>
+      <div class="arrow">→</div>
+    </div>
+    <div class="prog-card">
+      <div class="bgimg" style="background-image:url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80')"></div>
+      <div class="num">02</div><h3>HIIT & Cardio</h3>
+      <p>High-output interval sessions built to burn fat and build engine.</p>
+      <div class="arrow">→</div>
+    </div>
+    <div class="prog-card">
+      <div class="bgimg" style="background-image:url('https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80')"></div>
+      <div class="num">03</div><h3>Group Classes</h3>
+      <p>CrossFit-style WODs, yoga, and Zumba — pick your energy for the day.</p>
+      <div class="arrow">→</div>
+    </div>
+    <div class="prog-card">
+      <div class="bgimg" style="background-image:url('https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?auto=format&fit=crop&w=800&q=80')"></div>
+      <div class="num">04</div><h3>Personal Training</h3>
+      <p>One-on-one coaching built around your schedule and your limits.</p>
+      <div class="arrow">→</div>
+    </div>
+    <div class="prog-card">
+      <div class="bgimg" style="background-image:url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80')"></div>
+      <div class="num">05</div><h3>Nutrition Coaching</h3>
+      <p>Meal structure and macros that actually survive real life in Lahore.</p>
+      <div class="arrow">→</div>
+    </div>
+    <div class="prog-card">
+      <div class="bgimg" style="background-image:url('https://images.unsplash.com/photo-1550345332-09e3ac987658?auto=format&fit=crop&w=800&q=80')"></div>
+      <div class="num">06</div><h3>Recovery & Mobility</h3>
+      <p>Stretch sessions and mobility drills so training doesn't wreck you.</p>
+      <div class="arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Membership</span>
+      <h2>Simple plans.<br>No hidden reps.</h2>
+    </div>
+    <div class="toggle-wrap">
+      <span class="toggle-lbl active" id="lblMonthly">Monthly</span>
+      <div class="toggle" id="pricingToggle"><div class="knob"></div></div>
+      <span class="toggle-lbl" id="lblAnnual">Annual</span>
+      <span class="save-badge">SAVE 20%</span>
+    </div>
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <h3>Basic</h3>
+        <p class="desc">Get moving and build the habit.</p>
+        <div class="price-amt"><span>PKR</span> <span class="amt" data-m="4500" data-a="3600">4,500</span></div>
+        <div class="price-period">per month</div>
+        <ul class="price-feat">
+          <li>Full gym floor access</li>
+          <li>Locker & shower access</li>
+          <li>1 group class / week</li>
+          <li>App workout tracking</li>
+        </ul>
+        <a href="#contact" class="btn">Choose Basic</a>
+      </div>
+      <div class="price-card featured reveal">
+        <h3>Standard</h3>
+        <p class="desc">Our most-picked plan for steady progress.</p>
+        <div class="price-amt"><span>PKR</span> <span class="amt" data-m="7500" data-a="6000">7,500</span></div>
+        <div class="price-period">per month</div>
+        <ul class="price-feat">
+          <li>Everything in Basic</li>
+          <li>Unlimited group classes</li>
+          <li>Monthly progress check-in</li>
+          <li>Nutrition guide included</li>
+        </ul>
+        <a href="#contact" class="btn btn-solid">Choose Standard</a>
+      </div>
+      <div class="price-card reveal">
+        <h3>Premium</h3>
+        <p class="desc">Full coaching for serious goals.</p>
+        <div class="price-amt"><span>PKR</span> <span class="amt" data-m="12000" data-a="9600">12,000</span></div>
+        <div class="price-period">per month</div>
+        <ul class="price-feat">
+          <li>Everything in Standard</li>
+          <li>4x personal training sessions</li>
+          <li>Custom nutrition plan</li>
+          <li>Priority booking</li>
+        </ul>
+        <a href="#contact" class="btn">Choose Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRAINERS ================= -->
+<section class="trainers" id="trainers">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">The coaches</span>
+      <h2>Trainers who<br>track your reps.</h2>
+    </div>
+    <div class="trainer-grid">
+      <div class="trainer-card reveal">
+        <div class="photo"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=500&q=80" alt="Head strength coach"></div>
+        <div class="info"><h3>Hamza Raza</h3><div class="role">Head Strength Coach</div><div class="years">12 yrs experience</div></div>
+      </div>
+      <div class="trainer-card reveal">
+        <div class="photo"><img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=500&q=80" alt="HIIT coach"></div>
+        <div class="info"><h3>Ayesha Malik</h3><div class="role">HIIT & Conditioning</div><div class="years">7 yrs experience</div></div>
+      </div>
+      <div class="trainer-card reveal">
+        <div class="photo"><img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?auto=format&fit=crop&w=500&q=80" alt="Personal trainer"></div>
+        <div class="info"><h3>Bilal Ahmed</h3><div class="role">Personal Training</div><div class="years">9 yrs experience</div></div>
+      </div>
+      <div class="trainer-card reveal">
+        <div class="photo"><img src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&fit=crop&w=500&q=80" alt="Nutrition coach"></div>
+        <div class="info"><h3>Sana Tariq</h3><div class="role">Nutrition Coach</div><div class="years">6 yrs experience</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Inside the gym</span>
+      <h2>The floor speaks<br>for itself.</h2>
+    </div>
+  </div>
+  <div class="container">
+    <div class="gal-grid">
+      <div class="gal-item tall"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=700&q=80" alt="Gym floor with equipment"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=700&q=80" alt="Dumbbells rack"></div>
+      <div class="gal-item wide"><img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80" alt="Group training session"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=700&q=80" alt="Member training with weights"></div>
+      <div class="gal-item"><img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?auto=format&fit=crop&w=700&q=80" alt="Running and cardio zone"></div>
+      <div class="gal-item wide"><img src="https://images.unsplash.com/photo-1546483875-ad9014c88eba?auto=format&fit=crop&w=900&q=80" alt="Yoga and mobility class"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section class="testi">
+  <div class="container">
+    <div class="sec-head reveal" style="margin:0 auto 50px;text-align:center;">
+      <span class="eyebrow">Member results</span>
+      <h2>They showed up.<br>This happened.</h2>
+    </div>
+    <div class="testi-wrap">
+      <div class="testi-slide active">
+        <p class="testi-quote">Down 14kg in eight months and I still enjoy walking into that gym. Coaching made the difference, not the equipment.</p>
+        <div class="testi-name">Usman Farooq</div><div class="testi-role">Member since 2023</div>
+      </div>
+      <div class="testi-slide">
+        <p class="testi-quote">First gym where a trainer actually corrected my deadlift instead of just counting reps for me.</p>
+        <div class="testi-name">Mahnoor Sheikh</div><div class="testi-role">Member since 2022</div>
+      </div>
+      <div class="testi-slide">
+        <p class="testi-quote">The nutrition plan alongside training is what finally made the results stick past month two.</p>
+        <div class="testi-name">Ali Raza</div><div class="testi-role">Member since 2024</div>
+      </div>
+    </div>
+    <div class="testi-dots" id="testiDots"></div>
+  </div>
+</section>
+
+<!-- ================= CTA BAND ================= -->
+<section class="cta-band">
+  <div class="container">
+    <h2 class="reveal">Ready to train<br>like you mean it?</h2>
+    <p class="reveal">Your first session is free. Bring your shoes, we'll bring the plan.</p>
+    <div class="hero-cta" style="justify-content:center;">
+      <a href="#contact" class="btn btn-solid">Book Free Trial</a>
+      <a href="https://wa.me/923000000000" class="btn btn-outline">WhatsApp Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+  <div class="container contact-grid">
+    <div class="contact-info reveal">
+      <span class="eyebrow">Get in touch</span>
+      <h2>Come see<br>the floor.</h2>
+      <p>Walk in for a free tour, or send us your details and a coach will call you back within the day.</p>
+      <div class="info-row"><div class="ic">📍</div><div><div class="t">Location</div><div class="d">Main Boulevard, Gulberg III, Lahore, Pakistan</div></div></div>
+      <div class="info-row"><div class="ic">☎</div><div><div class="t">Phone / WhatsApp</div><div class="d">+92 300 0000000</div></div></div>
+      <div class="info-row"><div class="ic">⏰</div><div><div class="t">Hours</div><div class="d">Mon–Sat: 6:00 AM – 11:00 PM · Sun: 8:00 AM – 8:00 PM</div></div></div>
+    </div>
+    <form id="contactForm" class="reveal">
+      <div class="field"><label for="name">Full name</label><input id="name" type="text" required placeholder="Your name"></div>
+      <div class="field"><label for="phone">Phone number</label><input id="phone" type="tel" required placeholder="03XX-XXXXXXX"></div>
+      <div class="field"><label for="goal">Your goal</label><input id="goal" type="text" placeholder="e.g. Fat loss, strength, general fitness"></div>
+      <div class="field"><label for="msg">Message</label><textarea id="msg" rows="4" placeholder="Anything we should know?"></textarea></div>
+      <button type="submit" class="btn btn-solid">Send & Book Free Trial</button>
+    </form>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand"><img src="logo.png" alt="Fitness Hub logo"><span>FITNESS HUB</span></div>
+        <p class="tag">Lahore's training floor for people who show up and put in the reps.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#programs">Programs</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#trainers">Trainers</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Programs</h4>
+        <ul>
+          <li><a href="#programs">Strength Training</a></li>
+          <li><a href="#programs">HIIT & Cardio</a></li>
+          <li><a href="#programs">Personal Training</a></li>
+          <li><a href="#programs">Nutrition Coaching</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:+923000000000">+92 300 0000000</a></li>
+          <li><a href="mailto:info@fitnesshubpk.com">info@fitnesshubpk.com</a></li>
+          <li><a href="#contact">Gulberg III, Lahore</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Fitness Hub PK. All rights reserved.</span>
+      <div class="socials">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="Facebook">FB</a>
+        <a href="#" aria-label="TikTok">TT</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp float -->
+<a class="wa-float" href="https://wa.me/923000000000" aria-label="Chat on WhatsApp" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.46 17.5 2 12.04 2zm5.76 14.14c-.24.68-1.4 1.31-1.93 1.39-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.16-4.9-4.36-.14-.2-1.17-1.56-1.17-2.97 0-1.41.74-2.1 1-2.39.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.3.38-.43.51-.14.14-.29.29-.13.57.17.29.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.33 1.44.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.38-.24.63-.14.26.1 1.65.78 1.93.92.29.14.48.21.55.33.07.12.07.68-.17 1.36z"/></svg>
+</a>
+
+<script>
+  // ---------- header scroll state ----------
+  const header = document.getElementById('siteHeader');
+  const heroBg = document.getElementById('heroBg');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+    if (heroBg) heroBg.style.transform = `translateY(${window.scrollY * 0.25}px) scale(1.05)`;
+  }, { passive: true });
+
+  // ---------- mobile nav ----------
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
+  }));
+
+  // ---------- scroll reveal ----------
+  const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---------- animated counters ----------
+  const counters = document.querySelectorAll('.num[data-count]');
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.count, 10);
+      const duration = 1600;
+      const start = performance.now();
+      function tick(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target).toLocaleString();
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toLocaleString();
+      }
+      requestAnimationFrame(tick);
+      counterIO.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+  counters.forEach(c => counterIO.observe(c));
+
+  // ---------- pricing toggle ----------
+  const toggle = document.getElementById('pricingToggle');
+  const lblMonthly = document.getElementById('lblMonthly');
+  const lblAnnual = document.getElementById('lblAnnual');
+  const amounts = document.querySelectorAll('.amt');
+  let annual = false;
+  toggle.addEventListener('click', () => {
+    annual = !annual;
+    toggle.classList.toggle('on', annual);
+    lblMonthly.classList.toggle('active', !annual);
+    lblAnnual.classList.toggle('active', annual);
+    amounts.forEach(a => {
+      const val = annual ? a.dataset.a : a.dataset.m;
+      a.textContent = parseInt(val, 10).toLocaleString();
+    });
+  });
+
+  // ---------- testimonial slider ----------
+  const slides = document.querySelectorAll('.testi-slide');
+  const dotsWrap = document.getElementById('testiDots');
+  let current = 0;
+  slides.forEach((_, i) => {
+    const b = document.createElement('button');
+    if (i === 0) b.classList.add('active');
+    b.addEventListener('click', () => showSlide(i));
+    dotsWrap.appendChild(b);
+  });
+  function showSlide(i) {
+    slides[current].classList.remove('active');
+    dotsWrap.children[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dotsWrap.children[current].classList.add('active');
+  }
+  setInterval(() => showSlide((current + 1) % slides.length), 5000);
+
+  // ---------- contact form (demo) ----------
+  document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const btn = this.querySelector('button');
+    const original = btn.textContent;
+    btn.textContent = 'Sent — We\'ll call you soon';
+    btn.style.pointerEvents = 'none';
+    setTimeout(() => { btn.textContent = original; btn.style.pointerEvents = 'auto'; this.reset(); }, 3200);
+  });
+</script>
+</body>
+</html>
