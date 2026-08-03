@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Little Learners Playground — Created by Shifa Rashid</title>
+<meta name="description" content="A colorful educational puzzle game for young children — learn letters, numbers, colors, shapes, animals and fruits through matching, memory, and drag-and-drop games.">
+<meta name="theme-color" content="#52c9f0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="cloud-layer" aria-hidden="true"></div>
+
+<div id="app">
+
+  <!-- ============================================================ -->
+  <!-- START SCREEN                                                   -->
+  <!-- ============================================================ -->
+  <section id="screen-start" class="screen">
+    <div class="mascot" aria-hidden="true">🦉</div>
+    <h1 class="title-big">Little Learners<br>Playground</h1>
+    <p class="subtitle">Learn letters, numbers, colors, shapes, animals &amp; fruits — while playing!</p>
+    <div class="start-buttons">
+      <button class="btn big grass" id="btn-start">▶️ Start Playing</button>
+    </div>
+    <p class="credits">✨ Created by Shifa Rashid ✨</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY SELECT SCREEN                                         -->
+  <!-- ============================================================ -->
+  <section id="screen-categories" class="screen hidden">
+    <div class="top-bar">
+      <button class="icon-btn btn-mute-music" title="Music on/off">🎵</button>
+      <div class="spacer"></div>
+      <div class="score-pill">⭐ <span>0</span></div>
+      <div class="spacer"></div>
+      <button class="icon-btn btn-mute-sound" title="Sound on/off">🔊</button>
+    </div>
+    <h2 style="margin-top:60px;">What do you want to learn today?</h2>
+    <div class="grid" id="category-grid"></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- MODE SELECT SCREEN                                             -->
+  <!-- ============================================================ -->
+  <section id="screen-mode" class="screen hidden">
+    <div class="top-bar">
+      <button class="icon-btn btn-back-cat" title="Back">⬅️</button>
+      <div class="spacer"></div>
+      <div class="score-pill">⭐ <span>0</span></div>
+      <div class="spacer"></div>
+      <button class="icon-btn btn-mute-sound" title="Sound on/off">🔊</button>
+    </div>
+    <h2 id="mode-cat-title" style="margin-top:60px;"></h2>
+    <p class="subtitle">Choose how you want to play</p>
+    <div id="mode-list"></div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- GAME SCREEN (shared by all 3 modes)                            -->
+  <!-- ============================================================ -->
+  <section id="screen-game" class="screen hidden">
+    <div class="top-bar">
+      <button class="icon-btn btn-back-mode" title="Back">⬅️</button>
+      <div class="spacer"></div>
+      <div class="score-pill">⭐ <span>0</span></div>
+      <div class="spacer"></div>
+      <button class="icon-btn btn-mute-sound" title="Sound on/off">🔊</button>
+    </div>
+
+    <h3 id="game-title" class="center-text"></h3>
+    <div class="progress-dots" id="progress-dots"></div>
+
+    <div class="prompt-box" id="prompt-box"></div>
+
+    <!-- Match mode -->
+    <div class="options-grid" id="match-options"></div>
+
+    <!-- Memory mode -->
+    <div class="memory-grid" id="memory-grid"></div>
+
+    <!-- Drag & drop mode -->
+    <div class="dnd-wrap" id="dnd-wrap">
+      <div class="dnd-tray" id="dnd-tray"></div>
+      <div class="dnd-targets" id="dnd-targets"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- RESULTS SCREEN                                                 -->
+  <!-- ============================================================ -->
+  <section id="screen-results" class="screen hidden">
+    <div class="mascot" aria-hidden="true">🎉</div>
+    <h2 id="results-title"></h2>
+    <div class="stars-row" id="results-stars"></div>
+    <p class="result-score" id="results-score"></p>
+    <div class="row" style="margin-top:14px;">
+      <button class="btn grass hidden" id="btn-next-level">Next Level ➡️</button>
+      <button class="btn secondary" id="btn-replay-level">🔁 Play Again</button>
+      <button class="btn grape" id="btn-choose-another">🧩 Choose Another</button>
+      <button class="btn sun" id="btn-results-home">🏠 Home</button>
+    </div>
+    <p class="credits" style="margin-top:26px;">✨ Created by Shifa Rashid ✨</p>
+  </section>
+
+</div>
+
+<div class="feedback-banner" id="feedback-banner"></div>
+
+<script src="js/data.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
