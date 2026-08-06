@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<!--
+  ═══════════════════════════════════════════════════════════════════
+  CHINYERE SALE FILE CREATOR · v1.0.0
+  100% client-side · Static build · Cloudflare Pages ready
+  Module map (organized as sections below):
+    index.html · style.css · config.js · utils.js · csv.js · excel.js · ui.js · app.js
+  ═══════════════════════════════════════════════════════════════════
+-->
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHINYERE SALE FILE CREATOR — Shopify Sale Files, Automatically</title>
+<meta name="description" content="Browser-based Shopify discount CSV generator. Upload a Discount Circular + Shopify export, map columns, download a clean sale file. No servers. No uploads.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%230e6b45'/%3E%3Cpath d='M31.5 24A12 12 0 1 1 19.5 12a9.3 9.3 0 1 0 12 12z' fill='%23fff'/%3E%3Ccircle cx='31' cy='17' r='2.4' fill='%23e2604f'/%3E%3C/svg%3E">
+
+<!-- Typography (fontsource CDN) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.18/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.18/700.css">
+
+<style>
+/* ════════════════════════ style.css ════════════════════════ */
+:root{
+  --bg:#f2f7f3; --surface:#ffffff; --surface-2:#edf4ef;
+  --border:#dde9e1; --border-strong:#c5d8cb;
+  --text:#12291d; --muted:#5d7466; --faint:#8aa094;
+  --green:#0e6b45; --green-strong:#0a5236; --green-deep:#06341f;
+  --green-soft:#e1f1e7; --green-bright:#1fa35c;
+  --red:#d6453a; --red-deep:#b03328; --red-soft:#fcebe8;
+  --ring:rgba(14,107,69,.35);
+  --shadow-sm:0 1px 2px rgba(9,45,30,.05),0 4px 14px -8px rgba(9,45,30,.12);
+  --shadow-md:0 2px 4px rgba(9,45,30,.05),0 18px 44px -18px rgba(9,45,30,.22);
+  --radius:16px; --radius-sm:11px;
+  color-scheme:light;
+}
+[data-theme="dark"]{
+  --bg:#0a120e; --surface:#101b15; --surface-2:#152419;
+  --border:#20342a; --border-strong:#2e4a3a;
+  --text:#e7f2ea; --muted:#9db3a6; --faint:#6f8578;
+  --green:#2fbf7b; --green-strong:#27a86c; --green-deep:#0c2417;
+  --green-soft:#12301f; --green-bright:#3ecb87;
+  --red:#e2604f; --red-deep:#c14a3a; --red-soft:#331813;
+  --ring:rgba(47,191,123,.45);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3),0 6px 18px -10px rgba(0,0,0,.5);
+  --shadow-md:0 2px 6px rgba(0,0,0,.35),0 22px 50px -20px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+[hidden]{display:none !important}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg); color:var(--text);
+  line-height:1.55; min-height:100vh; display:flex; flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(720px 420px at 88% -8%, rgba(14,107,69,.10), transparent 62%),
+    radial-gradient(640px 420px at -10% 26%, rgba(214,69,58,.07), transparent 60%),
+    radial-gradient(900px 600px at 50% 118%, rgba(14,107,69,.07), transparent 60%);
+}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--ring);outline-offset:2px;border-radius:8px}
+
+/* ── Unity ribbon (🇵🇰 green/white + 🍉 red) ── */
+.ribbon{height:4px;background:linear-gradient(90deg,var(--green-deep) 0%,var(--green) 36%,#fff 50%,var(--red) 64%,var(--red-deep) 100%)}
+
+/* ── Top bar ── */
+.topbar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.topbarInner{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.logo{width:48px;height:48px;flex:none;border-radius:14px;box-shadow:var(--shadow-sm)}
+.brandText h1{font-size:clamp(15px,2.4vw,20px);font-weight:800;letter-spacing:.06em;line-height:1.2}
+.brandText h1 em{font-style:normal;color:var(--green)}
+[data-theme="dark"] .brandText h1 em{color:var(--green-bright)}
+.brandText p{font-size:12.5px;color:var(--muted);margin-top:1px}
+.topActions{display:flex;align-items:center;gap:10px}
+.verBadge{font-size:11.5px;font-weight:600;color:var(--green);background:var(--green-soft);border:1px solid color-mix(in srgb,var(--green) 30%,transparent);padding:4px 10px;border-radius:999px;letter-spacing:.04em}
+.iconBtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-size:17px;display:grid;place-items:center;transition:.2s;box-shadow:var(--shadow-sm)}
+.iconBtn:hover{border-color:var(--border-strong);transform:translateY(-1px)}
+
+/* ── Layout ── */
+main{max-width:1180px;margin:0 auto;padding:28px 24px 60px;width:100%;flex:1}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:26px;margin-bottom:22px}
+.panelHead{margin-bottom:20px}
+.panelHead h2{font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+.panelHead p{color:var(--muted);font-size:13.5px;margin-top:4px}
+.stepPill{width:26px;height:26px;border-radius:9px;background:var(--green);color:#fff;font-size:13px;font-weight:700;display:inline-grid;place-items:center;flex:none}
+
+/* ── Stepper ── */
+.stepper{display:flex;align-items:center;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.stepItem{display:flex;align-items:center;gap:9px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);color:var(--faint);font-size:13px;font-weight:600;transition:.25s}
+.stepDot{width:22px;height:22px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-size:11.5px;font-weight:700;border:1px solid var(--border)}
+.stepItem.active{border-color:var(--green);color:var(--text);box-shadow:0 0 0 3px var(--ring)}
+.stepItem.active .stepDot{background:var(--green);color:#fff;border-color:var(--green)}
+.stepItem.done{border-color:color-mix(in srgb,var(--green) 45%,transparent);color:var(--green)}
+.stepItem.done .stepDot{background:var(--green-soft);color:var(--green);border-color:transparent}
+.stepBar{flex:1;min-width:20px;height:2px;border-radius:2px;background:var(--border)}
+
+/* ── Upload cards ── */
+.uploadGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.uploadCard{border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;background:var(--surface);transition:.2s}
+.uploadCard:hover{border-color:var(--border-strong)}
+.ucHead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ucIcon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:21px;flex:none}
+.ucIcon.g{background:var(--green-soft)}
+.ucIcon.r{background:var(--red-soft)}
+.ucTitle h3{font-size:15px;font-weight:700}
+.ucTitle p{font-size:12px;color:var(--muted)}
+.chip{margin-left:auto;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.chip-loading{background:var(--surface-2);color:var(--muted);border:1px solid var(--border)}
+.chip-loading::after{content:"…";animation:dots 1.2s steps(4) infinite}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+.chip-ok{background:var(--green-soft);color:var(--green);border:1px solid color-mix(in srgb,var(--green) 30%,transparent)}
+.chip-err{background:var(--red-soft);color:var(--red);border:1px solid color-mix(in srgb,var(--red) 30%,transparent)}
+.dropzone{border:2px dashed var(--border-strong);border-radius:var(--radius-sm);padding:30px 18px;text-align:center;cursor:pointer;transition:.2s;background:color-mix(in srgb,var(--surface-2) 55%,transparent)}
+.dropzone:hover,.dropzone.drag{border-color:var(--green);background:var(--green-soft);transform:translateY(-1px)}
+.dzIcon{font-size:30px;margin-bottom:8px}
+.dzText{font-size:13.5px}
+.dzText .link{color:var(--green);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.dzHint{font-size:11.5px;color:var(--faint);margin-top:5px;letter-spacing:.02em}
+.fileMeta{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);font-size:12.5px;animation:fadeUp .35s ease}
+.fileMeta .fname{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46%}
+.fileMeta .fdetail{color:var(--muted);white-space:nowrap}
+.fileMeta button{margin-left:auto;border:none;background:transparent;color:var(--muted);font-size:14px;padding:4px 7px;border-radius:7px}
+.fileMeta button:hover{background:var(--red-soft);color:var(--red)}
+.assure{margin-top:18px;text-align:center;font-size:12.5px;color:var(--muted);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px}
+
+/* ── Mapping ── */
+.mapGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.mapCard{border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px}
+.mapCard h3{font-size:14.5px;font-weight:700;margin-bottom:4px}
+.mapCard .mapSub{font-size:12px;color:var(--muted);margin-bottom:14px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:5px;color:var(--text)}
+.field label b{color:var(--red)}
+.field select{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;transition:.15s;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 17px) 55%,calc(100% - 12px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+.field select:hover{border-color:var(--border-strong)}
+.field select.invalid{border-color:var(--red);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sampleTable{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+.sampleTable th,.sampleTable td{border:1px solid var(--border);padding:4px 8px;text-align:left;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sampleTable th{background:var(--surface-2);font-weight:600;color:var(--muted)}
+.sampleCaption{font-size:11px;color:var(--faint);margin-top:12px}
+.mapFoot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:20px;flex-wrap:wrap}
+.remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
+.remember input{accent-color:var(--green);width:16px;height:16px}
+.btnRow{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1.5px solid transparent;font-weight:600;font-size:14px;padding:11px 20px;transition:.2s;text-decoration:none}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none !important}
+.btn.primary{background:var(--green);color:#fff;box-shadow:0 6px 18px -8px color-mix(in srgb,var(--green) 70%,transparent)}
+.btn.primary:hover:not(:disabled){background:var(--green-strong);transform:translateY(-1px)}
+.btn.ghost{background:transparent;border-color:var(--border-strong);color:var(--text)}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.download{background:linear-gradient(135deg,var(--green) 0%,var(--green-strong) 100%);color:#fff;font-size:16px;padding:15px 30px;box-shadow:0 10px 26px -10px color-mix(in srgb,var(--green) 75%,transparent)}
+.btn.download:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 16px 32px -12px color-mix(in srgb,var(--green) 80%,transparent)}
+.btn.small{padding:7px 14px;font-size:12.5px;border-radius:9px}
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Progress ── */
+.progressPanel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px 24px;margin-bottom:22px;animation:fadeUp .3s ease}
+.progressMeta{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:9px}
+.progressPct{color:var(--green);font-family:'JetBrains Mono',monospace}
+.progressTrack{height:10px;background:var(--surface-2);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+.progressFill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--green-bright),var(--green));transition:width .25s ease}
+.progressFill.ind{width:38% !important;animation:slide 1.1s ease-in-out infinite}
+@keyframes slide{0%{margin-left:-40%}100%{margin-left:102%}}
+.progressSub{font-size:12px;color:var(--muted);margin-top:7px}
+
+/* ── Results ── */
+.successCard{display:flex;align-items:center;gap:20px;flex-wrap:wrap;border-left:5px solid var(--green)}
+.successCard.pop{animation:pop .55s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes pop{0%{transform:scale(.97);opacity:.5}100%{transform:scale(1);opacity:1}}
+.checkWrap{width:62px;height:62px;flex:none;border-radius:50%;background:var(--green-soft);display:grid;place-items:center}
+.checkSvg{width:38px;height:38px}
+.checkSvg circle{fill:none;stroke:var(--green);stroke-width:3;stroke-dasharray:160;stroke-dashoffset:160;animation:draw .7s .1s ease forwards}
+.checkSvg path{fill:none;stroke:var(--green);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .5s .5s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.successText{flex:1;min-width:220px}
+.successText h2{font-size:20px;font-weight:800}
+.successText p{color:var(--muted);font-size:13.5px;margin-top:2px}
+
+.statsGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.statTile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-sm);padding:16px 18px;display:flex;gap:13px;align-items:center;animation:fadeUp .5s ease both;animation-delay:calc(var(--i)*60ms)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.statIcon{width:42px;height:42px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;font-size:19px;flex:none}
+.statValue{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1.15;letter-spacing:-.01em}
+.statLabel{font-size:11.5px;color:var(--muted);font-weight:500;letter-spacing:.01em}
+.statHot{border-color:color-mix(in srgb,var(--green) 45%,transparent);background:linear-gradient(160deg,var(--surface) 60%,var(--green-soft))}
+.statHot .statIcon{background:var(--green-soft)}
+.statHot .statValue{color:var(--green)}
+
+.searchPanel h3,.previewPanel h3,.exportPanel h3{font-size:15.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.searchInput{width:100%;max-width:420px;margin-top:13px;padding:11px 15px;border:1.5px solid var(--border);border-radius:11px;background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13.5px;transition:.15s}
+.searchInput:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--ring);outline:none}
+.hint{font-size:13px;color:var(--muted);margin-top:13px}
+.hint code{background:var(--surface-2);padding:2px 7px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;border:1px solid var(--border)}
+.hint.warn{color:var(--red)}
+.recWrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-top:14px}
+.recCard{border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;background:var(--surface-2);animation:fadeUp .3s ease}
+.recHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.recHandle{font-weight:700;font-size:14.5px}
+.recGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.recGrid dt{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);font-weight:600}
+.recGrid dd{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600}
+.recGrid dd.gr{color:var(--green)}
+.recGrid dd.rd{color:var(--red)}
+.pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill-ok{background:var(--green-soft);color:var(--green)}
+.pill-same{background:var(--surface-2);color:var(--muted);border:1px solid var(--border)}
+.pill-no{background:var(--red-soft);color:var(--red)}
+
+.previewHead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.pgControls{display:flex;align-items:center;gap:8px}
+.pgInfo{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.tableWrap{overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:12px}
+table.preview{width:100%;border-collapse:collapse;font-size:12.5px;min-width:760px}
+.preview th{position:sticky;top:0;background:var(--surface-2);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:10px 13px;border-bottom:1px solid var(--border);white-space:nowrap}
+.preview td{padding:9px 13px;border-bottom:1px solid var(--border);white-space:nowrap}
+.preview tr:last-child td{border-bottom:none}
+.preview tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 45%,transparent)}
+.preview .num{font-family:'JetBrains Mono',monospace;text-align:right}
+.preview .newPrice{color:var(--green);font-weight:700}
+.preview .mutedCell{color:var(--faint)}
+.preview .empty{text-align:center;color:var(--muted);padding:26px}
+.discChip{background:var(--red-soft);color:var(--red);font-weight:700;font-size:11px;padding:3px 8px;border-radius:999px;font-family:'JetBrains Mono',monospace}
+.statusChip{background:var(--green-soft);color:var(--green);font-weight:600;font-size:11px;padding:3px 9px;border-radius:999px;text-transform:capitalize}
+.pgRange{font-size:12px;color:var(--faint);margin-top:10px}
+
+.exportPanel{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;border-left:5px solid var(--red)}
+.exportPanel p{font-size:12.5px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace}
+
+/* ── Toasts ── */
+.toastRoot{position:fixed;top:18px;right:18px;z-index:100;display:flex;flex-direction:column;gap:10px;max-width:min(380px,calc(100vw - 36px))}
+.toast{display:flex;gap:11px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:12px;box-shadow:var(--shadow-md);padding:13px 15px;transform:translateX(24px);opacity:0;transition:.3s cubic-bezier(.2,.9,.3,1)}
+.toast.show{transform:none;opacity:1}
+.toast-error{border-left-color:var(--red)}
+.toast-warning{border-left-color:#c98a1b}
+.toastIcon{font-size:17px;line-height:1.3}
+.toastBody{font-size:13px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.toastBody strong{font-size:13px}
+.toastBody span{color:var(--muted);word-break:break-word}
+.toastClose{border:none;background:transparent;color:var(--faint);font-size:12px;padding:2px 5px;border-radius:6px;margin-left:auto}
+.toastClose:hover{background:var(--surface-2);color:var(--text)}
+
+/* ── Footer ── */
+footer{margin-top:auto;background:linear-gradient(150deg,var(--green-deep) 0%,#04231500 0),linear-gradient(150deg,#073b2a,#04231a);color:#d9ecdf;position:relative;overflow:hidden}
+[data-theme="dark"] footer{background:linear-gradient(150deg,#08211700 0),linear-gradient(150deg,#08241a,#041710)}
+footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#fff 0 33%,#d6453a 33% 66%,#1fa35c 66% 100%);opacity:.85}
+.footInner{max-width:1180px;margin:0 auto;padding:38px 24px;text-align:center;position:relative}
+.footFlags{font-size:19px;letter-spacing:8px;margin-bottom:12px}
+.footLove{font-size:15.5px;font-weight:600;color:#fff}
+.footLove .heart{color:#ff6b5e;display:inline-block;animation:beat 1.6s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}12%{transform:scale(1.22)}24%{transform:scale(1)}}
+.footBy{margin-top:5px;font-size:13.5px;color:#a8cbb6}
+.footBy strong{color:#fff;font-weight:600}
+.footMeta{margin-top:16px;font-size:11.5px;color:#6f9781;letter-spacing:.05em}
+.footMeta b{color:#a8cbb6;font-weight:600}
+
+/* ── Responsive ── */
+@media(max-width:960px){
+  .statsGrid{grid-template-columns:repeat(2,1fr)}
+  .uploadGrid,.mapGrid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  main{padding:20px 14px 44px}
+  .panel{padding:19px}
+  .statsGrid{grid-template-columns:1fr 1fr;gap:10px}
+  .statValue{font-size:18px}
+  .topbarInner{padding:12px 14px}
+  .stepText{display:none}
+  .successCard{justify-content:center;text-align:center}
+  .exportPanel{justify-content:center;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="ribbon" aria-hidden="true"></div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="topbar">
+  <div class="topbarInner">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+          <stop stop-color="#14855a"/><stop offset="1" stop-color="#06341f"/>
+        </linearGradient></defs>
+        <rect width="48" height="48" rx="13" fill="url(#lg1)"/>
+        <path d="M32 24.5A12.2 12.2 0 1 1 19.8 12.3a9.4 9.4 0 1 0 12.2 12.2z" fill="#fff"/>
+        <polygon points="31.4,15.2 32.5,17.8 35.3,18 33.2,19.9 33.9,22.6 31.4,21.1 28.9,22.6 29.6,19.9 27.5,18 30.3,17.8" fill="#fff"/>
+        <circle cx="37.5" cy="35.5" r="3.1" fill="#e2604f" stroke="#fff" stroke-width="1.1"/>
+      </svg>
+      <div class="brandText">
+        <h1>CHINYERE <em>SALE FILE CREATOR</em></h1>
+        <p>Generate Shopify Sale Files Automatically 🌿</p>
+      </div>
+    </div>
+    <div class="topActions">
+      <span class="verBadge" id="verBadge">v1.0.0</span>
+      <button id="themeToggle" class="iconBtn" aria-label="Toggle dark mode" aria-pressed="false" title="Toggle dark mode">🌙</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ═══════════ STEPPER ═══════════ -->
+  <nav class="stepper" aria-label="Workflow progress">
+    <div class="stepItem active" data-step="1"><span class="stepDot">1</span><span class="stepText">📤 Upload</span></div>
+    <div class="stepBar"></div>
+    <div class="stepItem" data-step="2"><span class="stepDot">2</span><span class="stepText">🧭 Map Columns</span></div>
+    <div class="stepBar"></div>
+    <div class="stepItem" data-step="3"><span class="stepDot">3</span><span class="stepText">⚡ Generate &amp; Download</span></div>
+  </nav>
+
+  <!-- ═══════════ STEP 1 · UPLOAD ═══════════ -->
+  <section class="panel" id="stepUpload" aria-labelledby="hUpload">
+    <div class="panelHead">
+      <h2 id="hUpload"><span class="stepPill">1</span> Upload Source Files</h2>
+      <p>Both files are parsed locally in your browser — nothing is ever uploaded to a server. 🔒</p>
+    </div>
+
+    <div class="uploadGrid">
+      <!-- Card 1 · Discount Circular -->
+      <article class="uploadCard" id="cardDiscount">
+        <header class="ucHead">
+          <div class="ucIcon g" aria-hidden="true">📊</div>
+          <div class="ucTitle">
+            <h3>Discount Circular</h3>
+            <p>Excel · .xlsx / .xls</p>
+          </div>
+          <span class="chip" id="chipDiscount" hidden></span>
+        </header>
+        <div class="dropzone" id="dropDiscount" tabindex="0" role="button"
+             aria-label="Upload Discount Circular Excel file. Press Enter to browse.">
+          <input type="file" id="fileDiscount" accept=".xlsx,.xls" hidden>
+          <div class="dzIcon" aria-hidden="true">🗂️⬆️</div>
+          <div class="dzText"><strong>Drag &amp; drop</strong> your circular, or <span class="link">browse files</span></div>
+          <div class="dzHint">Must contain ALU + Discount columns</div>
+        </div>
+        <div class="fileMeta" id="metaDiscount" hidden></div>
+      </article>
+
+      <!-- Card 2 · Shopify Export -->
+      <article class="uploadCard" id="cardShopify">
+        <header class="ucHead">
+          <div class="ucIcon r" aria-hidden="true">🛍️</div>
+          <div class="ucTitle">
+            <h3>Shopify Export</h3>
+            <p>Product CSV · .csv</p>
+          </div>
+          <span class="chip" id="chipShopify" hidden></span>
+        </header>
+        <div class="dropzone" id="dropShopify" tabindex="0" role="button"
+             aria-label="Upload Shopify product export CSV file. Press Enter to browse.">
+          <input type="file" id="fileShopify" accept=".csv" hidden>
+          <div class="dzIcon" aria-hidden="true">📦⬆️</div>
+          <div class="dzText"><strong>Drag &amp; drop</strong> your export, or <span class="link">browse files</span></div>
+          <div class="dzHint">Supports 100,000+ row exports ⚡</div>
+        </div>
+        <div class="fileMeta" id="metaShopify" hidden></div>
+      </article>
+    </div>
+
+    <div class="assure">🔒 100% client-side &nbsp;·&nbsp; ⚡ Stream-processes 100,000+ rows &nbsp;·&nbsp; 🧠 Smart-skip leaves unchanged products out &nbsp;·&nbsp; 🍉 No data leaves your device</div>
+  </section>
+
+  <!-- ═══════════ STEP 2 · MAPPING ═══════════ -->
+  <section class="panel" id="stepMapping" hidden aria-labelledby="hMap">
+    <div class="panelHead">
+      <h2 id="hMap"><span class="stepPill">2</span> Confirm Column Mapping</h2>
+      <p>Columns were auto-detected. <b style="color:var(--green)">ALU ⇄ Shopify Handle</b> — each ALU matches a Handle, and the discount is applied to the Compare-At Price.</p>
+    </div>
+
+    <div class="mapGrid">
+      <div class="mapCard">
+        <h3>📊 Discount Circular</h3>
+        <p class="mapSub" id="mapDiscountSub">Excel workbook</p>
+        <div class="field">
+          <label for="mapAlu">ALU column <b>*</b> <span style="color:var(--faint);font-weight:500">→ matches Shopify Handle</span></label>
+          <select id="mapAlu"></select>
+        </div>
+        <div class="field">
+          <label for="mapDisc">Discount column <b>*</b> <span style="color:var(--faint);font-weight:500">("30%", "30", "25" all accepted)</span></label>
+          <select id="mapDisc"></select>
+        </div>
+        <div class="sampleCaption">Sample data:</div>
+        <div id="sampleDiscount"></div>
+      </div>
+
+      <div class="mapCard">
+        <h3>🛍️ Shopify Export</h3>
+        <p class="mapSub" id="mapShopifySub">Product CSV</p>
+        <div class="field">
+          <label for="mapHandle">Handle column <b>*</b></label>
+          <select id="mapHandle"></select>
+        </div>
+        <div class="field">
+          <label for="mapPrice">Variant Price column <b>*</b></label>
+          <select id="mapPrice"></select>
+        </div>
+        <div class="field">
+          <label for="mapCompare">Variant Compare At Price</label>
+          <select id="mapCompare"></select>
+        </div>
+        <div class="field">
+          <label for="mapSku">Variant SKU</label>
+          <select id="mapSku"></select>
+        </div>
+        <div class="field">
+          <label for="mapStatus">Status</label>
+          <select id="mapStatus"></select>
+        </div>
+        <div class="sampleCaption">Sample data:</div>
+        <div id="sampleShopify"></div>
+      </div>
+    </div>
+
+    <div class="mapFoot">
+      <label class="remember"><input type="checkbox" id="rememberMapping" checked> 💾 Remember this mapping on this device</label>
+      <div class="btnRow">
+        <button id="btnReset" class="btn ghost" type="button">↺ Start Over</button>
+        <button id="btnGenerate" class="btn primary" type="button">⚡ Generate Sale File</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PROGRESS ═══════════ -->
+  <section class="progressPanel" id="progressPanel" hidden aria-live="polite">
+    <div class="progressMeta">
+      <span id="progressLabel">Scanning Shopify export…</span>
+      <span class="progressPct" id="progressPct">0%</span>
+    </div>
+    <div class="progressTrack"><div class="progressFill" id="progressFill"></div></div>
+    <div class="progressSub" id="progressRows">0 rows processed</div>
+  </section>
+
+  <!-- ═══════════ STEP 3 · RESULTS ═══════════ -->
+  <section id="stepResults" hidden aria-labelledby="successTitle">
+    <div class="panel successCard" id="successCard">
+      <div class="checkWrap">
+        <svg class="checkSvg" viewBox="0 0 52 52" aria-hidden="true">
+          <circle cx="26" cy="26" r="24"/>
+          <path d="M14.5 27l7.5 7.5L37.5 18"/>
+        </svg>
+      </div>
+      <div class="successText">
+        <h2 id="successTitle">Sale file ready 🎉</h2>
+        <p id="successSummary">—</p>
+      </div>
+      <button id="btnDownloadTop" class="btn download" type="button">⬇️ Download Shopify Discount CSV</button>
+    </div>
+
+    <div class="statsGrid" id="statsGrid" aria-live="polite"></div>
+
+    <div class="panel searchPanel">
+      <h3>🔎 Handle Lookup</h3>
+      <input class="searchInput" id="searchInput" type="text" placeholder="Search a handle — e.g. CP0431" aria-label="Search handles" autocomplete="off" spellcheck="false">
+      <div id="searchResults"><p class="hint">Type a handle to see its current price, new price, discount and status.</p></div>
+    </div>
+
+    <div class="panel previewPanel">
+      <div class="previewHead">
+        <h3>📋 Preview — Generated Rows</h3>
+        <div class="pgControls">
+          <button class="btn ghost small" id="pgPrev" type="button" aria-label="Previous page">← Prev</button>
+          <span class="pgInfo" id="pgInfo">Page 1 / 1</span>
+          <button class="btn ghost small" id="pgNext" type="button" aria-label="Next page">Next →</button>
+        </div>
+      </div>
+      <div class="tableWrap">
+        <table class="preview" aria-label="Preview of generated CSV rows">
+          <thead><tr>
+            <th>#</th><th>Handle</th><th>Variant SKU</th><th style="text-align:right">Current Price</th>
+            <th style="text-align:right">Compare At</th><th style="text-align:right">New Price</th>
+            <th>Discount</th><th>Status</th>
+          </tr></thead>
+          <tbody id="previewBody"></tbody>
+        </table>
+      </div>
+      <p class="pgRange" id="pgRange"></p>
+    </div>
+
+    <div class="panel exportPanel">
+      <div>
+        <h3>📦 Final Export</h3>
+        <p id="exportInfo">—</p>
+      </div>
+      <div class="btnRow">
+        <button id="btnStartOver" class="btn ghost" type="button">↺ Start Over</button>
+        <button id="btnDownloadMain" class="btn download" type="button">⬇️ Download Shopify Discount CSV</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footInner">
+    <div class="footFlags" aria-hidden="true">🇵🇰 🤍 💚 🍉</div>
+    <div class="footLove">Made with <span class="heart">❤️</span> in Pakistan</div>
+    <div class="footBy">Created by <strong>Rashid Khaliq</strong></div>
+    <div class="footMeta">
+      CHINYERE SALE FILE CREATOR · <b id="footVersion">v1.0.0</b> · © <b id="footYear">2026</b> ·
+      🌿 100% Browser-Based · No Servers · No Data Collection 🤍
+    </div>
+  </div>
+</footer>
+
+<div class="toastRoot" id="toastRoot" aria-live="polite"></div>
+
+<!-- ═══════════ Libraries (CDN) ═══════════ -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+<script>
+/* ════════════════════════ config.js ════════════════════════ */
+const CONFIG = {
+  APP_NAME: 'CHINYERE SALE FILE CREATOR',
+  VERSION: '1.0.0',
+  YEAR: new Date().getFullYear(),
+  LS_MAPPING: 'chinyere.mapping.v1',
+  LS_THEME: 'chinyere.theme.v1',
+  PREVIEW_LIMIT: 100,        // max rows shown in preview table
+  PAGE_SIZE: 10,             // rows per preview page
+  PRICE_TOLERANCE: 0.005,    // price equality tolerance for smart-skip
+  CHUNK_SIZE: 512 * 1024,    // CSV streaming chunk (bytes)
+  OUTPUT_COLUMNS: ['Handle', 'Variant SKU', 'Variant Price', 'Variant Compare At Price', 'Status'],
+  // Auto-guess column patterns, ordered by priority
+  GUESS: {
+    alu:      [/^alu$/i, /^alu\b/i, /\balu\b/i, /^handle$/i, /^code$/i, /^sku$/i, /article/i, /item/i],
+    discount: [/^discount/i, /disc/i, /^off/i, /percent/i, /markdown/i, /%/],
+    handle:   [/^handle$/i, /handle/i, /^sku$/i, /^code$/i],
+    sku:      [/^variant sku$/i, /variant\s*sku/i, /^sku$/i, /\bsku\b/i],
+    price:    [/^variant price$/i, /variant\s*price/i, /^price$/i, /\bprice\b/i],
+    compare:  [/^variant compare at price$/i, /compare\s*at/i, /compare/i],
+    status:   [/^status$/i, /status/i]
+  }
+};
+</script>
+
+<script>
+/* ════════════════════════ utils.js ════════════════════════ */
+const $  = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+
+/** Round to 2 decimals, avoiding float drift. */
+function round2(n){ return Math.round((n + Number.EPSILON) * 100) / 100; }
+
+function formatInt(n){ return Number(n || 0).toLocaleString('en-US'); }
+
+function formatBytes(b){
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1048576).toFixed(1) + ' MB';
+}
+
+/** Parse a price string ("$1,299.99", "1299.99") into a number. */
+function parsePrice(v){
+  if (v == null || v === '') return null;
+  if (typeof v === 'number') return isFinite(v) ? v : null;
+  const s = String(v).replace(/[^0-9.\-]/g, '');
+  if (!s) return null;
+  const n = parseFloat(s);
+  return isFinite(n) ? n : null;
+}
+
+/** Normalize discount values: "30%", "30", " 25 %", 0.3 → percentage number. */
+function parseDiscount(v){
+  if (v == null || v === '') return null;
+  if (typeof v === 'number'){
+    if (!isFinite(v) || v <= 0) return null;
+    let p = v < 1 ? v * 100 : v;               // 0.3 → 30% (Excel % cells)
+    return p > 0 && p <= 100 ? round2(p) : null;
+  }
+  let s = String(v).trim().toLowerCase();
+  if (!s) return null;
+  const hasPct = s.includes('%');
+  s = s.replace(/[^0-9.\-]/g, '');
+  const n = parseFloat(s);
+  if (!isFinite(n) || n <= 0) return null;
+  let p = (!hasPct && n < 1) ? n * 100 : n;
+  return p > 0 && p <= 100 ? round2(p) : null;
+}
+
+function debounce(fn, ms){ let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+/** YYYY-MM-DD stamp for export filenames. */
+function todayStamp(){
+  const d = new Date(), p = x => String(x).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function truncate(s, n){ s = String(s ?? ''); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+
+/** Safe localStorage wrapper. */
+const store = {
+  get(k, fallback){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch(e){ return fallback; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+
+/** Animated integer count-up. */
+function countUp(el, target, dur = 900){
+  target = Math.round(target);
+  if (target === 0){ el.textContent = '0'; return; }
+  const t0 = performance.now();
+  const tick = t => {
+    const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = Math.round(target * e).toLocaleString('en-US');
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+/** Animated seconds counter. */
+function animateTime(el, v, dur = 900){
+  const t0 = performance.now();
+  const tick = t => {
+    const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = (v * e).toFixed(1) + 's';
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+</script>
+
+<script>
+/* ════════════════════════ csv.js ════════════════════════ */
+
+/** Escape one CSV row into a properly quoted line. */
+function csvLine(vals){
+  return vals.map(v => {
+    v = String(v ?? '');
+    return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+  }).join(',');
+}
+
+/** Header transform factory — trims headers and de-duplicates names per parse. */
+function makeHeaderTransform(){
+  const seen = new Map();
+  return function(h){
+    h = String(h == null ? '' : h).trim() || 'Column';
+    const c = seen.get(h) || 0;
+    seen.set(h, c + 1);
+    return c ? `${h} (${c + 1})` : h;
+  };
+}
+
+/** Read only the header + a few sample rows of a large CSV (instant preview). */
+function previewCsv(file, onDone, onError){
+  Papa.parse(file, {
+    header: true, preview: 6, skipEmptyLines: 'greedy',
+    transformHeader: makeHeaderTransform(),
+    complete: r => onDone(r.meta.fields || [], r.data || []),
+    error: onError
+  });
+}
+
+/** Build the final Shopify import CSV (only required columns) and download it. */
+function downloadDiscountCsv(updates){
+  const lines = [CONFIG.OUTPUT_COLUMNS.join(',')];
+  for (const r of updates){
+    lines.push(csvLine([r.handle, r.sku, r.newPrice.toFixed(2), r.compareAt.toFixed(2), r.status]));
+  }
+  const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const name = `CHINYERE_DISCOUNT_${todayStamp()}.csv`;
+  if (window.saveAs) saveAs(blob, name);
+  else { // fallback
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+  return name;
+}
+</script>
+
+<script>
+/* ════════════════════════ excel.js ════════════════════════ */
+
+/** Locate the header row inside the first 20 rows of a raw Excel sheet. */
+function detectHeaderRow(rows){
+  const maxR = Math.min(rows.length, 20);
+  let best = 0, bestScore = -1;
+  for (let r = 0; r < maxR; r++){
+    const row = rows[r]; if (!row) continue;
+    const cells = row.map(c => String(c ?? '').trim());
+    const nonEmpty = cells.filter(Boolean).length;
+    if (nonEmpty < 2) continue;
+    const joined = ' ' + cells.join(' ') + ' ';
+    let score = 0;
+    if (/\balu\b/i.test(joined)) score += 3;
+    if (/disc|off|percent|markdown|%/i.test(joined)) score += 3;
+    if (/handle|sku|code|item|article/i.test(joined)) score += 1;
+    const numeric = cells.filter(c => c && /^[\d.,%$]+$/.test(c)).length;
+    if (numeric > nonEmpty / 2) score -= 2; // mostly numbers → data row
+    if (score > bestScore){ bestScore = score; best = r; }
+  }
+  return bestScore > 0 ? best : 0;
+}
+
+/**
+ * Read the Discount Circular workbook fully (small file) and populate state.
+ * Returns true on success.
+ */
+async function loadDiscountFile(file){
+  const els = cardEls('Discount');
+  if (!/\.(xlsx|xls)$/i.test(file.name)){
+    toast('Please choose an Excel file (.xlsx or .xls).', 'error', 'Wrong file type');
+    return false;
+  }
+  setChip('Discount', 'loading', 'Reading');
+  try{
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: false });
+    if (!rows.length){
+      setChip('Discount', 'err', 'Empty');
+      toast('The Excel file contains no rows.', 'error', 'Empty file');
+      return false;
+    }
+    const headerRow = detectHeaderRow(rows);
+    const rawHeaders = rows[headerRow] || [];
+    const seen = new Map();
+    const names = rawHeaders.map((h, i) => {
+      let n = String(h ?? '').trim() || `Column ${i + 1}`;
+      const c = seen.get(n) || 0; seen.set(n, c + 1);
+      return c ? `${n} (${c + 1})` : n;
+    });
+    const dataRows = rows.length - headerRow - 1;
+    if (dataRows <= 0){
+      setChip('Discount', 'err', 'No data');
+      toast('No data rows found under the header row.', 'error', 'Empty file');
+      return false;
+    }
+    state.discount = {
+      file, rows, headerRow, headers: names,
+      nameToIdx: new Map(names.map((n, i) => [n, i])),
+      sheet: wb.SheetNames[0], ready: true
+    };
+    els.input.value = '';
+    setChip('Discount', 'ok', 'Ready ✓');
+    setMeta('Discount', `📄 <span class="fname" title="${escapeHtml(file.name)}">${escapeHtml(file.name)}</span>
+      <span class="fdetail">${formatBytes(file.size)} · ${formatInt(dataRows)} data rows · sheet "${escapeHtml(state.discount.sheet)}"</span>`);
+    toast(`Loaded ${formatInt(dataRows)} rows from “${truncate(file.name, 34)}”.`, 'success', 'Discount Circular 📊');
+    return true;
+  } catch(err){
+    setChip('Discount', 'err', 'Error');
+    toast('Could not read this Excel file — it may be corrupt or password protected.', 'error', 'Corrupt Excel');
+    return false;
+  }
+}
+
+/** Read only the Shopify CSV headers + samples (full scan happens at generation). */
+function loadShopifyFile(file){
+  return new Promise(resolve => {
+    const els = cardEls('Shopify');
+    if (!/\.csv$/i.test(file.name)){
+      toast('Please choose a CSV file (.csv) exported from Shopify.', 'error', 'Wrong file type');
+      resolve(false); return;
+    }
+    setChip('Shopify', 'loading', 'Reading');
+    previewCsv(file,
+      (fields, sample) => {
+        if (!fields.length || !sample.length){
+          setChip('Shopify', 'err', 'Empty');
+          toast('The CSV appears to be empty or has no data rows.', 'error', 'Empty file');
+          resolve(false); return;
+        }
+        state.shopify = { file, headers: fields, sample: sample.slice(0, 3), ready: true };
+        els.input.value = '';
+        setChip('Shopify', 'ok', 'Ready ✓');
+        setMeta('Shopify', `📄 <span class="fname" title="${escapeHtml(file.name)}">${escapeHtml(file.name)}</span>
+          <span class="fdetail">${formatBytes(file.size)} · ${formatInt(fields.length)} columns</span>`);
+        toast(`“${truncate(file.name, 34)}” is ready — full scan runs at generation.`, 'success', 'Shopify Export 🛍️');
+        resolve(true);
+      },
+      () => {
+        setChip('Shopify', 'err', 'Error');
+        toast('Could not parse this CSV — the file appears to be corrupt.', 'error', 'Corrupt CSV');
+        resolve(false);
+      });
+  });
+}
+</script>
+
+<script>
+/* ════════════════════════ ui.js ════════════════════════ */
+
+/* ---- Toast notifications ---- */
+function toast(msg, type = 'info', title = ''){
+  const icons = { success: '✅', error: '⛔', warning: '⚠️', info: '💡' };
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `
+    <span class="toastIcon">${icons[type] || '💡'}</span>
+    <div class="toastBody">${title ? `<strong>${escapeHtml(title)}</strong>` : ''}<span>${escapeHtml(msg)}</span></div>
+    <button class="toastClose" aria-label="Dismiss notification">✕</button>`;
+  $('#toastRoot').appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  const kill = () => { el.classList.remove('show'); setTimeout(() => el.remove(), 280); };
+  $('.toastClose', el).addEventListener('click', kill);
+  setTimeout(kill, 4800);
+}
+
+/* ---- Dark mode ---- */
+function initTheme(){
+  const saved = store.get(CONFIG.LS_THEME, null);
+  const prefers = matchMedia('(prefers-color-scheme: dark)').matches;
+  setTheme(saved || (prefers ? 'dark' : 'light'), false);
+}
+function setTheme(t, persist = true){
+  document.documentElement.dataset.theme = t;
+  const btn = $('#themeToggle');
+  btn.textContent = t === 'dark' ? '☀️' : '🌙';
+  btn.setAttribute('aria-pressed', t === 'dark');
+  if (persist) store.set(CONFIG.LS_THEME, t);
+}
+
+/* ---- Stepper ---- */
+function setStep(n){
+  $$('.stepItem').forEach(el => {
+    const s = +el.dataset.step;
+    el.classList.toggle('active', s === n);
+    el.classList.toggle('done', s < n);
+    $('.stepDot', el).textContent = s < n ? '✓' : s;
+  });
+}
+
+/* ---- Upload card helpers ---- */
+function cardEls(key){
+  return { zone: $('#drop' + key), input: $('#file' + key), chip: $('#chip' + key), meta: $('#meta' + key) };
+}
+function setChip(key, mode, text){
+  const c = cardEls(key).chip;
+  c.hidden = false;
+  c.className = 'chip chip-' + (mode === 'loading' ? 'loading' : mode === 'ok' ? 'ok' : 'err');
+  c.textContent = text;
+}
+function setMeta(key, html){ const m = cardEls(key).meta; m.hidden = false; m.innerHTML = html; }
+function clearCardUi(key){
+  const e = cardEls(key);
+  e.input.value = ''; e.chip.hidden = true; e.meta.hidden = true;
+}
+
+/* ---- Progress panel (rAF-throttled) ---- */
+let _pp = null, _pr = 0;
+function showProgress(label){
+  $('#progressPanel').hidden = false;
+  $('#progressLabel').textContent = label;
+  $('#progressPct').textContent = '0%';
+  $('#progressFill').style.width = '0%';
+  $('#progressFill').classList.remove('ind');
+  $('#progressRows').textContent = '0 rows processed';
+}
+function updateProgress(pct, rows){
+  _pp = { pct, rows };
+  if (!_pr) _pr = requestAnimationFrame(flushProgress);
+}
+function flushProgress(){
+  _pr = 0; if (!_pp) return;
+  $('#progressRows').textContent = formatInt(_pp.rows) + ' rows processed';
+  const fill = $('#progressFill');
+  if (_pp.pct == null){ fill.classList.add('ind'); $('#progressPct').textContent = '…'; }
+  else { fill.classList.remove('ind'); fill.style.width = _pp.pct + '%'; $('#progressPct').textContent = _pp.pct + '%'; }
+}
+function hideProgress(){ $('#progressPanel').hidden = true; }
+
+/* ---- Mapping UI ---- */
+function guessColumn(headers, patterns){
+  for (const p of patterns){
+    const hit = headers.find(h => p.test(h));
+    if (hit) return hit;
+  }
+  return '';
+}
+function fillSelect(sel, headers, getSample, required){
+  sel.innerHTML = '';
+  sel.appendChild(new Option(required ? '— select required column —' : '— not needed —', ''));
+  for (const h of headers){
+    const s = getSample ? getSample(h) : '';
+    const label = s !== '' && s != null ? `${h} · e.g. ${truncate(s, 22)}` : h;
+    sel.appendChild(new Option(label, h));
+  }
+  sel.classList.remove('invalid');
+}
+function buildMappingUI(){
+  const saved = store.get(CONFIG.LS_MAPPING, null);
+  const useSaved = saved && saved.remember !== false && saved.fields;
+  const pick = (headers, key, patterns) => {
+    if (useSaved && saved.fields[key] && headers.includes(saved.fields[key])) return saved.fields[key];
+    return guessColumn(headers, patterns);
+  };
+  const dHeaders = state.discount.headers, sHeaders = state.shopify.headers;
+  const dSample = h => {
+    const i = state.discount.nameToIdx.get(h);
+    const r = state.discount.rows[state.discount.headerRow + 1];
+    return r ? String(r[i] ?? '') : '';
+  };
+  const sSample = h => {
+    const r = state.shopify.sample[0];
+    return r ? String(r[h] ?? '') : '';
+  };
+  fillSelect($('#mapAlu'),     dHeaders, dSample, true);
+  fillSelect($('#mapDisc'),    dHeaders, dSample, true);
+  fillSelect($('#mapHandle'),  sHeaders, sSample, true);
+  fillSelect($('#mapPrice'),   sHeaders, sSample, true);
+  fillSelect($('#mapCompare'), sHeaders, sSample, false);
+  fillSelect($('#mapSku'),     sHeaders, sSample, false);
+  fillSelect($('#mapStatus'),  sHeaders, sSample, false);
+
+  const set = (sel, v) => { if (v) sel.value = v; };
+  set($('#mapAlu'),     pick(dHeaders, 'alu',     CONFIG.GUESS.alu));
+  set($('#mapDisc'),    pick(dHeaders, 'discount',CONFIG.GUESS.discount));
+  set($('#mapHandle'),  pick(sHeaders, 'handle',  CONFIG.GUESS.handle));
+  set($('#mapPrice'),   pick(sHeaders, 'price',   CONFIG.GUESS.price));
+  set($('#mapCompare'), pick(sHeaders, 'compare', CONFIG.GUESS.compare));
+  set($('#mapSku'),     pick(sHeaders, 'sku',     CONFIG.GUESS.sku));
+  set($('#mapStatus'),  pick(sHeaders, 'status',  CONFIG.GUESS.status));
+
+  $('#rememberMapping').checked = saved ? saved.remember !== false : true;
+  $('#mapDiscountSub').textContent = `${state.discount.file.name} · ${formatInt(state.discount.rows.length - state.discount.headerRow - 1)} rows`;
+  $('#mapShopifySub').textContent  = `${state.shopify.file.name} · ${formatBytes(state.shopify.file.size)}`;
+  renderSampleTable($('#sampleDiscount'), dHeaders.slice(0, 6),
+    state.discount.rows.slice(state.discount.headerRow + 1, state.discount.headerRow + 4)
+      .map(r => dHeaders.slice(0, 6).map(h => String(r[state.discount.nameToIdx.get(h)] ?? ''))));
+  renderSampleTable($('#sampleShopify'), sHeaders.slice(0, 6),
+    state.shopify.sample.map(row => sHeaders.slice(0, 6).map(h => String(row[h] ?? ''))));
+}
+function renderSampleTable(el, cols, rows){
+  if (!cols.length){ el.innerHTML = ''; return; }
+  let html = '<table class="sampleTable"><thead><tr>' +
+    cols.map(h => `<th>${escapeHtml(h)}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(r => { html += '<tr>' + r.map(c => `<td title="${escapeHtml(c)}">${escapeHtml(truncate(c, 18))}</td>`).join('') + '</tr>'; });
+  el.innerHTML = html + '</tbody></table>';
+}
+function readMapping(){
+  return {
+    alu: $('#mapAlu').value, disc: $('#mapDisc').value,
+    handle: $('#mapHandle').value, price: $('#mapPrice').value,
+    compare: $('#mapCompare').value, sku: $('#mapSku').value, status: $('#mapStatus').value
+  };
+}
+
+/* ---- Statistics ---- */
+function renderStats(s){
+  const tiles = [
+    { icon: '📊', label: 'Discount Circular Products', value: s.circular },
+    { icon: '🛍️', label: 'Shopify Products', value: s.shopify },
+    { icon: '🔗', label: 'Matched Products', value: s.matched },
+    { icon: '💚', label: 'Updated Products', value: s.updated, hot: true },
+    { icon: '🤍', label: 'Skipped (No Match)', value: s.noMatch },
+    { icon: '⏸️', label: 'Skipped (Already Same Discount)', value: s.same },
+    { icon: '⚠️', label: 'Skipped (Data Issues)', value: s.issues },
+    { icon: '⚡', label: 'Processing Time', value: s.elapsed, time: true, hot: true }
+  ];
+  $('#statsGrid').innerHTML = tiles.map((t, i) => `
+    <div class="statTile ${t.hot ? 'statHot' : ''}" style="--i:${i}">
+      <div class="statIcon">${t.icon}</div>
+      <div>
+        <div class="statValue">${t.time ? '0.0s' : '0'}</div>
+        <div class="statLabel">${t.label}</div>
+      </div>
+    </div>`).join('');
+  $$('.statTile').forEach((tile, i) => {
+    const el = $('.statValue', tile), t = tiles[i];
+    if (t.time) animateTime(el, t.value); else countUp(el, t.value);
+  });
+}
+
+/* ---- Search ---- */
+function sampleHandle(){
+  if (state.results){
+    const it = state.results.searchIndex.keys().next();
+    if (it && it.value) return it.value;
+  }
+  return 'CP0431';
+}
+function recordHtml(r){
+  const chip = r.status === 'updated' ? '<span class="pill pill-ok">✅ Updated</span>'
+    : r.status === 'same' ? '<span class="pill pill-same">⏸️ Already Discounted</span>'
+    : '<span class="pill pill-no">🚫 Not Found in Shopify</span>';
+  const money = v => v == null ? '—' : Number(v).toFixed(2);
+  return `
+  <div class="recCard">
+    <div class="recHead"><span class="recHandle mono">${escapeHtml(r.handle)}</span>${chip}</div>
+    <dl class="recGrid">
+      <div><dt>Discount</dt><dd class="rd">−${r.discount}%</dd></div>
+      <div><dt>New Price</dt><dd class="gr">${r.newPrice == null ? '—' : money(r.newPrice)}</dd></div>
+      <div><dt>Current Price</dt><dd>${money(r.current)}</dd></div>
+      <div><dt>Compare At</dt><dd>${money(r.base)}</dd></div>
+    </dl>
+  </div>`;
+}
+function renderSearch(){
+  const box = $('#searchResults');
+  if (!state.results) return;
+  const q = $('#searchInput').value.trim();
+  if (!q){
+    box.innerHTML = `<p class="hint">Type a handle to inspect it — e.g. <code>${escapeHtml(sampleHandle())}</code></p>`;
+    return;
+  }
+  const idx = state.results.searchIndex, key = q.toUpperCase();
+  const exact = idx.get(key);
+  if (exact){ box.innerHTML = '<div class="recWrap">' + recordHtml(exact) + '</div>'; return; }
+  const matches = [];
+  for (const [k, v] of idx){ if (k.includes(key)){ matches.push(v); if (matches.length >= 20) break; } }
+  if (!matches.length){
+    box.innerHTML = `<p class="hint warn">😕 No handles matching “${escapeHtml(q)}” in either file.</p>`;
+    return;
+  }
+  box.innerHTML = `<p class="hint">${matches.length} partial match${matches.length > 1 ? 'es' : ''}:</p>
+    <div class="recWrap">${matches.map(recordHtml).join('')}</div>`;
+}
+
+/* ---- Preview table + pagination ---- */
+let previewPage = 0;
+function renderPreview(){
+  const ups = state.results.updates;
+  const list = ups.slice(0, CONFIG.PREVIEW_LIMIT);
+  const pages = Math.max(1, Math.ceil(list.length / CONFIG.PAGE_SIZE));
+  previewPage = Math.max(0, Math.min(previewPage, pages - 1));
+  const start = previewPage * CONFIG.PAGE_SIZE;
+  const slice = list.slice(start, start + CONFIG.PAGE_SIZE);
+  $('#previewBody').innerHTML = slice.length ? slice.map((r, i) => `
+    <tr>
+      <td class="num mutedCell">${start + i + 1}</td>
+      <td class="mono">${escapeHtml(r.handle)}</td>
+      <td class="mono mutedCell">${escapeHtml(r.sku || '—')}</td>
+      <td class="num">${r.oldPrice.toFixed(2)}</td>
+      <td class="num">${r.compareAt.toFixed(2)}</td>
+      <td class="num newPrice">${r.newPrice.toFixed(2)}</td>
+      <td><span class="discChip">−${r.discount}%</span></td>
+      <td><span class="statusChip">${escapeHtml(r.status)}</span></td>
+    </tr>`).join('')
+    : '<tr><td colspan="8" class="empty">No rows require updating — every matched product already has the correct price 🎉</td></tr>';
+  $('#pgInfo').textContent = `Page ${previewPage + 1} / ${pages}`;
+  $('#pgRange').textContent = ups.length
+    ? `Showing ${start + 1}–${Math.min(start + CONFIG.PAGE_SIZE, list.length)} of ${formatInt(ups.length)} updated rows (preview capped at ${CONFIG.PREVIEW_LIMIT})`
+    : 'No rows were generated.';
+  $('#pgPrev').disabled = previewPage === 0;
+  $('#pgNext').disabled = previewPage >= pages - 1;
+}
+</script>
+
+<script>
+/* ════════════════════════ app.js ════════════════════════ */
+
+/* ---- Application state ---- */
+const freshDiscount = () => ({ file: null, rows: [], headers: [], nameToIdx: new Map(), headerRow: 0, sheet: '', ready: false });
+const freshShopify  = () => ({ file: null, headers: [], sample: [], ready: false });
+const state = { discount: freshDiscount(), shopify: freshShopify(), results: null, running: false };
+
+/* ---- Flow control ---- */
+function invalidateResults(){
+  state.results = null;
+  $('#stepResults').hidden = true;
+  hideProgress();
+  $('#searchInput').value = '';
+}
+function maybeShowMapping(){
+  if (state.discount.ready && state.shopify.ready){
+    buildMappingUI();
+    $('#stepMapping').hidden = false;
+    setStep(2);
+    $('#stepMapping').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+async function handleFile(kind, file){
+  if (state.running){ toast('Please wait for the current run to finish.', 'warning'); return; }
+  invalidateResults();
+  const ok = kind === 'discount' ? await loadDiscountFile(file) : await loadShopifyFile(file);
+  if (ok) maybeShowMapping();
+}
+function clearFile(key){
+  const isDisc = key === 'discount';
+  if (isDisc) state.discount = freshDiscount(); else state.shopify = freshShopify();
+  clearCardUi(isDisc ? 'Discount' : 'Shopify');
+  invalidateResults();
+  $('#stepMapping').hidden = !(state.discount.ready && state.shopify.ready);
+  setStep(state.discount.ready && state.shopify.ready ? 2 : 1);
+  toast('File removed.', 'info');
+}
+function startOver(){
+  if (state.running) return;
+  state.discount = freshDiscount(); state.shopify = freshShopify();
+  invalidateResults();
+  clearCardUi('Discount'); clearCardUi('Shopify');
+  $('#stepMapping').hidden = true;
+  setStep(1);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---- Discount engine (Map lookups + chunked CSV streaming) ---- */
+async function runEngine(){
+  if (state.running) return;
+  if (!state.discount.ready || !state.shopify.ready){
+    toast('Please upload both files first.', 'error', 'No file selected');
+    return;
+  }
+  const m = readMapping();
+
+  // Validate required mappings
+  const required = [['alu', '#mapAlu'], ['disc', '#mapDisc'], ['handle', '#mapHandle'], ['price', '#mapPrice']];
+  for (const [key, sel] of required){
+    if (!m[key]){
+      const el = $(sel);
+      el.classList.add('invalid');
+      el.focus();
+      toast('A required column is not mapped. Please select it and try again.', 'error', 'Missing mapping');
+      return;
+    }
+  }
+  store.set(CONFIG.LS_MAPPING, { remember: $('#rememberMapping').checked, fields: m });
+
+  state.running = true;
+  invalidateResults();
+  const btn = $('#btnGenerate'), oldLabel = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Processing…';
+  setStep(3);
+  showProgress('Scanning Shopify export…');
+
+  const t0 = performance.now();
+  try{
+    /* 1 ─ Build the O(1) discount lookup Map from the circular */
+    const { rows, headerRow, nameToIdx } = state.discount;
+    const aluIdx = nameToIdx.get(m.alu), discIdx = nameToIdx.get(m.disc);
+    const dMap = new Map();
+    let dupeAlu = 0, badDisc = 0;
+    for (let i = headerRow + 1; i < rows.length; i++){
+      const row = rows[i]; if (!row) continue;
+      const alu = String(row[aluIdx] ?? '').trim();
+      if (!alu) continue;
+      const pct = parseDiscount(row[discIdx]);
+      if (pct == null){ badDisc++; continue; }
+      const key = alu.toUpperCase();
+      if (dMap.has(key)){ dupeAlu++; continue; }   // keep first occurrence
+      dMap.set(key, { alu, pct });
+    }
+    if (!dMap.size){
+      throw new Error('No valid ALU + discount rows were found in the circular. Check the mapped columns.');
+    }
+    if (dupeAlu) toast(`${formatInt(dupeAlu)} duplicate ALU${dupeAlu > 1 ? 's were' : ' was'} found in the circular — first occurrence kept.`, 'warning', 'Duplicate handles');
+    if (badDisc) toast(`${formatInt(badDisc)} circular row(s) had unreadable discounts and were ignored.`, 'warning');
+
+    /* 2 ─ Stream the Shopify CSV in chunks; single pass, no nested loops */
+    const stats = { shopify: 0, matched: 0, updated: 0, noMatch: 0, same: 0, issues: 0 };
+    const updates = [], emitted = new Set();
+    const searchIndex = new Map();
+    const unseen = new Set(dMap.keys());
+    const TOL = CONFIG.PRICE_TOLERANCE;
+
+    function processRow(row){
+      stats.shopify++;
+      const handle = row[m.handle] == null ? '' : String(row[m.handle]).trim();
+      if (!handle){ stats.noMatch++; return; }
+      const key = handle.toUpperCase();
+      const d = dMap.get(key);
+      if (!d){ stats.noMatch++; return; }
+      stats.matched++;
+      unseen.delete(key);
+
+      const price = parsePrice(row[m.price]);
+      const compare = m.compare ? parsePrice(row[m.compare]) : null;
+      if (price == null || price <= 0){ stats.issues++; return; }
+
+      const base = (compare != null && compare > 0) ? compare : price;
+      const newPrice = round2(base * (1 - d.pct / 100));
+      const sku = m.sku ? String(row[m.sku] ?? '').trim() : '';
+      let status = m.status ? String(row[m.status] ?? '').trim().toLowerCase() : 'active';
+      if (!['active', 'draft', 'archived'].includes(status)) status = 'active';
+
+      // De-duplicate identical Handle+SKU rows
+      const dk = key + '|' + sku.toUpperCase();
+      if (emitted.has(dk)){ stats.issues++; return; }
+      emitted.add(dk);
+
+      // Smart skip: already at the correct sale price
+      const rec = { handle, sku, discount: d.pct, current: price, base, newPrice, status: '' };
+      if (Math.abs(price - newPrice) < TOL){
+        rec.status = 'same'; stats.same++;
+      } else {
+        rec.status = 'updated'; stats.updated++;
+        updates.push({ handle, sku, oldPrice: price, compareAt: base, newPrice, discount: d.pct, status });
+      }
+      if (!searchIndex.has(key)) searchIndex.set(key, rec);
+    }
+
+    await new Promise((resolve, reject) => {
+      let lastPct = -1;
+      Papa.parse(state.shopify.file, {
+        header: true,
+        skipEmptyLines: 'greedy',
+        chunkSize: CONFIG.CHUNK_SIZE,
+        transformHeader: makeHeaderTransform(),
+        chunk(results, parser){
+          const data = results.data;
+          for (let i = 0; i < data.length; i++) processRow(data[i]);
+          const cursor = results.meta && results.meta.cursor;
+          const pct = cursor && state.shopify.file.size
+            ? Math.min(100, Math.floor(cursor / state.shopify.file.size * 100)) : null;
+          if (pct !== lastPct){ lastPct = pct; updateProgress(pct, stats.shopify); }
+          parser.resume();
+        },
+        complete: () => resolve(),
+        error: err => reject(err)
+      });
+    });
+
+    if (!stats.shopify){ throw new Error('The Shopify CSV contains no data rows.'); }
+
+    /* 3 ─ Circular handles never found in Shopify (for search lookup) */
+    for (const key of unseen){
+      if (!searchIndex.has(key)){
+        const rec = dMap.get(key);
+        searchIndex.set(key, { handle: rec.alu, sku: '', discount: rec.pct, current: null, base: null, newPrice: null, status: 'no-match' });
+      }
+    }
+
+    /* 4 ─ Publish results */
+    const elapsed = (performance.now() - t0) / 1000;
+    state.results = {
+      updates, searchIndex,
+      stats: { ...stats, circular: dMap.size, elapsed },
+      filename: `CHINYERE_DISCOUNT_${todayStamp()}.csv`
+    };
+    renderResults();
+    toast(`Done! ${formatInt(stats.updated)} product${stats.updated === 1 ? '' : 's'} updated in ${elapsed.toFixed(1)}s.`, 'success', 'Generation complete 💚');
+  } catch(err){
+    hideProgress();
+    toast(err && err.message ? err.message : 'Something went wrong while processing the files.', 'error', 'Processing error');
+    setStep(2);
+  } finally {
+    state.running = false;
+    btn.disabled = false; btn.innerHTML = oldLabel;
+  }
+}
+
+/* ---- Results rendering ---- */
+function renderResults(){
+  const { stats, updates } = state.results;
+  hideProgress();
+  renderStats(stats);
+  $('#searchResults').innerHTML = `<p class="hint">Type a handle to inspect it — e.g. <code>${escapeHtml(sampleHandle())}</code></p>`;
+  $('#searchInput').value = '';
+  previewPage = 0;
+  renderPreview();
+
+  const card = $('#successCard');
+  if (updates.length){
+    $('#successTitle').textContent = 'Sale file ready 🎉';
+    $('#successSummary').textContent =
+      `${formatInt(stats.updated)} of ${formatInt(stats.matched)} matched products updated in ${stats.elapsed.toFixed(1)}s — only the required Shopify columns are included.`;
+    $('#btnDownloadTop').disabled = false; $('#btnDownloadMain').disabled = false;
+  } else {
+    $('#successTitle').textContent = 'No updates needed 🎉';
+    $('#successSummary').textContent =
+      `All ${formatInt(stats.matched)} matched products already carry the correct sale price. Nothing to import.`;
+    $('#btnDownloadTop').disabled = true; $('#btnDownloadMain').disabled = true;
+  }
+  $('#exportInfo').textContent = `${state.results.filename} · ${formatInt(updates.length)} rows · columns: ${CONFIG.OUTPUT_COLUMNS.join(', ')}`;
+  $('#stepResults').hidden = false;
+  card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ---- Download ---- */
+function handleDownload(){
+  if (!state.results || !state.results.updates.length){
+    toast('Nothing to download yet — generate the sale file first.', 'warning');
+    return;
+  }
+  const name = downloadDiscountCsv(state.results.updates);
+  toast(`${formatInt(state.results.updates.length)} rows exported as ${name}.`, 'success', 'Download started ⬇️');
+}
+
+/* ---- Wiring / init ---- */
+function wireUpload(kind, key){
+  const zone = $('#drop' + key), input = $('#file' + key);
+  zone.addEventListener('click', () => input.click());
+  zone.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); input.click(); }
+  });
+  input.addEventListener('change', () => { const f = input.files[0]; if (f) handleFile(kind, f); });
+  ['dragenter', 'dragover'].forEach(ev =>
+    zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('drag'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.remove('drag'); }));
+  zone.addEventListener('drop', e => {
+    const f = e.dataTransfer && e.dataTransfer.files[0];
+    if (f) handleFile(kind, f);
+  });
+}
+
+function init(){
+  initTheme();
+  $('#verBadge').textContent = 'v' + CONFIG.VERSION;
+  $('#footVersion').textContent = 'v' + CONFIG.VERSION;
+  $('#footYear').textContent = CONFIG.YEAR;
+
+  wireUpload('discount', 'Discount');
+  wireUpload('shopify', 'Shopify');
+
+  $('#themeToggle').addEventListener('click', () =>
+    setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+  $('#btnGenerate').addEventListener('click', runEngine);
+  $('#btnReset').addEventListener('click', startOver);
+  $('#btnStartOver').addEventListener('click', startOver);
+  $('#btnDownloadTop').addEventListener('click', handleDownload);
+  $('#btnDownloadMain').addEventListener('click', handleDownload);
+
+  $('#searchInput').addEventListener('input', debounce(renderSearch, 250));
+  $('#pgPrev').addEventListener('click', () => { previewPage--; renderPreview(); });
+  $('#pgNext').addEventListener('click', () => { previewPage++; renderPreview(); });
+
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-remove]');
+    if (b) clearFile(b.dataset.remove);
+  });
+
+  setStep(1);
+}
+init();
+</script>
+</body>
+</html>
