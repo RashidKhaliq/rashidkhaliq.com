@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <!--
   ═══════════════════════════════════════════════════════════════════
-  CHINYERE SALE FILE CREATOR · v1.0.0
+  CHINYERE SALE FILE CREATOR · v1.1.0
+  Update: new Shopify output headers · optional Tags column ·
+  Sale Campaign Tag input · tag merge logic · extended mapping ·
+  variant option preservation · updated smart-skip · export validation
   100% client-side · Static build · Cloudflare Pages ready
-  Module map (organized as sections below):
-    index.html · style.css · config.js · utils.js · csv.js · excel.js · ui.js · app.js
+  Module map: index.html · style.css · config.js · utils.js · csv.js · excel.js · ui.js · app.js
   ═══════════════════════════════════════════════════════════════════
 -->
 <html lang="en" data-theme="light">
@@ -147,10 +149,22 @@ main{max-width:1180px;margin:0 auto;padding:28px 24px 60px;width:100%;flex:1}
 .field select:hover{border-color:var(--border-strong)}
 .field select.invalid{border-color:var(--red);animation:shake .35s}
 @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.fieldGrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.mapGroupLabel{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin:4px 0 11px;border-top:1px dashed var(--border);padding-top:11px}
 .sampleTable{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
 .sampleTable th,.sampleTable td{border:1px solid var(--border);padding:4px 8px;text-align:left;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sampleTable th{background:var(--surface-2);font-weight:600;color:var(--muted)}
 .sampleCaption{font-size:11px;color:var(--faint);margin-top:12px}
+
+/* ── Sale Campaign field 🍉 ── */
+.campaignField{margin-top:18px;border:1.5px dashed color-mix(in srgb,var(--red) 45%,transparent);background:color-mix(in srgb,var(--red-soft) 55%,transparent);border-radius:var(--radius-sm);padding:16px 18px}
+.campaignField>label{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:7px}
+.optTag{color:var(--faint);font-weight:500;font-size:11.5px}
+.campaignField input{width:100%;margin-top:9px;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;transition:.15s}
+.campaignField input:focus{border-color:var(--red);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 22%,transparent);outline:none}
+.fieldHint{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.5}
+.fieldHint b{color:var(--text)}
+
 .mapFoot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:20px;flex-wrap:wrap}
 .remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
 .remember input{accent-color:var(--green);width:16px;height:16px}
@@ -219,6 +233,7 @@ main{max-width:1180px;margin:0 auto;padding:28px 24px 60px;width:100%;flex:1}
 .recGrid dd.rd{color:var(--red)}
 .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
 .pill-ok{background:var(--green-soft);color:var(--green)}
+.pill-tag{background:var(--red-soft);color:var(--red)}
 .pill-same{background:var(--surface-2);color:var(--muted);border:1px solid var(--border)}
 .pill-no{background:var(--red-soft);color:var(--red)}
 
@@ -226,9 +241,9 @@ main{max-width:1180px;margin:0 auto;padding:28px 24px 60px;width:100%;flex:1}
 .pgControls{display:flex;align-items:center;gap:8px}
 .pgInfo{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
 .tableWrap{overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:12px}
-table.preview{width:100%;border-collapse:collapse;font-size:12.5px;min-width:760px}
+table.preview{width:100%;border-collapse:collapse;font-size:12.5px;min-width:880px}
 .preview th{position:sticky;top:0;background:var(--surface-2);text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:10px 13px;border-bottom:1px solid var(--border);white-space:nowrap}
-.preview td{padding:9px 13px;border-bottom:1px solid var(--border);white-space:nowrap}
+.preview td{padding:9px 13px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis}
 .preview tr:last-child td{border-bottom:none}
 .preview tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 45%,transparent)}
 .preview .num{font-family:'JetBrains Mono',monospace;text-align:right}
@@ -236,11 +251,19 @@ table.preview{width:100%;border-collapse:collapse;font-size:12.5px;min-width:760
 .preview .mutedCell{color:var(--faint)}
 .preview .empty{text-align:center;color:var(--muted);padding:26px}
 .discChip{background:var(--red-soft);color:var(--red);font-weight:700;font-size:11px;padding:3px 8px;border-radius:999px;font-family:'JetBrains Mono',monospace}
-.statusChip{background:var(--green-soft);color:var(--green);font-weight:600;font-size:11px;padding:3px 9px;border-radius:999px;text-transform:capitalize}
+.chgChip{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-right:4px;white-space:nowrap}
+.chgPrice{background:var(--green-soft);color:var(--green)}
+.chgTag{background:var(--red-soft);color:var(--red)}
 .pgRange{font-size:12px;color:var(--faint);margin-top:10px}
 
-.exportPanel{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;border-left:5px solid var(--red)}
-.exportPanel p{font-size:12.5px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace}
+.exportPanel{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;border-left:5px solid var(--red)}
+.exportInfo{flex:1;min-width:300px}
+.exportInfo>p{font-size:12.5px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace}
+.validList{list-style:none;margin-top:13px;display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:7px}
+.validList li{font-size:12.5px;padding:8px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2)}
+.validList li span{color:var(--faint);font-weight:400}
+.vOk{color:var(--green);font-weight:600}
+.vBad{color:var(--red);font-weight:600}
 
 /* ── Toasts ── */
 .toastRoot{position:fixed;top:18px;right:18px;z-index:100;display:flex;flex-direction:column;gap:10px;max-width:min(380px,calc(100vw - 36px))}
@@ -256,8 +279,8 @@ table.preview{width:100%;border-collapse:collapse;font-size:12.5px;min-width:760
 .toastClose:hover{background:var(--surface-2);color:var(--text)}
 
 /* ── Footer ── */
-footer{margin-top:auto;background:linear-gradient(150deg,var(--green-deep) 0%,#04231500 0),linear-gradient(150deg,#073b2a,#04231a);color:#d9ecdf;position:relative;overflow:hidden}
-[data-theme="dark"] footer{background:linear-gradient(150deg,#08211700 0),linear-gradient(150deg,#08241a,#041710)}
+footer{margin-top:auto;background:linear-gradient(150deg,#073b2a,#04231a);color:#d9ecdf;position:relative;overflow:hidden}
+[data-theme="dark"] footer{background:linear-gradient(150deg,#08241a,#041710)}
 footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#fff 0 33%,#d6453a 33% 66%,#1fa35c 66% 100%);opacity:.85}
 .footInner{max-width:1180px;margin:0 auto;padding:38px 24px;text-align:center;position:relative}
 .footFlags{font-size:19px;letter-spacing:8px;margin-bottom:12px}
@@ -283,6 +306,7 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;back
   .stepText{display:none}
   .successCard{justify-content:center;text-align:center}
   .exportPanel{justify-content:center;text-align:center}
+  .fieldGrid{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
@@ -312,7 +336,7 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;back
       </div>
     </div>
     <div class="topActions">
-      <span class="verBadge" id="verBadge">v1.0.0</span>
+      <span class="verBadge" id="verBadge">v1.1.0</span>
       <button id="themeToggle" class="iconBtn" aria-label="Toggle dark mode" aria-pressed="false" title="Toggle dark mode">🌙</button>
     </div>
   </div>
@@ -384,7 +408,7 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;back
   <section class="panel" id="stepMapping" hidden aria-labelledby="hMap">
     <div class="panelHead">
       <h2 id="hMap"><span class="stepPill">2</span> Confirm Column Mapping</h2>
-      <p>Columns were auto-detected. <b style="color:var(--green)">ALU ⇄ Shopify Handle</b> — each ALU matches a Handle, and the discount is applied to the Compare-At Price.</p>
+      <p>Columns were auto-detected. <b style="color:var(--green)">ALU ⇄ Shopify Handle</b> — the discount is applied to the Compare-At Price, and Title, Options &amp; SKU are copied exactly. 🤍</p>
     </div>
 
     <div class="mapGrid">
@@ -410,25 +434,66 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;back
           <label for="mapHandle">Handle column <b>*</b></label>
           <select id="mapHandle"></select>
         </div>
-        <div class="field">
-          <label for="mapPrice">Variant Price column <b>*</b></label>
-          <select id="mapPrice"></select>
+        <div class="fieldGrid">
+          <div class="field">
+            <label for="mapPrice">Variant Price <b>*</b></label>
+            <select id="mapPrice"></select>
+          </div>
+          <div class="field">
+            <label for="mapCompare">Variant Compare At Price <b>*</b></label>
+            <select id="mapCompare"></select>
+          </div>
         </div>
-        <div class="field">
-          <label for="mapCompare">Variant Compare At Price</label>
-          <select id="mapCompare"></select>
-        </div>
-        <div class="field">
-          <label for="mapSku">Variant SKU</label>
-          <select id="mapSku"></select>
-        </div>
-        <div class="field">
-          <label for="mapStatus">Status</label>
-          <select id="mapStatus"></select>
+        <p class="mapGroupLabel">Copied exactly into the output 🤍</p>
+        <div class="fieldGrid">
+          <div class="field">
+            <label for="mapTitle">Title</label>
+            <select id="mapTitle"></select>
+          </div>
+          <div class="field">
+            <label for="mapSku">Variant SKU</label>
+            <select id="mapSku"></select>
+          </div>
+          <div class="field">
+            <label for="mapOpt1Name">Option1 Name</label>
+            <select id="mapOpt1Name"></select>
+          </div>
+          <div class="field">
+            <label for="mapOpt1Value">Option1 Value</label>
+            <select id="mapOpt1Value"></select>
+          </div>
+          <div class="field">
+            <label for="mapOpt2Name">Option2 Name</label>
+            <select id="mapOpt2Name"></select>
+          </div>
+          <div class="field">
+            <label for="mapOpt2Value">Option2 Value</label>
+            <select id="mapOpt2Value"></select>
+          </div>
+          <div class="field">
+            <label for="mapOpt3Name">Option3 Name</label>
+            <select id="mapOpt3Name"></select>
+          </div>
+          <div class="field">
+            <label for="mapOpt3Value">Option3 Value</label>
+            <select id="mapOpt3Value"></select>
+          </div>
+          <div class="field">
+            <label for="mapTags">Tags 🍉</label>
+            <select id="mapTags"></select>
+          </div>
         </div>
         <div class="sampleCaption">Sample data:</div>
         <div id="sampleShopify"></div>
       </div>
+    </div>
+
+    <!-- Sale Campaign Tag (optional) -->
+    <div class="campaignField">
+      <label for="campaignTag">🍉 Sale Campaign Tag <span class="optTag">(optional)</span></label>
+      <input id="campaignTag" type="text" autocomplete="off" spellcheck="false"
+             placeholder="New_Year_Sale, Independence_Sale, Black_Friday, Winter_Sale, Eid_Sale">
+      <p class="fieldHint">When set, a <b>Tags</b> column is appended after “Variant Compare At Price” and this tag is merged into each product’s existing tags — original order preserved, duplicates removed, no trailing commas. When left empty, <b>no Tags column is generated</b> and Shopify tags stay untouched.</p>
     </div>
 
     <div class="mapFoot">
@@ -486,9 +551,9 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;back
       <div class="tableWrap">
         <table class="preview" aria-label="Preview of generated CSV rows">
           <thead><tr>
-            <th>#</th><th>Handle</th><th>Variant SKU</th><th style="text-align:right">Current Price</th>
-            <th style="text-align:right">Compare At</th><th style="text-align:right">New Price</th>
-            <th>Discount</th><th>Status</th>
+            <th>#</th><th>Handle</th><th>Title</th><th>Variant SKU</th>
+            <th style="text-align:right">Current Price</th><th style="text-align:right">Compare At</th>
+            <th style="text-align:right">New Price</th><th>Discount</th><th>Changes</th>
           </tr></thead>
           <tbody id="previewBody"></tbody>
         </table>
@@ -497,9 +562,10 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;back
     </div>
 
     <div class="panel exportPanel">
-      <div>
-        <h3>📦 Final Export</h3>
+      <div class="exportInfo">
+        <h3>📦 Final Export &amp; Validation</h3>
         <p id="exportInfo">—</p>
+        <ul class="validList" id="validationList" aria-live="polite"></ul>
       </div>
       <div class="btnRow">
         <button id="btnStartOver" class="btn ghost" type="button">↺ Start Over</button>
@@ -516,7 +582,7 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;back
     <div class="footLove">Made with <span class="heart">❤️</span> in Pakistan</div>
     <div class="footBy">Created by <strong>Rashid Khaliq</strong></div>
     <div class="footMeta">
-      CHINYERE SALE FILE CREATOR · <b id="footVersion">v1.0.0</b> · © <b id="footYear">2026</b> ·
+      CHINYERE SALE FILE CREATOR · <b id="footVersion">v1.1.0</b> · © <b id="footYear">2026</b> ·
       🌿 100% Browser-Based · No Servers · No Data Collection 🤍
     </div>
   </div>
@@ -533,7 +599,7 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;back
 /* ════════════════════════ config.js ════════════════════════ */
 const CONFIG = {
   APP_NAME: 'CHINYERE SALE FILE CREATOR',
-  VERSION: '1.0.0',
+  VERSION: '1.1.0',
   YEAR: new Date().getFullYear(),
   LS_MAPPING: 'chinyere.mapping.v1',
   LS_THEME: 'chinyere.theme.v1',
@@ -541,16 +607,31 @@ const CONFIG = {
   PAGE_SIZE: 10,             // rows per preview page
   PRICE_TOLERANCE: 0.005,    // price equality tolerance for smart-skip
   CHUNK_SIZE: 512 * 1024,    // CSV streaming chunk (bytes)
-  OUTPUT_COLUMNS: ['Handle', 'Variant SKU', 'Variant Price', 'Variant Compare At Price', 'Status'],
+  // Exact Shopify import headers, in exact required order.
+  OUTPUT_COLUMNS: [
+    'Handle', 'Title',
+    'Option1 Name', 'Option1 Value',
+    'Option2 Name', 'Option2 Value',
+    'Option3 Name', 'Option3 Value',
+    'Variant SKU', 'Variant Price', 'Variant Compare At Price'
+  ],
+  TAGS_COLUMN: 'Tags',       // appended ONLY when a Sale Campaign Tag is entered
   // Auto-guess column patterns, ordered by priority
   GUESS: {
-    alu:      [/^alu$/i, /^alu\b/i, /\balu\b/i, /^handle$/i, /^code$/i, /^sku$/i, /article/i, /item/i],
-    discount: [/^discount/i, /disc/i, /^off/i, /percent/i, /markdown/i, /%/],
-    handle:   [/^handle$/i, /handle/i, /^sku$/i, /^code$/i],
-    sku:      [/^variant sku$/i, /variant\s*sku/i, /^sku$/i, /\bsku\b/i],
-    price:    [/^variant price$/i, /variant\s*price/i, /^price$/i, /\bprice\b/i],
-    compare:  [/^variant compare at price$/i, /compare\s*at/i, /compare/i],
-    status:   [/^status$/i, /status/i]
+    alu:       [/^alu$/i, /^alu\b/i, /\balu\b/i, /^handle$/i, /^code$/i, /^sku$/i, /article/i, /item/i],
+    discount:  [/^discount/i, /disc/i, /^off/i, /percent/i, /markdown/i, /%/],
+    handle:    [/^handle$/i, /handle/i, /^sku$/i, /^code$/i],
+    sku:       [/^variant sku$/i, /variant\s*sku/i, /^sku$/i, /\bsku\b/i],
+    price:     [/^variant price$/i, /variant\s*price/i, /^price$/i, /\bprice\b/i],
+    compare:   [/^variant compare at price$/i, /compare\s*at/i, /compare/i],
+    title:     [/^title$/i, /\btitle\b/i],
+    opt1Name:  [/^option1 name$/i, /option1\s*name/i],
+    opt1Value: [/^option1 value$/i, /option1\s*value/i],
+    opt2Name:  [/^option2 name$/i, /option2\s*name/i],
+    opt2Value: [/^option2 value$/i, /option2\s*value/i],
+    opt3Name:  [/^option3 name$/i, /option3\s*name/i],
+    opt3Value: [/^option3 value$/i, /option3\s*value/i],
+    tags:      [/^tags$/i, /\btags\b/i]
   }
 };
 </script>
@@ -597,6 +678,11 @@ function parseDiscount(v){
   if (!isFinite(n) || n <= 0) return null;
   let p = (!hasPct && n < 1) ? n * 100 : n;
   return p > 0 && p <= 100 ? round2(p) : null;
+}
+
+/** Sanitize a user-entered Sale Campaign Tag (trim, collapse spaces, strip commas). */
+function sanitizeCampaignTag(v){
+  return String(v ?? '').replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 function debounce(fn, ms){ let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
@@ -677,11 +763,53 @@ function previewCsv(file, onDone, onError){
   });
 }
 
-/** Build the final Shopify import CSV (only required columns) and download it. */
-function downloadDiscountCsv(updates){
-  const lines = [CONFIG.OUTPUT_COLUMNS.join(',')];
+/** Final ordered header list — Tags column ONLY when a campaign tag is set. */
+function buildOutputColumns(withTags){
+  return withTags ? CONFIG.OUTPUT_COLUMNS.concat([CONFIG.TAGS_COLUMN]) : CONFIG.OUTPUT_COLUMNS.slice();
+}
+
+/** Case-insensitive check: does a comma-separated tag list already contain tag? */
+function hasTag(existing, tag){
+  const needle = String(tag ?? '').trim().toLowerCase();
+  if (!needle) return true;
+  return String(existing ?? '').split(',').some(t => t.trim().toLowerCase() === needle);
+}
+
+/**
+ * Merge existing Shopify tags with the campaign tag:
+ * preserves original order, trims spaces, removes duplicates,
+ * never leaves empty segments or trailing commas.
+ */
+function mergeTags(existing, newTag){
+  const seen = new Set();
+  const out = [];
+  for (const t of String(existing ?? '').split(',')){
+    const clean = t.trim();
+    if (!clean) continue;
+    const k = clean.toLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(clean);
+  }
+  const n = String(newTag ?? '').trim();
+  if (n && !seen.has(n.toLowerCase())) out.push(n);
+  return out.join(',');
+}
+
+/** Build the Shopify import CSV (exact spec headers) and download it. */
+function downloadDiscountCsv(updates, withTags){
+  const cols = buildOutputColumns(withTags);
+  const lines = [cols.join(',')];
   for (const r of updates){
-    lines.push(csvLine([r.handle, r.sku, r.newPrice.toFixed(2), r.compareAt.toFixed(2), r.status]));
+    const vals = [
+      r.handle, r.title,
+      r.opt1Name, r.opt1Value,
+      r.opt2Name, r.opt2Value,
+      r.opt3Name, r.opt3Value,
+      r.sku, r.newPrice.toFixed(2), r.compareAt.toFixed(2)
+    ];
+    if (withTags) vals.push(r.tags ?? '');   // Tags last, only when campaign tag set
+    lines.push(csvLine(vals));
   }
   const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const name = `CHINYERE_DISCOUNT_${todayStamp()}.csv`;
@@ -922,24 +1050,42 @@ function buildMappingUI(){
     const r = state.shopify.sample[0];
     return r ? String(r[h] ?? '') : '';
   };
-  fillSelect($('#mapAlu'),     dHeaders, dSample, true);
-  fillSelect($('#mapDisc'),    dHeaders, dSample, true);
+  // Discount circular
+  fillSelect($('#mapAlu'),  dHeaders, dSample, true);
+  fillSelect($('#mapDisc'), dHeaders, dSample, true);
+  // Shopify export — required
   fillSelect($('#mapHandle'),  sHeaders, sSample, true);
   fillSelect($('#mapPrice'),   sHeaders, sSample, true);
-  fillSelect($('#mapCompare'), sHeaders, sSample, false);
-  fillSelect($('#mapSku'),     sHeaders, sSample, false);
-  fillSelect($('#mapStatus'),  sHeaders, sSample, false);
+  fillSelect($('#mapCompare'), sHeaders, sSample, true);
+  // Shopify export — copied exactly (optional)
+  fillSelect($('#mapTitle'),     sHeaders, sSample, false);
+  fillSelect($('#mapSku'),       sHeaders, sSample, false);
+  fillSelect($('#mapOpt1Name'),  sHeaders, sSample, false);
+  fillSelect($('#mapOpt1Value'), sHeaders, sSample, false);
+  fillSelect($('#mapOpt2Name'),  sHeaders, sSample, false);
+  fillSelect($('#mapOpt2Value'), sHeaders, sSample, false);
+  fillSelect($('#mapOpt3Name'),  sHeaders, sSample, false);
+  fillSelect($('#mapOpt3Value'), sHeaders, sSample, false);
+  fillSelect($('#mapTags'),      sHeaders, sSample, false);
 
   const set = (sel, v) => { if (v) sel.value = v; };
-  set($('#mapAlu'),     pick(dHeaders, 'alu',     CONFIG.GUESS.alu));
-  set($('#mapDisc'),    pick(dHeaders, 'discount',CONFIG.GUESS.discount));
-  set($('#mapHandle'),  pick(sHeaders, 'handle',  CONFIG.GUESS.handle));
-  set($('#mapPrice'),   pick(sHeaders, 'price',   CONFIG.GUESS.price));
-  set($('#mapCompare'), pick(sHeaders, 'compare', CONFIG.GUESS.compare));
-  set($('#mapSku'),     pick(sHeaders, 'sku',     CONFIG.GUESS.sku));
-  set($('#mapStatus'),  pick(sHeaders, 'status',  CONFIG.GUESS.status));
+  set($('#mapAlu'),        pick(dHeaders, 'alu',       CONFIG.GUESS.alu));
+  set($('#mapDisc'),       pick(dHeaders, 'discount',  CONFIG.GUESS.discount));
+  set($('#mapHandle'),     pick(sHeaders, 'handle',    CONFIG.GUESS.handle));
+  set($('#mapPrice'),      pick(sHeaders, 'price',     CONFIG.GUESS.price));
+  set($('#mapCompare'),    pick(sHeaders, 'compare',   CONFIG.GUESS.compare));
+  set($('#mapTitle'),      pick(sHeaders, 'title',     CONFIG.GUESS.title));
+  set($('#mapSku'),        pick(sHeaders, 'sku',       CONFIG.GUESS.sku));
+  set($('#mapOpt1Name'),   pick(sHeaders, 'opt1Name',  CONFIG.GUESS.opt1Name));
+  set($('#mapOpt1Value'),  pick(sHeaders, 'opt1Value', CONFIG.GUESS.opt1Value));
+  set($('#mapOpt2Name'),   pick(sHeaders, 'opt2Name',  CONFIG.GUESS.opt2Name));
+  set($('#mapOpt2Value'),  pick(sHeaders, 'opt2Value', CONFIG.GUESS.opt2Value));
+  set($('#mapOpt3Name'),   pick(sHeaders, 'opt3Name',  CONFIG.GUESS.opt3Name));
+  set($('#mapOpt3Value'),  pick(sHeaders, 'opt3Value', CONFIG.GUESS.opt3Value));
+  set($('#mapTags'),       pick(sHeaders, 'tags',      CONFIG.GUESS.tags));
 
   $('#rememberMapping').checked = saved ? saved.remember !== false : true;
+  $('#campaignTag').value = (saved && typeof saved.campaign === 'string') ? saved.campaign : '';
   $('#mapDiscountSub').textContent = `${state.discount.file.name} · ${formatInt(state.discount.rows.length - state.discount.headerRow - 1)} rows`;
   $('#mapShopifySub').textContent  = `${state.shopify.file.name} · ${formatBytes(state.shopify.file.size)}`;
   renderSampleTable($('#sampleDiscount'), dHeaders.slice(0, 6),
@@ -958,8 +1104,11 @@ function renderSampleTable(el, cols, rows){
 function readMapping(){
   return {
     alu: $('#mapAlu').value, disc: $('#mapDisc').value,
-    handle: $('#mapHandle').value, price: $('#mapPrice').value,
-    compare: $('#mapCompare').value, sku: $('#mapSku').value, status: $('#mapStatus').value
+    handle: $('#mapHandle').value, price: $('#mapPrice').value, compare: $('#mapCompare').value,
+    title: $('#mapTitle').value, sku: $('#mapSku').value, tags: $('#mapTags').value,
+    opt1Name: $('#mapOpt1Name').value, opt1Value: $('#mapOpt1Value').value,
+    opt2Name: $('#mapOpt2Name').value, opt2Value: $('#mapOpt2Value').value,
+    opt3Name: $('#mapOpt3Name').value, opt3Value: $('#mapOpt3Value').value
   };
 }
 
@@ -971,7 +1120,7 @@ function renderStats(s){
     { icon: '🔗', label: 'Matched Products', value: s.matched },
     { icon: '💚', label: 'Updated Products', value: s.updated, hot: true },
     { icon: '🤍', label: 'Skipped (No Match)', value: s.noMatch },
-    { icon: '⏸️', label: 'Skipped (Already Same Discount)', value: s.same },
+    { icon: '⏸️', label: 'Skipped (No Changes Needed)', value: s.same },
     { icon: '⚠️', label: 'Skipped (Data Issues)', value: s.issues },
     { icon: '⚡', label: 'Processing Time', value: s.elapsed, time: true, hot: true }
   ];
@@ -998,8 +1147,9 @@ function sampleHandle(){
   return 'CP0431';
 }
 function recordHtml(r){
-  const chip = r.status === 'updated' ? '<span class="pill pill-ok">✅ Updated</span>'
-    : r.status === 'same' ? '<span class="pill pill-same">⏸️ Already Discounted</span>'
+  const chip = r.status === 'updated' ? '<span class="pill pill-ok">✅ Price Updated</span>'
+    : r.status === 'tagged' ? '<span class="pill pill-tag">🍉 Tag Added</span>'
+    : r.status === 'same' ? '<span class="pill pill-same">⏸️ No Changes</span>'
     : '<span class="pill pill-no">🚫 Not Found in Shopify</span>';
   const money = v => v == null ? '—' : Number(v).toFixed(2);
   return `
@@ -1043,24 +1193,37 @@ function renderPreview(){
   previewPage = Math.max(0, Math.min(previewPage, pages - 1));
   const start = previewPage * CONFIG.PAGE_SIZE;
   const slice = list.slice(start, start + CONFIG.PAGE_SIZE);
-  $('#previewBody').innerHTML = slice.length ? slice.map((r, i) => `
+  $('#previewBody').innerHTML = slice.length ? slice.map((r, i) => {
+    let chg = '';
+    if (r.priceChanged) chg += '<span class="chgChip chgPrice">💰 Price</span>';
+    if (r.tagAdded) chg += '<span class="chgChip chgTag">🍉 Tag</span>';
+    return `
     <tr>
       <td class="num mutedCell">${start + i + 1}</td>
       <td class="mono">${escapeHtml(r.handle)}</td>
+      <td title="${escapeHtml(r.title)}">${escapeHtml(truncate(r.title, 24)) || '—'}</td>
       <td class="mono mutedCell">${escapeHtml(r.sku || '—')}</td>
       <td class="num">${r.oldPrice.toFixed(2)}</td>
       <td class="num">${r.compareAt.toFixed(2)}</td>
-      <td class="num newPrice">${r.newPrice.toFixed(2)}</td>
+      <td class="num ${r.priceChanged ? 'newPrice' : 'mutedCell'}">${r.newPrice.toFixed(2)}</td>
       <td><span class="discChip">−${r.discount}%</span></td>
-      <td><span class="statusChip">${escapeHtml(r.status)}</span></td>
-    </tr>`).join('')
-    : '<tr><td colspan="8" class="empty">No rows require updating — every matched product already has the correct price 🎉</td></tr>';
+      <td>${chg || '—'}</td>
+    </tr>`;
+  }).join('')
+    : '<tr><td colspan="9" class="empty">No rows require updating — every matched product already has the correct price and tags 🎉</td></tr>';
   $('#pgInfo').textContent = `Page ${previewPage + 1} / ${pages}`;
   $('#pgRange').textContent = ups.length
     ? `Showing ${start + 1}–${Math.min(start + CONFIG.PAGE_SIZE, list.length)} of ${formatInt(ups.length)} updated rows (preview capped at ${CONFIG.PREVIEW_LIMIT})`
     : 'No rows were generated.';
   $('#pgPrev').disabled = previewPage === 0;
   $('#pgNext').disabled = previewPage >= pages - 1;
+}
+
+/* ---- Export validation checklist ---- */
+function renderValidation(res){
+  $('#validationList').innerHTML = res.checks.map(c =>
+    `<li class="${c.ok ? 'vOk' : 'vBad'}">${c.ok ? '✓' : '✗'} ${escapeHtml(c.label)}${c.detail ? ` <span>· ${escapeHtml(c.detail)}</span>` : ''}</li>`
+  ).join('');
 }
 </script>
 
@@ -1070,7 +1233,7 @@ function renderPreview(){
 /* ---- Application state ---- */
 const freshDiscount = () => ({ file: null, rows: [], headers: [], nameToIdx: new Map(), headerRow: 0, sheet: '', ready: false });
 const freshShopify  = () => ({ file: null, headers: [], sample: [], ready: false });
-const state = { discount: freshDiscount(), shopify: freshShopify(), results: null, running: false };
+const state = { discount: freshDiscount(), shopify: freshShopify(), results: null, campaignTag: '', running: false };
 
 /* ---- Flow control ---- */
 function invalidateResults(){
@@ -1112,6 +1275,66 @@ function startOver(){
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/* ---- Export validation (gates the Download button) ---- */
+function validateExport(){
+  const withTags = !!state.campaignTag;
+  const cols = buildOutputColumns(withTags);
+  const ups = state.results.updates;
+  const checks = [];
+
+  // 1 · All mandatory Shopify headers exist
+  checks.push({
+    label: 'All mandatory Shopify headers exist',
+    ok: CONFIG.OUTPUT_COLUMNS.every(h => cols.includes(h)),
+    detail: cols.length + ' columns'
+  });
+
+  // 2 · Column order exactly matches the specification
+  const SPEC_ORDER = withTags
+    ? ['Handle','Title','Option1 Name','Option1 Value','Option2 Name','Option2 Value','Option3 Name','Option3 Value','Variant SKU','Variant Price','Variant Compare At Price','Tags']
+    : ['Handle','Title','Option1 Name','Option1 Value','Option2 Name','Option2 Value','Option3 Name','Option3 Value','Variant SKU','Variant Price','Variant Compare At Price'];
+  checks.push({ label: 'Column order matches Shopify spec', ok: JSON.stringify(cols) === JSON.stringify(SPEC_ORDER) });
+
+  // 3 · Prices rounded to two decimal places
+  let pricesOk = true;
+  for (const r of ups){
+    if (!isFinite(r.newPrice) || !/^\d+\.\d{2}$/.test(r.newPrice.toFixed(2)) ||
+        !isFinite(r.compareAt) || !/^\d+\.\d{2}$/.test(r.compareAt.toFixed(2))){ pricesOk = false; break; }
+  }
+  checks.push({ label: 'Prices rounded to 2 decimal places', ok: pricesOk });
+
+  // 4 · No duplicate output rows (Handle + SKU + option values)
+  const seenRows = new Set();
+  let dup = false;
+  for (const r of ups){
+    const k = [r.handle.toUpperCase(), r.sku.toUpperCase(), r.opt1Value.toUpperCase(), r.opt2Value.toUpperCase(), r.opt3Value.toUpperCase()].join('|');
+    if (seenRows.has(k)){ dup = true; break; }
+    seenRows.add(k);
+  }
+  checks.push({ label: 'No duplicate output rows', ok: !dup, detail: formatInt(ups.length) + ' rows' });
+
+  // 5 · Tags merged correctly (only when the Tags column is generated)
+  let tagsOk = true;
+  let tagDetail = 'not generated — no campaign tag entered';
+  if (withTags){
+    tagDetail = 'merged, deduplicated, no trailing commas';
+    const needle = state.campaignTag.toLowerCase();
+    for (const r of ups){
+      const t = String(r.tags ?? '');
+      if (/,$/.test(t) || t.includes(',,')){ tagsOk = false; break; }
+      const parts = t.split(',').map(s => s.trim());
+      const lower = parts.map(s => s.toLowerCase());
+      if (parts.some(s => !s) || new Set(lower).size !== lower.length || !lower.includes(needle)){ tagsOk = false; break; }
+    }
+  }
+  checks.push({ label: 'Tags merged correctly', ok: tagsOk, detail: tagDetail });
+
+  // 6 · Overall Shopify import compatibility
+  const allOk = checks.every(c => c.ok);
+  checks.push({ label: 'Compatible with Shopify CSV Import', ok: allOk });
+  return { ok: allOk, checks };
+}
+
 /* ---- Discount engine (Map lookups + chunked CSV streaming) ---- */
 async function runEngine(){
   if (state.running) return;
@@ -1120,9 +1343,10 @@ async function runEngine(){
     return;
   }
   const m = readMapping();
+  const campaignTag = sanitizeCampaignTag($('#campaignTag').value);
 
   // Validate required mappings
-  const required = [['alu', '#mapAlu'], ['disc', '#mapDisc'], ['handle', '#mapHandle'], ['price', '#mapPrice']];
+  const required = [['alu', '#mapAlu'], ['disc', '#mapDisc'], ['handle', '#mapHandle'], ['price', '#mapPrice'], ['compare', '#mapCompare']];
   for (const [key, sel] of required){
     if (!m[key]){
       const el = $(sel);
@@ -1132,9 +1356,10 @@ async function runEngine(){
       return;
     }
   }
-  store.set(CONFIG.LS_MAPPING, { remember: $('#rememberMapping').checked, fields: m });
+  store.set(CONFIG.LS_MAPPING, { remember: $('#rememberMapping').checked, fields: m, campaign: campaignTag });
 
   state.running = true;
+  state.campaignTag = campaignTag;
   invalidateResults();
   const btn = $('#btnGenerate'), oldLabel = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Processing…';
@@ -1165,7 +1390,7 @@ async function runEngine(){
     if (badDisc) toast(`${formatInt(badDisc)} circular row(s) had unreadable discounts and were ignored.`, 'warning');
 
     /* 2 ─ Stream the Shopify CSV in chunks; single pass, no nested loops */
-    const stats = { shopify: 0, matched: 0, updated: 0, noMatch: 0, same: 0, issues: 0 };
+    const stats = { shopify: 0, matched: 0, updated: 0, noMatch: 0, same: 0, issues: 0, tagged: 0 };
     const updates = [], emitted = new Set();
     const searchIndex = new Map();
     const unseen = new Set(dMap.keys());
@@ -1182,28 +1407,55 @@ async function runEngine(){
       unseen.delete(key);
 
       const price = parsePrice(row[m.price]);
-      const compare = m.compare ? parsePrice(row[m.compare]) : null;
+      const compare = parsePrice(row[m.compare]);
       if (price == null || price <= 0){ stats.issues++; return; }
+      if (compare == null || compare <= 0){ stats.issues++; return; } // Compare At missing/invalid → skip
 
-      const base = (compare != null && compare > 0) ? compare : price;
-      const newPrice = round2(base * (1 - d.pct / 100));
-      const sku = m.sku ? String(row[m.sku] ?? '').trim() : '';
-      let status = m.status ? String(row[m.status] ?? '').trim().toLowerCase() : 'active';
-      if (!['active', 'draft', 'archived'].includes(status)) status = 'active';
+      const newPrice = round2(compare * (1 - d.pct / 100));
 
-      // De-duplicate identical Handle+SKU rows
-      const dk = key + '|' + sku.toUpperCase();
+      // Values copied EXACTLY from the Shopify export
+      const get = k => m[k] ? String(row[m[k]] ?? '') : '';
+      const title = get('title'),
+            o1n = get('opt1Name'), o1v = get('opt1Value'),
+            o2n = get('opt2Name'), o2v = get('opt2Value'),
+            o3n = get('opt3Name'), o3v = get('opt3Value'),
+            sku = get('sku').trim(),
+            existingTags = get('tags');
+
+      // De-duplicate identical Handle + SKU + option rows
+      const dk = [key, sku.toUpperCase(), o1v.toUpperCase(), o2v.toUpperCase(), o3v.toUpperCase()].join('|');
       if (emitted.has(dk)){ stats.issues++; return; }
       emitted.add(dk);
 
-      // Smart skip: already at the correct sale price
-      const rec = { handle, sku, discount: d.pct, current: price, base, newPrice, status: '' };
-      if (Math.abs(price - newPrice) < TOL){
-        rec.status = 'same'; stats.same++;
-      } else {
-        rec.status = 'updated'; stats.updated++;
-        updates.push({ handle, sku, oldPrice: price, compareAt: base, newPrice, discount: d.pct, status });
+      // Smart-skip: include only when price changes OR a new tag must be added
+      const priceChanged = Math.abs(price - newPrice) >= TOL;
+      const tagNeeded = campaignTag ? !hasTag(existingTags, campaignTag) : false;
+
+      const rec = { handle, sku, discount: d.pct, current: price, base: compare, newPrice: priceChanged ? newPrice : price, status: '' };
+
+      if (!priceChanged && !tagNeeded){
+        stats.same++;
+        rec.status = 'same';
+        if (!searchIndex.has(key)) searchIndex.set(key, rec);
+        return;
       }
+
+      stats.updated++;
+      let mergedTags = null;
+      if (campaignTag){
+        mergedTags = mergeTags(existingTags, campaignTag);
+        if (tagNeeded) stats.tagged++;
+      }
+      rec.status = priceChanged ? 'updated' : 'tagged';
+      updates.push({
+        handle, title,
+        opt1Name: o1n, opt1Value: o1v,
+        opt2Name: o2n, opt2Value: o2v,
+        opt3Name: o3n, opt3Value: o3v,
+        sku, oldPrice: price, compareAt: compare,          // Compare At kept unchanged
+        newPrice: rec.newPrice, discount: d.pct,
+        tags: mergedTags, priceChanged, tagAdded: tagNeeded
+      });
       if (!searchIndex.has(key)) searchIndex.set(key, rec);
     }
 
@@ -1246,7 +1498,7 @@ async function runEngine(){
       filename: `CHINYERE_DISCOUNT_${todayStamp()}.csv`
     };
     renderResults();
-    toast(`Done! ${formatInt(stats.updated)} product${stats.updated === 1 ? '' : 's'} updated in ${elapsed.toFixed(1)}s.`, 'success', 'Generation complete 💚');
+    toast(`Done! ${formatInt(stats.updated)} product${stats.updated === 1 ? '' : 's'} exported in ${elapsed.toFixed(1)}s.`, 'success', 'Generation complete 💚');
   } catch(err){
     hideProgress();
     toast(err && err.message ? err.message : 'Something went wrong while processing the files.', 'error', 'Processing error');
@@ -1268,18 +1520,28 @@ function renderResults(){
   renderPreview();
 
   const card = $('#successCard');
+  const withTags = !!state.campaignTag;
   if (updates.length){
     $('#successTitle').textContent = 'Sale file ready 🎉';
-    $('#successSummary').textContent =
-      `${formatInt(stats.updated)} of ${formatInt(stats.matched)} matched products updated in ${stats.elapsed.toFixed(1)}s — only the required Shopify columns are included.`;
-    $('#btnDownloadTop').disabled = false; $('#btnDownloadMain').disabled = false;
+    let summary = `${formatInt(stats.updated)} of ${formatInt(stats.matched)} matched products exported in ${stats.elapsed.toFixed(1)}s — exact Shopify headers, nothing extra.`;
+    if (withTags) summary += ` 🍉 Tag “${state.campaignTag}” newly added to ${formatInt(stats.tagged)} product${stats.tagged === 1 ? '' : 's'}.`;
+    $('#successSummary').textContent = summary;
   } else {
     $('#successTitle').textContent = 'No updates needed 🎉';
     $('#successSummary').textContent =
-      `All ${formatInt(stats.matched)} matched products already carry the correct sale price. Nothing to import.`;
-    $('#btnDownloadTop').disabled = true; $('#btnDownloadMain').disabled = true;
+      `All ${formatInt(stats.matched)} matched products already carry the correct price${withTags ? ' and tag' : ''}. Nothing to import.`;
   }
-  $('#exportInfo').textContent = `${state.results.filename} · ${formatInt(updates.length)} rows · columns: ${CONFIG.OUTPUT_COLUMNS.join(', ')}`;
+  const cols = buildOutputColumns(withTags);
+  $('#exportInfo').textContent = `${state.results.filename} · ${formatInt(updates.length)} rows · ${cols.length} columns · ${cols.join(', ')}`;
+
+  // Export validation gates the Download buttons
+  const valid = validateExport();
+  renderValidation(valid);
+  const canDownload = updates.length > 0 && valid.ok;
+  $('#btnDownloadTop').disabled = !canDownload;
+  $('#btnDownloadMain').disabled = !canDownload;
+  if (!valid.ok) toast('Export validation failed — review the checklist before downloading.', 'error', 'Validation');
+
   $('#stepResults').hidden = false;
   card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
   card.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1291,7 +1553,7 @@ function handleDownload(){
     toast('Nothing to download yet — generate the sale file first.', 'warning');
     return;
   }
-  const name = downloadDiscountCsv(state.results.updates);
+  const name = downloadDiscountCsv(state.results.updates, !!state.campaignTag);
   toast(`${formatInt(state.results.updates.length)} rows exported as ${name}.`, 'success', 'Download started ⬇️');
 }
 
